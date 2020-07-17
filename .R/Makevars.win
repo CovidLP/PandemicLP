@@ -1,6 +1,3 @@
-
-CXX14FLAGS=-03 -march=native -mtune=native
-CXX11FLAGS=-03 -march=native -mtune=native
-CXX11FLAGS=-03 -mtune=native CXX14 = $(BINPREF)g++ -m$(WIN) -std=c++1y
-CXX14 = g++ -std=c++1y
-CXX14FLAGS = -03 -Wno-unused-variable -Wno-unused-function
+CXX14FLAGS=-O3 -Wno-unused-variable -Wno-unused-function
+CXX14 = $(BINPREF)g++ -m$(WIN) -std=c++1y
+CXX11FLAGS=-O3 -Wno-unused-variable -Wno-unused-function
