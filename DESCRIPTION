@@ -1,0 +1,41 @@
+Package: pandemicLP
+Type: Package
+Title: Long term prediction for epidemic and pandemic data
+Version: 0.1.0
+Date: 2020-07-17
+Authors@R: c(person("Débora", "de Freitas Magalhães", email = "deborafmag@gmail.com", role = "aut"),
+            person("Marta Cristina", "Colozza Bianchi da Costa", email = "marta_bianchi@ufg.br", role = "aut"),
+            person("Guido", "Alberti Moreira", email = "guidoalber@gmail.com", role = c("cre","aut")),
+            person("Thais", "Pacheco Menezes", email = "thaispacheco1207@gmail.com", role = "aut"),
+            person("Marcos", "Oliveira Prates", email = "marcosop@est.ufmg.br", role = "aut"))
+Maintainer: CovidLP team <covidlp.team@gmail.com>
+Description: The long term prediction is based on the theory in \href{http://est.ufmg.br/covidlp/home/pt/}{est.ufmg.br/covidlp/home/pt}.
+    The package is updated along with the model in the app, so it is recommended that it is kept up to date.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Biarch: true
+Depends:
+    R (>= 3.4.0),
+    rstan (>= 2.18.1)
+Imports:
+    methods,
+    Rcpp (>= 0.12.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    rstantools (>= 2.1.1),
+    plotly (>= 4.9.2.1)
+LinkingTo:
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+Suggests:
+    knitr,
+    rmarkdown
+URL: http://est.ufmg.br/covidlp/home/pt/
+VignetteBuilder: knitr
+SystemRequirements: GNU make
+RoxygenNote: 7.1.1
