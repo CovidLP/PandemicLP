@@ -13,6 +13,7 @@
 #'\code{?pandemic_model}.
 #'
 #' @docType data
+#' @name covid19BH
 #'
 #' @usage data(covid19BH)
 #'
@@ -87,5 +88,4 @@
 #'## plotting results
 #'
 #'plot(predictions)
-
-"covid19BH"
+NULL
