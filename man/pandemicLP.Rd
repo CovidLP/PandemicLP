@@ -18,3 +18,11 @@ term prediction of epidemic and pandemic count data. Four main functions are the
 \details{
 Theoretical foundation can be found in \href{http://est.ufmg.br/covidlp/home/pt/}{est.ufmg.br/covidlp/home/pt}
 }
+\examples{
+\dontrun{
+dataMG = load_covid("Brazil","MG")
+estimMG = stan_pandemic(dataMG)
+predMG = posterior_predict(estimMG)
+plot(predMG)}
+
+}

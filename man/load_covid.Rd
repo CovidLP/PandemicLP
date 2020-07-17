@@ -38,10 +38,11 @@ The output of this function is in the correct format to be used directly into th
 The user must online for this function to work.
 }
 \examples{
+\dontrun{
 load_covid("Brazil","MG")
 load_covid(country_name = "India", last_date = "2020-06-15")
 load_covid("US")
-load_covid(country_name = "italy")
+load_covid(country_name = "italy")}
 
 }
 \references{

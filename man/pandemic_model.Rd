@@ -164,6 +164,7 @@ In future versions of the \code{PandemicLP} package, the user will be allowed to
 
 ##result of the pandemic_model function may take a few minutes
 
+\dontrun{
 Y1=load_covid(country_name="Brazil",state_name="SP",last_date='2020-04-25')
 output1=pandemic_model(Y1)
 print(output1)
@@ -189,8 +190,9 @@ print(output3)
 #convergence diagnostics
 traceplot(output3)
 stan_ac(output3$fit,pars=c("a","b","c","f"))
-stan_dens(output3$fit,pars=c("a","b","c","f"))
+stan_dens(output3$fit,pars=c("a","b","c","f"))}
 #initival values for 2 chains:
+\dontrun{
 inits4=list(
  list(a=95,b=0.8,c=0.3,f=1.1), list(f=1.01)
 )
@@ -201,7 +203,7 @@ output4$config.inputs$use_inputs$init
 #convergence diagnostics
 traceplot(output4)
 stan_ac(output4$fit,pars=c("a","b","c","f"))
-stan_dens(output4$fit,pars=c("a","b","c","f"))
+stan_dens(output4$fit,pars=c("a","b","c","f"))}
 
 
 }
