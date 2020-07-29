@@ -26,10 +26,12 @@
 #'   \item The third item is a numeric object that contains the population size of the given region.
 #' }
 #'
-#' @examples load_covid("Brazil","MG")
+#' @examples
+#' \dontrun{
+#' load_covid("Brazil","MG")
 #' load_covid(country_name = "India", last_date = "2020-06-15")
 #' load_covid("US")
-#' load_covid(country_name = "italy")
+#' load_covid(country_name = "italy")}
 #'
 #' @source \url{https://github.com/CSSEGISandData/COVID-19}
 #' \url{https://github.com/covid19br/covid19br.github.io}

@@ -3,7 +3,16 @@
 #' S3 method that plots the predicted data into an interactive graphic.
 #' @param object Output of function posterior_predict.stanpandemic.
 #' @return A list containing two plots, long and short. If any of them wasn't plotted due to lack of prediction, its value returns NULL.
-#' @seealso \code{\link{posterior_predict.pandemicEstimated}}.
+#' \item{\code{long}}{
+#'   The plotted long term prediction. The predictions is made on daily new cases.
+#'   }
+#'   \item{\code{short}}{
+#'   The plotted shirt term prediction. The predictions is made on daily accumulated cases.
+#'   }
+#' @seealso \code{\link{posterior_predict.pandemicEstimated}}, \code{\link{pandemic_stats}} and \code{\link{plottedPandemic-objects}}.
+#' @references
+#' CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+#' Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 #' @examples
 #' \dontrun{
 #' dataMG = load_covid("Brazil","MG")
@@ -52,9 +61,8 @@ plot.pandemicPredicted <- function(object){
       total_number_975 <- sum(dados$new_cases,data$q975)
 
 
-      fig2 <- plotly::add_trace(plotly::plot_ly(data),
-                                x = ~dates, y = ~med, type= "scatter", name = "Prediction", mode = "markers",
-                                marker=list(color='rgb(0,0,0)', dash='solid', width=2.5))
+      fig2 <- plotly::add_trace(plotly::plot_ly(data),x = ~dates, y = ~med, type= "scatter", name = "Prediction", mode = "markers",
+                                               marker=list(color='rgb(0,0,0)', dash='solid', width=2.5))
 
       fig2 <- plotly::add_trace(fig2,x = ~dados$date, y = ~dados$new_cases, type = 'scatter', mode = 'lines+markers', hoverinfo = "x+y", name = "Observed Data", mode = "lines+markers",
                   hoverinfo = "x+y",
@@ -63,7 +71,10 @@ plot.pandemicPredicted <- function(object){
                     line = list(color = 'rgb(0, 0, 0)', width = 1)),
                   line = list(
                     color = 'rgb(100, 140, 240)',
-                    width = 1.5))
+                    width = 1.5)
+
+
+        )
 
       fig2 <- plotly::layout(fig2,title = paste("Prediction of New Cases - ",object[[4]]),
                                       annotations = list(text = paste0(
@@ -187,7 +198,7 @@ plot.pandemicPredicted <- function(object){
       data <- data.frame(dates,data)
       data$dates <- as.Date(data$dates)
 
-      fig2 <- plotly::add_trace(plotly::plot_ly(data),x = ~dates, y = ~med, type= "scatter", name = "Prediction", mode = "markers",
+      fig2 <- plotly::add_trace(plotly::plot_ly(fig2),x = ~dates, y = ~med, type= "scatter", name = "Prediction", mode = "markers",
                                                marker=list(color='rgb(0,0,0)', dash='solid', width=2.5))
 
       dados <- object[[3]]
@@ -205,7 +216,10 @@ plot.pandemicPredicted <- function(object){
                     line = list(color = 'rgb(0, 0, 0)', width = 1)),
                   line = list(
                     color = 'rgb(100, 140, 240)',
-                    width = 1.5))
+                    width = 1.5)
+
+
+        )
 
       fig2 <- plotly::layout(fig2,title = paste("Prediction of Deaths - ",object[[4]]),
                                       annotations = list(text = paste0(
@@ -263,7 +277,7 @@ plot.pandemicPredicted <- function(object){
       data <- data.frame(dates,data)
       data$dates <- as.Date(data$dates)
 
-      fig2 <- plotly::add_trace(plotly::plot_ly(data),x = ~dates, y = ~med, type= "scatter", name = "Prediction", mode = "markers",
+      fig2 <- plotly::add_trace(plotly::plot_ly(fig2),x = ~dates, y = ~med, type= "scatter", name = "Prediction", mode = "markers",
                                                marker=list(color='rgb(0,0,0)', dash='solid', width=2.5))
 
       dados <- object[[3]]
@@ -275,7 +289,10 @@ plot.pandemicPredicted <- function(object){
                     line = list(color = 'rgb(0, 0, 0)', width = 1)),
                   line = list(
                     color = 'rgb(100, 140, 240)',
-                    width = 1.5))
+                    width = 1.5)
+
+
+        )
 
       fig2 <- plotly::layout(fig2,title = paste("Prediction of Deaths - ",object[[4]]),
                               xaxis = list(title = "date"),

@@ -70,10 +70,11 @@
 #' ## fitted model:
 #' ##pandemic_model function may take a few minutes...
 #'
+#' \dontrun{
 #' outputBH = pandemic_model(Y, warmup = 3000, case_type = "deaths", chains = 2,
 #'                      control = list(max_treedepth = 50, adapt_delta = 0.999))
 #'
-#'print(outputBH)
+#' print(outputBH)
 #'
 #'##convergence diagnostics
 #'traceplot(outputBH)
@@ -87,5 +88,5 @@
 #'
 #'## plotting results
 #'
-#'plot(predictions)
+#'plot(predictions)}
 NULL
