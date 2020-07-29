@@ -1,4 +1,4 @@
-Package: pandemicLP
+Package: PandemicLP
 Type: Package
 Title: Long term prediction for epidemic and pandemic data
 Version: 0.1.0
