@@ -11,6 +11,12 @@ plot.pandemicPredicted(object)
 }
 \value{
 A list containing two plots, long and short. If any of them wasn't plotted due to lack of prediction, its value returns NULL.
+\item{\code{long}}{
+  The plotted long term prediction. The predictions is made on daily new cases.
+  }
+  \item{\code{short}}{
+  The plotted shirt term prediction. The predictions is made on daily accumulated cases.
+  }
 }
 \description{
 S3 method that plots the predicted data into an interactive graphic.
@@ -22,6 +28,10 @@ estimMG = stan_pandemic(dataMG)
 predMG = posterior_predict(estimMG)
 plot(predMG)}
 }
+\references{
+CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
+}
 \seealso{
-\code{\link{posterior_predict.pandemicEstimated}}.
+\code{\link{posterior_predict.pandemicEstimated}}, \code{\link{pandemic_stats}} and \code{\link{plottedPandemic-objects}}.
 }

@@ -4,7 +4,7 @@
 \alias{print.pandemicPredicted}
 \title{Prints prediction summary of pandemic model}
 \usage{
-\method{print}{pandemicPredicted}(object, summaryFun = mean, printPred = "Long", truncView = 3)
+\method{print}{pandemicPredicted}(object, summaryFun = median, printPred = "Long", truncView = 3)
 }
 \arguments{
 \item{summaryFun}{Use this function to summarize the predictions. Default argument is mean, but can be any function on a vector}
@@ -13,7 +13,7 @@
 }
 \description{
 S3 method designed to summarize the prediction obtained by the
-\link[pandemicMCMC]{posterior_predict.stanpandemic} function. It is not necessary to call function
+\link{posterior_predict.stanpandemic} function. It is not necessary to call function
 directly, only visualize the object directly, unless it is desired to change the default arguments.
 }
 \examples{
@@ -23,5 +23,5 @@ predMG = posterior_predict(estimMG)
 predMG}
 }
 \seealso{
-\link[pandemicMCMC]{posterior_predict.stanpandemic} and \link[pandemicMCMC]{plot.pandemicPredicted}
+\link{posterior_predict.stanpandemic} and \link{plot.pandemicPredicted}
 }
