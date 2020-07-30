@@ -3,8 +3,8 @@
 #! /bin/sh
 "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "rstantools::rstan_config()"
 
-CXX14FLAGS=-03 -march=native -mtune=native
-CXX11FLAGS=-03 -march=native -mtune=native
-CXX11FLAGS=-03 -mtune=native CXX14 = $(BINPREF)g++ -m$(WIN) -std=c++1y
-CXX14 = C:\Rtools\mingw_64\bin\g++ -std=c++1y
-CXX14FLAGS = -03 -Wno-unused-variable -Wno-unused-function
+set CXX14FLAGS=-03 -march=native -mtune=native
+set CXX11FLAGS=-03 -march=native -mtune=native
+set CXX11FLAGS=-03 -mtune=native CXX14 = $(BINPREF)g++ -m$(WIN) -std=c++1y
+set CXX14 = C:\Rtools\mingw_64\bin\g++ -std=c++1y
+set CXX14FLAGS = -03 -Wno-unused-variable -Wno-unused-function
