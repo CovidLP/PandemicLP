@@ -72,10 +72,21 @@ posterior_predict.pandemicEstimated = function(object,horizonLong = 300, horizon
   else
     y.futS = pred$yS[,1:horizonShort] + object$Y$data$deaths[nrow(object$Y$data)]
 
+  ## error checking
+  muCheck = cbind(as.data.frame(object$fit)[grep("mu",names(chains))], pred$mu)
+  excessivePos = which(rowSums(muCheck) > pop)
+  if (length(excessivePos) & length(excessivePos) < 0.05*M){ ## Case > 0.05*M should be handled by flags below
+    y.futL = y.futL[-excessivePos,]
+    y.futS = y.futS[-excessivePos,]
+    futMu = futMu[-excessivePos,]
+  }
+  flag = 0
+  if (sum(apply(muCheck,2,quantile,0.5)) > 0.08*pop) flag = 2 else if (sum(apply(muCheck,2,quantile,0.975)) > 0.12*pop) flag = 1
+
   output <- list(predictive_Long = y.futL, predictive_Short = y.futS,
                  data = object$Y$data, location = object$Y$name, cases_type = object$cases.type,
-                 pastMu = as.data.frame(object$fit)[grep("mu",names(object$fit))],
-                 futMu = pred$mu)
+                 pastMu = as.data.frame(object$fit)[grep("mu",names(chains))],
+                 futMu = pred$mu, errorCheck = list(excessivePosition = excessivePos,flagValue = flag))
 
   class(output) = "pandemicPredicted"
   return(output)
