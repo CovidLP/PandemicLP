@@ -1,4 +1,4 @@
-#' pandemicStats objects: 95% Credible Interval predictions from PandemicLP model
+#' pandemicStats objects: 95\% Credible Interval predictions from PandemicLP model
 #'
 #' The \code{pandemic_stats} function returns an object of S3 class
 #' \code{pandemicStats} in a list format containing the components described below. \cr
@@ -26,7 +26,6 @@
 #'   A data frame with the median value of the mean number of new cases for each day. Starting from the first
 #'   day of the pandemic to the last day of the long-term horizon.
 #'   }
-#'
 #' }
 #'
 NULL
