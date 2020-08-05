@@ -81,7 +81,7 @@ posterior_predict.pandemicEstimated = function(object,horizonLong = 300, horizon
   output <- list(predictive_Long = y.futL, predictive_Short = y.futS,
                  data = object$Y$data, location = object$Y$name, cases_type = object$cases.type,
                  pastMu = as.data.frame(object$fit)[grep("mu",names(chains))],
-                 futMu = pred$mu)
+                 futMu = pred$mu[,1:horizonLong])
 
   class(output) = "pandemicPredicted"
   return(output)
