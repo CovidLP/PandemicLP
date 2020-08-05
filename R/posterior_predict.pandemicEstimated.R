@@ -1,3 +1,7 @@
+# Environment created to exchange objects between package functions
+pandemic_environment = new.env()
+pandemic_environment$fullPred = list()
+
 #' Draw from the posterior predictive distribution for pandemic data
 #'
 #' The posterior predictive distribution is the distribution of the outcome
@@ -65,28 +69,19 @@ posterior_predict.pandemicEstimated = function(object,horizonLong = 300, horizon
   finalTime = sum(grepl("mu",names(chains))) ## How many mu's
 
   # generate points from the marginal predictive distribution
-  pred = generatePredictedPoints_pandemic(M,chains,horizonLong, NA_replacement, object$model_name, finalTime)
-  y.futL = pred$yL
+  pred = generatePredictedPoints_pandemic(M,chains,1000, NA_replacement, object$model_name, finalTime)
+  pandemic_environment$fullPred$thousandLongPred = pred$yL # For internal use
   if (object$cases.type == "confirmed")
-    y.futS = pred$yS[,1:horizonShort] + object$Y$data$cases[nrow(object$Y$data)]
+    pandemic_environment$fullPred$thousandShortPred = pred$yS + object$Y$data$cases[nrow(object$Y$data)]
   else
-    y.futS = pred$yS[,1:horizonShort] + object$Y$data$deaths[nrow(object$Y$data)]
-
-  ## error checking
-  muCheck = cbind(as.data.frame(object$fit)[grep("mu",names(chains))], pred$mu)
-  excessivePos = which(rowSums(muCheck) > pop)
-  if (length(excessivePos) & length(excessivePos) < 0.05*M){ ## Case > 0.05*M should be handled by flags below
-    y.futL = y.futL[-excessivePos,]
-    y.futS = y.futS[-excessivePos,]
-    futMu = futMu[-excessivePos,]
-  }
-  flag = 0
-  if (sum(apply(muCheck,2,quantile,0.5)) > 0.08*pop) flag = 2 else if (sum(apply(muCheck,2,quantile,0.975)) > 0.12*pop) flag = 1
+    pandemic_environment$fullPred$thousandShortPred = pred$yS + object$Y$data$deaths[nrow(object$Y$data)]
+  y.futL = pandemic_environment$fullPred$thousandLongPred[,1:horizonLong]
+  y.futS = pandemic_environment$fullPred$thousandShortPred[,1:horizonShort]
 
   output <- list(predictive_Long = y.futL, predictive_Short = y.futS,
                  data = object$Y$data, location = object$Y$name, cases_type = object$cases.type,
                  pastMu = as.data.frame(object$fit)[grep("mu",names(chains))],
-                 futMu = pred$mu, errorCheck = list(excessivePosition = excessivePos,flagValue = flag))
+                 futMu = pred$mu)
 
   class(output) = "pandemicPredicted"
   return(output)
@@ -100,12 +95,12 @@ generatePredictedPoints_pandemic = function(M,c,h,n,m,ft){
   y = mu = matrix(-Inf,ncol = h,nrow = M)
   if (grepl("poisson",m))
     for (i in 1:h){
-      mu[,i] = log(c$f)+log(c$a)+log(c$c)-(c$c*(ft+i))-(c$f+1)*log(c$b+exp(-c$c*(ft+i)) ) # log scale
-      y[,i] = stats::rpois(M,exp(mu[,i]))
+      mu[,i] = exp(log(c$f)+log(c$a)+log(c$c)-(c$c*(ft+i))-(c$f+1)*log(c$b+exp(-c$c*(ft+i)) ))
+      y[,i] = stats::rpois(M,mu[,i])
     } else if (grepl("negbin",m))
       for (i in 1:h){
         mu[,i] = log(c$f)+log(c$a)+log(c$c)-(c$c*(ft+i))-(c$f+1)*log(c$b+exp(-c$c*(ft+i)) ) # log scale
-        y[,i] = stats::rpois(M,stats::rgamma(M,exp(mu[,i])*c$aGamma,c$aGamma))
+        y[,i] = stats::rpois(M,stats::rgamma(M,mu[,i]*c$aGamma,c$aGamma))
       } else
         stop(paste("Unknown model",m))
 
