@@ -4,7 +4,7 @@
 \alias{plot.pandemicPredicted}
 \title{Plot pandemic predictions}
 \usage{
-plot.pandemicPredicted(object)
+\method{plot}{pandemicPredicted}(object)
 }
 \arguments{
 \item{object}{Output of function posterior_predict.stanpandemic.}
