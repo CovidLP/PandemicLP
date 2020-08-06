@@ -8,8 +8,6 @@
 #' are based on the new cases and the argument \code{horizonLong} in \code{posterior_predict.pandemicEstimated}
 #' function.
 #'
-#' @importFrom matrixStats colQuantiles colCumsums
-#'
 #' @param object an object of S3 class \code{pandemicPredicted} created by function \code{posterior_predict}
 #'
 #' @return An object of class \code{pandemicStats}. This object is a list containing the following elements:
@@ -85,29 +83,29 @@ pandemic_stats <- function(object){
 
   ### list output ST predicition:
   ST_predict <- data.frame( date  = date_full[(t+1):(t+ST_horizon)],
-                            q2.5  = matrixStats::colQuantiles(object$predictive_Short, prob = .025),
-                            med   = matrixStats::colQuantiles(object$predictive_Short, prob = .5),
-                            q97.5 = matrixStats::colQuantiles(object$predictive_Short, prob = .975),
+                            q2.5  = apply(object$predictive_Short,2,quantile,.025),
+                            med   = apply(object$predictive_Short,2,quantile,.5),
+                            q97.5 = apply(object$predictive_Short,2,quantile,.975),
                             mean  = colMeans(object$predictive_Short))
   row.names(ST_predict) <- NULL
 
   ### total number of cases
   if(object$cases_type == "confirmed"){
-      cumulative_y =  object$data$cases[t]    #casos acumulados até o tempo t.
+    cumulative_y =  object$data$cases[t]    #casos acumulados até o tempo t.
   } else{
-      cumulative_y =  object$data$deaths[t]
+    cumulative_y =  object$data$deaths[t]
   }
 
-   if(cumulative_y > 1000){
-    lowquant <- matrixStats::colQuantiles(object$predictive_Long , prob =.025)
-    medquant <- matrixStats::colQuantiles(object$predictive_Long, prob =.5)
-    highquant <- matrixStats::colQuantiles(object$predictive_Long, prob =.975)  #faz o quantil dos numeros novos
+  if(cumulative_y > 1000){
+    lowquant <- apply(object$predictive_Long,2,quantile,.025)
+    medquant <- apply(object$predictive_Long,2,quantile,.5)
+    highquant <- apply(object$predictive_Long,2,quantile,.975) #faz o quantil dos numeros novos
   } else{
-    lowquant <- c(cumulative_y , matrixStats::colQuantiles(object$predictive_Short, prob =.025)) #raz o quantil dos numeros acumulados
+    lowquant <- c(cumulative_y , apply(object$predictive_Short,2,quantile,.025)) #raz o quantil dos numeros acumulados
     lowquant <- (lowquant - lag(lowquant, default = 0))[-1] #depois calcula os numero de novos casos a partir dos acumulados
-    medquant <- c(cumulative_y, matrixStats::colQuantiles(object$predictive_Short, prob =.5))
+    medquant <- c(cumulative_y, apply(object$predictive_Short,2,quantile,.5))
     medquant <- (medquant - lag(medquant,default = 0))[-1]
-    highquant <- c(cumulative_y, matrixStats::colQuantiles(object$predictive_Short, prob =.975))
+    highquant <- c(cumulative_y, apply(object$predictive_Short,2,quantile,.975))
     highquant <- (highquant - lag(highquant, default = 0))[-1]
   }
 
@@ -126,7 +124,7 @@ pandemic_stats <- function(object){
   peak50 <- date_full[which.max(mu50)]
 
   q <- .99
-  med_cumulative <- matrixStats::colCumsums(as.matrix(mu50))
+  med_cumulative <- apply(as.matrix(mu50),2,cumsum)
   med_percent<- med_cumulative / med_cumulative[ t + LT_horizon ] #calcula o quanto cada numero acumulado representa do numero total de casos
   med_end <- which(med_percent - q > 0)[1] #pega o primeiro que ultrapassa 99% dos casos
   end50 <- date_full[med_end]
@@ -151,12 +149,12 @@ pandemic_stats <- function(object){
 
   ###calcula IC  fim da pandemia:
 
-  low_cumulative <- matrixStats::colCumsums(as.matrix(mu25))
+  low_cumulative <- apply(as.matrix(mu25),2,cumsum)
   low_percent <- low_cumulative / low_cumulative[t + LT_horizon]
   low_end <- which(low_percent - q > 0)[1]
   end2.5 <- date_full[low_end]             #limite inferior data fim
 
-  high_cumulative <- matrixStats::colCumsums(as.matrix(mu975))
+  high_cumulative <- apply(as.matrix(mu975),2,cumsum)
   high_percent <- high_cumulative / high_cumulative[t + LT_horizon]
   high_end <- which( high_percent - q > 0)[1]
   end97.5 <- date_full[high_end]            #limite superior data fim
