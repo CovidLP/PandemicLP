@@ -25,9 +25,6 @@ print.pandemicPredicted = function(object,summaryFun = median,printPred = "Long"
     names(preds) = dates
   }
   else stop("printPred must be \'Long\' or \'Short\'")
-  if (length(object$errorCheck$excessivePosition)) message("warning: Some sampled values of the predictive distribution for the mean have yielded unrealistic results and have been removed.")
-  if (flagValue == 1) message("warning: Credible intervals for the predicted means have unrealistic results and will not be plotted.")
-  if (flagValue == 2) message("warning: Medians for the predicted means have unrealistic results and will not be plotted.")
   cat("\nShowing predictive ",deparse(substitute(summaryFun))," for the ",tolower(printPred)," term predictions for ",object$locale,".\n\n",sep="")
   if (truncView >= (length(preds)/2) | (!truncView))
     print.default(preds)
@@ -36,7 +33,7 @@ print.pandemicPredicted = function(object,summaryFun = median,printPred = "Long"
     cat("   ...\n\n")
     print.default(preds[(length(preds)-truncView+1):length(preds)])
   }
-  cat("\n*For customized view, see help(print.pandemicPredicted)\n",sep="")
+  cat("\n*For customized view, see help(print.pandemicPredicted)",sep="")
   cat("\n**For more details, see help(pandemicPredicted-objects)\n",sep="")
 
   invisible(object)
