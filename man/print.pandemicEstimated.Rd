@@ -7,7 +7,7 @@
 \method{print}{pandemicEstimated}(x, digits = 3, ...)
 }
 \arguments{
-\item{x}{An object of S3 class \code{\link[ = pandemicEstimated-objects]{pandemicEstimated}}.}
+\item{x}{An object of S3 class \link{pandemicEstimated-objects}.}
 
 \item{digits}{Number of digits to use for formatting numbers.}
 
@@ -21,7 +21,7 @@ The \code{print} method for \code{pandemicEstimated} object of class S3 displays
 fitted model. See the \strong{Details} section below for descriptions of the different components of the printed
 output. \cr
 \cr
-The \code{fit} component of the \code{\link[ = pandemicEstimated-objects]{pandemicEstimated}} object generated
+The \code{fit} component of the \link{pandemicEstimated-objects} object generated
 by the \code{pandemic_model} function can be summarised to provide more information.
 Check \code{?`summary,stanfit-method`} for additional summary statistics and diagnostics.
 }

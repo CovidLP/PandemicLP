@@ -92,7 +92,7 @@ Additional arguments can be \code{control}, \code{cores}, etc...}
 values of the CovidLP app as input arguments.\cr
 \cr
 If \code{covidLPconfig = TRUE}, the \code{\link[rstan]{sampling}} uses the following configuration:
-\code{chains = 1}, \code{warmup = 2000}, \code{thin = 3},  \code{sample_size = 1000},\cr
+\code{chains = 1}, \code{warmup = 5000}, \code{thin = 3},  \code{sample_size = 1000},\cr
 \code{init} = \code{list(list(a = 100 , b1 = log(1), c = 0.5, f = 1.01))}, \code{algorithm = "NUTS"},
 \code{control} = \code{list(max_treedepth = 50, adapt_delta = 0.999)};
 \code{p = 0.08} for \code{case_type = "confirmed"} or \cr
@@ -105,7 +105,7 @@ For \code{covidLPconfig = FALSE}: each argument will be set to its default value
 unless the user specifies otherwise.}
 }
 \value{
-An object of S3 Class \code{\link[= pandemicEstimated-objects]{pandemicEstimated}} representing the fitted results.
+An object of S3 Class \link{pandemicEstimated-objects} representing the fitted results.
 The \code{fit} component of the \code{pandemicEstimated} class is an object of S4 Class \code{\link[rstan]{stanfit}}.
 }
 \description{
