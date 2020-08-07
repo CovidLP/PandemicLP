@@ -87,7 +87,7 @@
 #' values of the CovidLP app as input arguments.\cr
 #' \cr
 #' If \code{covidLPconfig = TRUE}, the \code{\link[rstan]{sampling}} uses the following configuration:
-#' \code{chains = 1}, \code{warmup = 2000}, \code{thin = 3},  \code{sample_size = 1000},\cr
+#' \code{chains = 1}, \code{warmup = 5000}, \code{thin = 3},  \code{sample_size = 1000},\cr
 #' \code{init} = \code{list(list(a = 100 , b1 = log(1), c = 0.5, f = 1.01))}, \code{algorithm = "NUTS"},
 #' \code{control} = \code{list(max_treedepth = 50, adapt_delta = 0.999)};
 #' \code{p = 0.08} for \code{case_type = "confirmed"} or \cr
@@ -141,7 +141,7 @@
 #'
 #' In future versions of the \code{PandemicLP} package, the user will be allowed to change the priors selected.
 #'
-#' @return An object of S3 Class \code{\link[= pandemicEstimated-objects]{pandemicEstimated}} representing the fitted results.
+#' @return An object of S3 Class \link{pandemicEstimated-objects} representing the fitted results.
 #' The \code{fit} component of the \code{pandemicEstimated} class is an object of S4 Class \code{\link[rstan]{stanfit}}.
 #'
 #' @seealso \code{\link{load_covid}}, \code{\link{posterior_predict.pandemicEstimated}},
@@ -284,7 +284,7 @@ pandemic_model = function( Y, case_type = "confirmed", p = 1, chains = 1, warmup
 
   if(covidLPconfig){
 
-    warmup= 2e3; thin=3; sample_size= 1e3; chains= 1
+    warmup= 5e3; thin=3; sample_size= 1e3; chains= 1
 
     number_iterations= warmup + thin*sample_size
 

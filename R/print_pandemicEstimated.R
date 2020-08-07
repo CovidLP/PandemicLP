@@ -4,13 +4,13 @@
 #' fitted model. See the \strong{Details} section below for descriptions of the different components of the printed
 #' output. \cr
 #' \cr
-#' The \code{fit} component of the \code{\link[ = pandemicEstimated-objects]{pandemicEstimated}} object generated
+#' The \code{fit} component of the \link{pandemicEstimated-objects} object generated
 #' by the \code{pandemic_model} function can be summarised to provide more information.
 #' Check \code{?`summary,stanfit-method`} for additional summary statistics and diagnostics.
 #'
 #' @method print pandemicEstimated
 #' @templateVar pandemicEstimatedArg x
-#' @param x An object of S3 class \code{\link[ = pandemicEstimated-objects]{pandemicEstimated}}.
+#' @param x An object of S3 class \link{pandemicEstimated-objects}.
 #' @param digits Number of digits to use for formatting numbers.
 #' @param ... Currently unused.
 #' @return Returns \code{x}, invisibly.
@@ -46,8 +46,8 @@
 #' }
 #'
 #' @seealso \code{?`summary,stanfit-method`}
-#' 
-#'@importMethodsFrom rstan summary   
+#'
+#'@importMethodsFrom rstan summary
 #'
 #'
 #' @export
@@ -76,7 +76,7 @@ print.pandemicEstimated=function(x,digits=3,...){
   print(head(tab1,n=3))
   colnames(tab1)=rep("...",length(colnames(tab1)))
   print(tail(tab1,n=3))                              #gambiarra para printar só alguns mu[t]
-  
+
   cat("\n------\n")
 
   cat("\n covidLPconfig = ", x$config.inputs$covidLPconfig,":\n")
@@ -91,7 +91,7 @@ print.pandemicEstimated=function(x,digits=3,...){
 
   print(x$config.inputs$use_inputs$init[[1]])   #show only chain_id=1
 
-  
+
   cat("\n------\n")
   cat("\nPriors:\n")
   cat("\n a ","~ ","Gamma(0.1, 0.1)")
