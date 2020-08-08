@@ -78,6 +78,7 @@ posterior_predict.pandemicEstimated = function(object,horizonLong = 500, horizon
     pandemic_environment$fullPred$thousandShortPred = pred$yS + object$Y$data$cases[nrow(object$Y$data)]
   else
     pandemic_environment$fullPred$thousandShortPred = pred$yS + object$Y$data$deaths[nrow(object$Y$data)]
+  pandemic_environment$fullPred$thousandMus = pred$mu
   y.futL = pandemic_environment$fullPred$thousandLongPred[,1:horizonLong]
   y.futS = pandemic_environment$fullPred$thousandShortPred[,1:horizonShort]
 
