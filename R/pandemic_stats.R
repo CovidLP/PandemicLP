@@ -1,50 +1,50 @@
 #' Relevant Statistics of the Pandemic Model
 #'
-#' This function provides short and long-term predictions for the pandemic. 95% credible intervals are
-#' assigned for every future date predicted, as well as for the total number of cases, and dates for the peak
-#' and end of the pandemic.\cr
-#' Short-term predictions are made on the cumulative counts and are dependent on the previous assignment of the
-#' \code{horizonShort} argument in \code{posterior_predict.pandemicEstimated} function. Long-term predictions
-#' are based on the new cases and the argument \code{horizonLong} in \code{posterior_predict.pandemicEstimated}
-#' function.
+#' This function provides short and long-term predictions for the pandemic. 95\% credible intervals are
+#' assigned for the number of cases for every future date predicted, as well as for the total number of cases,
+#' and dates for the peak and end of the pandemic.\cr
+#' \cr
+#' Short-term predictions are made on the cumulative counts and long-term predictions
+#' are based on the new case counts.
 #'
-#' @param object an object of S3 class \code{pandemicPredicted} created by function \code{posterior_predict}
+#' @param object an object of S3 class \code{pandemicPredicted} created by function
+#'  \code{posterior_predict()}.
 #'
-#' @return An object of class \code{pandemicStats}. This object is a list containing the following elements:
+#' @return An object of S3 class \code{pandemicStats}. This object is a list containing the following elements:
 #' \itemize{
-#'    \item{\code{data}}{
+#'    \item{\code{data}:}{
 #'    A list with a data frame containing the observed pandemic data, a character string with the location name
 #'    and a character string indicating the type of cases predicted.
 #'    }
-#'    \item{\code{ST_predict}}{
-#'    A data frame with the Short-term predictions for the number of cumulative cases. For each future date predicted,
+#'    \item{\code{ST_predict}:}{
+#'    A data frame with the short-term predictions for the number of cumulative cases. For each future date predicted,
 #'    the mean, median, 2.5 and 97.5 percentiles are provided.
 #'    }
-#'    \item{\code{LT_predict}}{
-#'    A data frame with the Long-term predictions for the number of new cases. For each future date predicted,
+#'    \item{\code{LT_predict}:}{
+#'    A data frame with the long-term predictions for the number of new cases. For each future date predicted,
 #'    the mean, median, 2.5 and 97.5 percentiles are provided.
 #'    }
-#'    \item{\code{LT_summary}}{
+#'    \item{\code{LT_summary}:}{
 #'    A list with the estimated total number of cases and the dates for the peak and end of the pandemic.
 #'    In each metric, the median, 2.5 and 97.5 percentiles are provided. For more information, see the
 #'    \strong{Details} section.\cr
-#'    \emph{Warning: These calculations are restricted to the argument \code{horizonLong} in the
-#'    \code{posterior_predict.pandemicEstimated} function. It might be necessary to increase the horizon to in
-#'    order to properly calculate the end of the pandemic and total number of cases.}
 #'    }
-#'    \item{\code{mu}}{
+#'    \item{\code{mu}:}{
 #'    A data frame with the median values of the mean number of new cases for each date (starting from the first
-#'    observed data point until the last date in the Long-term horizon).
+#'    observed data point until the last date in the long-term horizon).
 #'    }
 #' }
 #'
 #' @details
 #'  \subsection{Total Number of Cases}{
-#'  The total number of cases is obtained by adding the predicted new cases to the cumulative total
-#'  already observed in the data.
+#'  The total number of cases is obtained by adding the cumulative total cases observed in the data to the
+#'  predicted new cases for the next 1,000 days.
 #'  }
 #'  \subsection{Estimated Peak Dates}{
-#'  The 95% credible interval for the peak of cases is selected such that the two limiting dates of the 97.5
+#'  The median, 2.5 and 97.5 percentiles are calculated on the mean number of new cases for the pandemic curve
+#'  (starting from the first observed data point until 1,000 days after the last date observed in the data).\cr
+#'  \cr
+#'  The 95\% credible interval for the peak of cases is selected such that the two limiting dates of the 97.5
 #'  percentile curve coincides with the highest value of the 2.5 percentile curve. This guarantees that all
 #'  possible curves belonging to the confidence band will peak within the defined interval.
 #'  }
@@ -53,7 +53,7 @@
 #'  }
 #'
 #' @references
-#' CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+#' CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
 #' Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 #'
 #' @examples
@@ -66,8 +66,8 @@
 #' }
 #'
 #' @seealso
-#' \link{\code{load_covid}} \link{\code{pandemic_model}} \link{\code{posterior_predict.pandemicEstimated}}
-#' \link{\code{plot.pandemicPredicted}} \link{\code{print.pandemicStats}}
+#' \code{\link{load_covid}}    \code{\link{pandemic_model}}   \code{\link{posterior_predict.pandemicEstimated}}
+#' \code{\link{plot.pandemicPredicted}}     \code{\link{print.pandemicStats}}
 #'
 #' @export
 
@@ -79,7 +79,7 @@ pandemic_stats <- function(object){
   t = length(object$data[[1]])
   ST_horizon = ncol(object$predictive_Short)
   LT_horizon = ncol(object$predictive_Long)
-  date_full <- as.Date( object$data$date[1]:(max(object$data$date) + LT_horizon), origin = "1970-01-01")
+  date_full <- as.Date( object$data$date[1]:(max(object$data$date) + 1000), origin = "1970-01-01")
 
   ### list output ST predicition:
   ST_predict <- data.frame( date  = date_full[(t+1):(t+ST_horizon)],
@@ -97,15 +97,15 @@ pandemic_stats <- function(object){
   }
 
   if(cumulative_y > 1000){
-    lowquant <- apply(object$predictive_Long,2,quantile,.025)
-    medquant <- apply(object$predictive_Long,2,quantile,.5)
-    highquant <- apply(object$predictive_Long,2,quantile,.975) #faz o quantil dos numeros novos
+    lowquant <- apply(pandemic_environment$fullPred$thousandLongPred,2,quantile,.025)
+    medquant <- apply(pandemic_environment$fullPred$thousandLongPred,2,quantile,.5)
+    highquant <- apply(pandemic_environment$fullPred$thousandLongPred,2,quantile,.975) #faz o quantil dos numeros novos
   } else{
-    lowquant <- c(cumulative_y , apply(object$predictive_Short,2,quantile,.025)) #raz o quantil dos numeros acumulados
+    lowquant <- c(cumulative_y , apply(pandemic_environment$fullPred$thousandShortPred,2,quantile,.025)) #raz o quantil dos numeros acumulados
     lowquant <- (lowquant - lag(lowquant, default = 0))[-1] #depois calcula os numero de novos casos a partir dos acumulados
-    medquant <- c(cumulative_y, apply(object$predictive_Short,2,quantile,.5))
+    medquant <- c(cumulative_y, apply(pandemic_environment$fullPred$thousandShortPred,2,quantile,.5))
     medquant <- (medquant - lag(medquant,default = 0))[-1]
-    highquant <- c(cumulative_y, apply(object$predictive_Short,2,quantile,.975))
+    highquant <- c(cumulative_y, apply(pandemic_environment$fullPred$thousandShortPred,2,quantile,.975))
     highquant <- (highquant - lag(highquant, default = 0))[-1]
   }
 
@@ -117,7 +117,7 @@ pandemic_stats <- function(object){
   peak2.5 <- peak50 <- peak97.5 <- NULL
   end2.5 <- end50 <- end97.5 <- NULL
 
-  chain_mu <-cbind(object$pastMu, object$futMu)
+  chain_mu <-cbind(object$pastMu, pandemic_environment$fullPred$thousandMus)
 
   ### median dates
   mu50 <- apply(chain_mu, 2, quantile, probs = 0.5)      #quantil 50% das medias mu
@@ -125,7 +125,7 @@ pandemic_stats <- function(object){
 
   q <- .99
   med_cumulative <- apply(as.matrix(mu50),2,cumsum)
-  med_percent<- med_cumulative / med_cumulative[ t + LT_horizon ] #calcula o quanto cada numero acumulado representa do numero total de casos
+  med_percent<- med_cumulative / med_cumulative[t + 1000] #calcula o quanto cada numero acumulado representa do numero total de casos
   med_end <- which(med_percent - q > 0)[1] #pega o primeiro que ultrapassa 99% dos casos
   end50 <- date_full[med_end]
 
@@ -135,7 +135,7 @@ pandemic_stats <- function(object){
 
   Maxq2.5 <- which.max(mu25)  #indica o indice do max mu do quantil 2.5
   aux <- mu975 - mu25[Maxq2.5]  #subtrai o max do LI do vetor do vetor de medias do LS
-  aux2 <- aux[ Maxq2.5 : (t + LT_horizon)] #seleciona aux do indice max do LI de mu ate t+L0
+  aux2 <- aux[ Maxq2.5 : (t + 1000)] #seleciona aux do indice max do LI de mu ate t+L0
   val <- ifelse( length(aux2[aux2 < 0]) > 0, min(aux2[aux2 > 0]), aux[length(aux)])  #seleciona o minimo desse vetor, desde que seja um numero positivo
   date_max <- which(aux == val)
 
@@ -150,20 +150,20 @@ pandemic_stats <- function(object){
   ###calcula IC  fim da pandemia:
 
   low_cumulative <- apply(as.matrix(mu25),2,cumsum)
-  low_percent <- low_cumulative / low_cumulative[t + LT_horizon]
+  low_percent <- low_cumulative / low_cumulative[t + 1000]
   low_end <- which(low_percent - q > 0)[1]
   end2.5 <- date_full[low_end]             #limite inferior data fim
 
   high_cumulative <- apply(as.matrix(mu975),2,cumsum)
-  high_percent <- high_cumulative / high_cumulative[t + LT_horizon]
+  high_percent <- high_cumulative / high_cumulative[t + 1000]
   high_end <- which( high_percent - q > 0)[1]
   end97.5 <- date_full[high_end]            #limite superior data fim
 
   #### LT predictions:
   LT_predict <- data.frame( date  = date_full[(t+1):(t+LT_horizon)],
-                            q2.5  = lowquant,
-                            med   = medquant,
-                            q97.5 = highquant,
+                            q2.5  = lowquant[1:LT_horizon],
+                            med   = medquant[1:LT_horizon],
+                            q97.5 = highquant[1:LT_horizon],
                             mean  = colMeans(object$predictive_Long))   ##precisa? [,1:L0]
   row.names(LT_predict) <- NULL
 
@@ -178,7 +178,7 @@ pandemic_stats <- function(object){
                      end_date_med = end50,
                      end_date_UB = end97.5)
 
-  muplot <- data.frame(date = date_full, mu = mu50)
+  muplot <- data.frame(date = date_full[1:(t+LT_horizon)], mu = mu50[1:(t+LT_horizon)])
   row.names(muplot) <-NULL
 
   dataplot <- list(data = object$data, location = object$location, case_type = object$cases_type)
