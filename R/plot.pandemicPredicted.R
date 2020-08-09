@@ -32,13 +32,13 @@ plot.pandemicPredicted <- function(object){
     } else {
       outputs <- pandemic_stats(object)
       
-      dados <- outputs$data_plot$data
+      dados <- outputs$data$data
       data <- outputs$LT_predict
       pred_summary <- outputs$LT_summary
       metric_leg <- ifelse(object[[5]] == "confirmed","cases","deaths")
       last_date_n <- min(data$date) - 1
       pred_time <- length(data$date)
-      mu_plot <- outputs$mu_plot
+      mu_plot <- outputs$mu
       
       printDate <- function(date){
         monthsEn <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
@@ -94,7 +94,7 @@ plot.pandemicPredicted <- function(object){
         x = c(dados$date[which(dados$date == last_date_n)],
               data$date[1:pred_time]),
         y = c(dados$new_cases[which(dados$date == last_date_n)],
-              data$q25[1:pred_time]),
+              data$q2.5[1:pred_time]),
         showlegend = F,
         name = "95% CI",
         type = 'scatter', 
@@ -108,7 +108,7 @@ plot.pandemicPredicted <- function(object){
         x = c(dados$date[which(dados$date == last_date_n)],
               data$date[1:pred_time]),
         y = c(dados$new_cases[which(dados$date == last_date_n)],
-              data$q975[1:pred_time]),
+              data$q97.5[1:pred_time]),
         type = 'scatter', 
         mode = 'lines', hoverinfo = "x+y", 
         fill = 'tonexty',
@@ -137,7 +137,7 @@ plot.pandemicPredicted <- function(object){
     } else {
       outputs <- pandemic_stats(object)
       
-      dados <- outputs$data_plot$data
+      dados <- outputs$data$data
       data <- outputs$ST_predict
       last_date_n <- min(data$date) - 1
       pred_time <- length(data$date)
@@ -171,7 +171,7 @@ plot.pandemicPredicted <- function(object){
                                 x = c(dados$date[which(dados$date == last_date_n)],
                                       data$date[1:pred_time]),
                                 y = c(dados$cases[which(dados$date == last_date_n)],
-                                      data$q25[1:pred_time]),
+                                      data$q2.5[1:pred_time]),
                                 showlegend = F,
                                 name = "95% CI",
                                 type = 'scatter', 
@@ -185,7 +185,7 @@ plot.pandemicPredicted <- function(object){
                                 x = c(dados$date[which(dados$date == last_date_n)],
                                       data$date[1:pred_time]),
                                 y = c(dados$cases[which(dados$date == last_date_n)],
-                                      data$q975[1:pred_time]),
+                                      data$q97.5[1:pred_time]),
                                 type = 'scatter', 
                                 mode = 'lines', hoverinfo = "x+y", 
                                 fill = 'tonexty',
@@ -208,13 +208,13 @@ plot.pandemicPredicted <- function(object){
     } else {
       outputs <- pandemic_stats(object)
       
-      dados <- outputs$data_plot$data
+      dados <- outputs$data$data
       data <- outputs$LT_predict
       pred_summary <- outputs$LT_summary
       metric_leg <- ifelse(object[[5]] == "confirmed","cases","deaths")
       last_date_n <- min(data$date) - 1
       pred_time <- length(data$date)
-      mu_plot <- outputs$mu_plot
+      mu_plot <- outputs$mu
       
       printDate <- function(date){
         monthsEn <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
@@ -270,7 +270,7 @@ plot.pandemicPredicted <- function(object){
                                 x = c(dados$date[which(dados$date == last_date_n)],
                                       data$date[1:pred_time]),
                                 y = c(dados$new_deaths[which(dados$date == last_date_n)],
-                                      data$q25[1:pred_time]),
+                                      data$q2.5[1:pred_time]),
                                 showlegend = F,
                                 name = "95% CI",
                                 type = 'scatter', 
@@ -284,7 +284,7 @@ plot.pandemicPredicted <- function(object){
                                 x = c(dados$date[which(dados$date == last_date_n)],
                                       data$date[1:pred_time]),
                                 y = c(dados$new_deaths[which(dados$date == last_date_n)],
-                                      data$q975[1:pred_time]),
+                                      data$q97.5[1:pred_time]),
                                 type = 'scatter', 
                                 mode = 'lines', hoverinfo = "x+y", 
                                 fill = 'tonexty',
@@ -313,7 +313,7 @@ plot.pandemicPredicted <- function(object){
     } else {
       outputs <- pandemic_stats(object)
       
-      dados <- outputs$data_plot$data
+      dados <- outputs$data$data
       data <- outputs$ST_predict
       last_date_n <- min(data$date) - 1
       pred_time <- length(data$date)
@@ -347,7 +347,7 @@ plot.pandemicPredicted <- function(object){
                                 x = c(dados$date[which(dados$date == last_date_n)],
                                       data$date[1:pred_time]),
                                 y = c(dados$deaths[which(dados$date == last_date_n)],
-                                      data$q25[1:pred_time]),
+                                      data$q2.5[1:pred_time]),
                                 showlegend = F,
                                 name = "95% CI",
                                 type = 'scatter', 
@@ -361,7 +361,7 @@ plot.pandemicPredicted <- function(object){
                                 x = c(dados$date[which(dados$date == last_date_n)],
                                       data$date[1:pred_time]),
                                 y = c(dados$deaths[which(dados$date == last_date_n)],
-                                      data$q975[1:pred_time]),
+                                      data$q97.5[1:pred_time]),
                                 type = 'scatter', 
                                 mode = 'lines', hoverinfo = "x+y", 
                                 fill = 'tonexty',
