@@ -6,7 +6,7 @@
 #'
 #' @name pandemicStats-objects
 #'
-#' @section Elements for \code{\link{pandemicStats}} objects:
+#' @section Elements for \code{pandemicStats} objects:
 #' \describe{
 #'   \item{\code{data}}{
 #'   A list containing a data frame with the pandemic data observed, a character string with the location name,

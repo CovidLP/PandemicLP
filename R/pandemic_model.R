@@ -78,7 +78,7 @@
 #' \code{init = "random"}. Specification of the initial values for \code{\link{pandemic_model}} can only be via list.
 #' See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}.
 #'
-#' @param ... Other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\code{rstan} package).
+#' @param ... Other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
 #' Additional arguments can be \code{control}, \code{cores}, etc...
 #'
 #' @param covidLPconfig \code{TRUE} or \code{FALSE}: flag indicating whether to use default

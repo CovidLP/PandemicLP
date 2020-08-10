@@ -45,7 +45,7 @@
 #'
 #' }
 #'
-#' @seealso \code{\link{'summary,stanfit-method`}}
+#' @seealso \code{\link{summary,stanfit-method}}
 #'
 #' @importMethodsFrom rstan summary
 #'
