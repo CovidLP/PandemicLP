@@ -7,7 +7,7 @@
 \S4method{traceplot}{pandemicEstimated}(object)
 }
 \arguments{
-\item{object}{Output of the \code{\link{pandemic_model}} function}
+\item{object}{Output of the estimation function}
 }
 \description{
 Uses stan's traceplot function to draw the traceplots for the relevant parameters of the estimated model.
@@ -19,5 +19,5 @@ estimMG = pandemic_model(dataMG)
 traceplot(estimMG)}
 }
 \seealso{
-\code{\link{pandemic_model}}
+{pandemic_model}
 }

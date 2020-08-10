@@ -8,7 +8,7 @@ pandemic_stats(object)
 }
 \arguments{
 \item{object}{an object of S3 class \code{pandemicPredicted} created by function
-\code{\link{posterior_predict.pandemicEstimated}}.}
+\code{posterior_predict()}.}
 }
 \value{
 An object of S3 class \code{pandemicStats}. This object is a list containing the following elements:
@@ -19,13 +19,11 @@ An object of S3 class \code{pandemicStats}. This object is a list containing the
    }
    \item{\code{ST_predict}:}{
    A data frame with the short-term predictions for the number of cumulative cases. For each future date predicted,
-   the mean, median, 2.5 and 97.5 percentiles are provided.\cr
-   The short-term horizon is determined by the \code{horizonShort} argument in the \code{posterior_predict} function.
+   the mean, median, 2.5 and 97.5 percentiles are provided.
    }
    \item{\code{LT_predict}:}{
    A data frame with the long-term predictions for the number of new cases. For each future date predicted,
-   the mean, median, 2.5 and 97.5 percentiles are provided.\cr
-   The long-term horizon is determined by the \code{horizonLong} argument in the \code{posterior_predict} function.
+   the mean, median, 2.5 and 97.5 percentiles are provided.
    }
    \item{\code{LT_summary}:}{
    A list with the estimated total number of cases and the dates for the peak and end of the pandemic.
@@ -78,6 +76,6 @@ CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Depart
 Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 }
 \seealso{
-\code{\link{load_covid}}, \code{\link{pandemic_model}}, \code{\link{posterior_predict.pandemicEstimated}}
-and \code{\link{plot.pandemicPredicted}}.
+\code{\link{load_covid}}    \code{\link{pandemic_model}}   \code{\link{posterior_predict.pandemicEstimated}}
+\code{\link{plot.pandemicPredicted}}     \code{\link{print.pandemicStats}}
 }

@@ -27,7 +27,7 @@ data(covid19BH)
 \description{
 The purpose of this page is to show the user how to format the Y input argument
 in \code{\link{pandemic_model}} function, when epidemiological data was obtained
-outside of the \code{\link{load_covid}} function.\cr
+outside of the \code{load_covid} function.\cr
 \cr
 The Covid-19 data for the city of Belo Horizonte, MG - Brazil will be used to illustrate
 how to correctly format the epidemiological data required in the \code{pandemic_model} function.
@@ -38,7 +38,8 @@ check the \code{Y} input argument description in \cr
 \code{?pandemic_model}.
 }
 \examples{
-## formating the data frame for pandemic_model function
+## formating the data frame for pandemic_model()
+
 covid19BH
 names(covid19BH)
 
@@ -53,15 +54,20 @@ data      #note:  data frame is ordered by date in descending order!
 data = data[order(data$date, decreasing=FALSE), ]
 data      #data frame ordered by dates in ascending order
 
+
 ## building the Y list required
+
 pop = data$population[1]
+
 Y = list(data = data, name = "Belo Horizonte/MG", population = pop)
 
 ## fitted model:
 ##pandemic_model function may take a few minutes...
+
 \dontrun{
 outputBH = pandemic_model(Y, warmup = 3000, case_type = "deaths", chains = 2,
                      control = list(max_treedepth = 50, adapt_delta = 0.999))
+
 print(outputBH)
 
 ##convergence diagnostics
@@ -69,21 +75,21 @@ traceplot(outputBH)
 stan_ac(outputBH$fit, pars = c("a","b","c","f"))
 stan_dens(outputBH$fit, pars = c("a","b","c","f"))
 
+
 ## making predictions
+
 predictions = posterior_predict(outputBH)
 
-## calculating prediction intervals and statistics
-stats = pandemic_stats(predictions)
-
 ## plotting results
+
 plot(predictions)}
 }
 \references{
-CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
 Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 }
 \seealso{
 \code{\link{load_covid}}, \code{\link{pandemic_model}}, \code{\link{posterior_predict.pandemicEstimated}},
-\code{\link{pandemic_stats}} and  \code{\link{plot.pandemicPredicted}}.
+\code{\link{plot.pandemicPredicted}}
 }
 \keyword{datasets}
