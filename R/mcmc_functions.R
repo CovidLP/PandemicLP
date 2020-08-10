@@ -8,8 +8,8 @@ traceplot_pandemicEstimated = function(object){
 #' Draw traceplot of the parameters for the pandemic model
 #'
 #' Uses stan's traceplot function to draw the traceplots for the relevant parameters of the estimated model.
-#' @param object Output of the estimation function
-#' @seealso {pandemic_model}
+#' @param object Output of the \code{\link{pandemic_model}} function
+#' @seealso \code{\link{pandemic_model}}
 #' @examples
 #' \dontrun{
 #' dataMG = load_covid("Brazil","MG")

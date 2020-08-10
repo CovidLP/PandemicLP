@@ -21,7 +21,7 @@
 #' @return A list with 3 items.
 #' \itemize{
 #'   \item The first item is a data frame with the number of cumulative cases, new cases, cumulative deaths and new deaths associated
-#'   with Covid-19 for each date, up to the last_date in the specified region.
+#'   with Covid-19 for each date, up to the \code{last_date} in the specified region.
 #'   \item The second item is a character string with the country name (and state name, if available).
 #'   \item The third item is a numeric object that contains the population size of the given region.
 #' }
@@ -33,15 +33,16 @@
 #' load_covid("US")
 #' load_covid(country_name = "italy")}
 #'
-#' @source \url{https://github.com/CSSEGISandData/COVID-19}
+#' @source \url{https://github.com/CSSEGISandData/COVID-19}\cr
 #' \url{https://github.com/covid19br/covid19br.github.io}
 #'
 #' @references
-#' CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+#' CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
 #' Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 #'
-#' @seealso  \code{\link{country_list}}      \code{\link{state_list}}    \code{\link{pandemic_model}}
-#' \code{\link{posterior_predict.pandemicEstimated}}     \code{\link{plot.pandemicPredicted}}
+#' @seealso  \code{\link{country_list}}, \code{\link{state_list}},  \code{\link{pandemic_model}},
+#' \code{\link{posterior_predict.pandemicEstimated}}, \code{\link{pandemic_stats}} and
+#' \code{\link{plot.pandemicPredicted}}.
 #'
 #' @export
 #'

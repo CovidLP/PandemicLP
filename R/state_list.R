@@ -1,9 +1,9 @@
 #' List of states available in the Covid-19 database
 #'
-#' @description This function provides the state abbreviations to be used in the \code{load_covid} function
+#' @description This function provides the state abbreviations to be used in the \code{\link{load_covid}} function
 #' and the corresponding state names. Only brazilian states are currently available.
 #'
-#' @seealso \code{\link{load_covid}} \code{\link{country_list}}
+#' @seealso \code{\link{load_covid}} and \code{\link{country_list}}.
 #'
 #' @export
 #'

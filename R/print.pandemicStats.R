@@ -5,9 +5,9 @@
 #'
 #' @method print pandemicStats
 #'
-#' @param object An object of S3 class \code{pandemicStats}.
+#' @param object An object of S3 class \code{\link{pandemicStats-objects}}.
 #'
-#' @seealso \code{\link{pandemic_stats}}  \code{\link{pandemicStats-objects}}
+#' @seealso \code{\link{pandemic_stats}}
 #'
 #' @export
 
@@ -56,8 +56,9 @@ print.pandemicStats <-function(object, ...){
   print(end, row.names = F)
 
   cat("\n------\n")
-  cat("*For more information see ?`pandemicStats-objects`\n")
-  cat("*For details on the calculations, see ?pandemic_stats\n")
+  cat("*Use plot() to see these statistics in a graph format.\n")
+  cat("*For more information, see ?'pandemicStats-objects'.\n")
+  cat("*For details on the calculations, see ?pandemic_stats.\n")
 
 
   invisible(object)

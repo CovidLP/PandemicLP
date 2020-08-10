@@ -1,19 +1,23 @@
 #' Prints prediction summary of pandemic model
 #'
 #' S3 method designed to summarize the prediction obtained by the
-#' \link{posterior_predict.stanpandemic} function. It is not necessary to call function
-#' directly, only visualize the object directly, unless it is desired to change the default arguments.
-#' @param summaryFun Use this function to summarize the predictions. Default argument is mean, but can be any function on a vector
-#' @param printPred Valid values are 'Long' or 'Short'. Note that 'Short' will show cumulative predictions
-#' @seealso \link{posterior_predict.stanpandemic} and \link{plot.pandemicPredicted}
+#' \code{\link{posterior_predict.pandemicEstimated}} function. It is not necessary to call function
+#' directly, unless it is desired to change the default arguments.
+#' @param summaryFun Use this function to summarize the predictions. Default argument is median, but can be any function on a vector.
+#' @param printPred Valid values are 'Long' or 'Short'. Note that 'Short' will show short-term cumulative predictions, while
+#' 'Long' will return the long-term daily cases predicted.
+#' @param truncView How many predictions to print. Default is 3, which means that the method prints the first
+#' 3 days predicted and the last 3 days of the prediction horizon.
+#' @seealso \code{\link{posterior_predict.pandemicEstimated}} and \code{\link{plot.pandemicPredicted}}.
 #' @examples
-#' \dontrun{dataMG = load_covid("Brazil","MG")
-#' estimMG = stan_pandemic(dataMG)
+#' \dontrun{
+#' dataMG = load_covid("Brazil","MG")
+#' estimMG = pandemic_model(dataMG)
 #' predMG = posterior_predict(estimMG)
-#' predMG}
+#' print(predMG, summaryFun = mean, truncView = 5)}
 #' @export
 print.pandemicPredicted = function(object,summaryFun = median,printPred = "Long",truncView = 3){
-  cat("\nPredicted pandemic ",object$cases_deaths," for ",object$locale,". Can be plotted with plot().\n",sep="")
+  cat("\nPredicted pandemic ",ifelse(object$cases_type=="confirmed", "confirmed", "death")," cases for ",object$location,". Can be plotted with plot().\n",sep="")
   if (printPred == "Long"){
     dates = max(object$data$date) + 1:ncol(object$predictive_Long)
     preds = apply(object$predictive_Long,2,summaryFun)
@@ -25,7 +29,7 @@ print.pandemicPredicted = function(object,summaryFun = median,printPred = "Long"
     names(preds) = dates
   }
   else stop("printPred must be \'Long\' or \'Short\'")
-  cat("\nShowing predictive ",deparse(substitute(summaryFun))," for the ",tolower(printPred)," term predictions for ",object$locale,".\n\n",sep="")
+  cat("\nShowing predictive ",deparse(substitute(summaryFun))," for the ",tolower(printPred),"-term predictions for ",object$location,".\n\n",sep="")
   if (truncView >= (length(preds)/2) | (!truncView))
     print.default(preds)
   else {
