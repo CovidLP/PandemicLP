@@ -7,53 +7,55 @@
 pandemic_stats(object)
 }
 \arguments{
-\item{object}{an object of S3 class \code{pandemicPredicted} created by function \code{posterior_predict}}
+\item{object}{an object of S3 class \code{pandemicPredicted} created by function
+\code{\link{posterior_predict.pandemicEstimated}}.}
 }
 \value{
-An object of class \code{pandemicStats}. This object is a list containing the following elements:
+An object of S3 class \code{pandemicStats}. This object is a list containing the following elements:
 \itemize{
-   \item{\code{data}}{
+   \item{\code{data}:}{
    A list with a data frame containing the observed pandemic data, a character string with the location name
    and a character string indicating the type of cases predicted.
    }
-   \item{\code{ST_predict}}{
-   A data frame with the Short-term predictions for the number of cumulative cases. For each future date predicted,
-   the mean, median, 2.5 and 97.5 percentiles are provided.
+   \item{\code{ST_predict}:}{
+   A data frame with the short-term predictions for the number of cumulative cases. For each future date predicted,
+   the mean, median, 2.5 and 97.5 percentiles are provided.\cr
+   The short-term horizon is determined by the \code{horizonShort} argument in the \code{posterior_predict} function.
    }
-   \item{\code{LT_predict}}{
-   A data frame with the Long-term predictions for the number of new cases. For each future date predicted,
-   the mean, median, 2.5 and 97.5 percentiles are provided.
+   \item{\code{LT_predict}:}{
+   A data frame with the long-term predictions for the number of new cases. For each future date predicted,
+   the mean, median, 2.5 and 97.5 percentiles are provided.\cr
+   The long-term horizon is determined by the \code{horizonLong} argument in the \code{posterior_predict} function.
    }
-   \item{\code{LT_summary}}{
+   \item{\code{LT_summary}:}{
    A list with the estimated total number of cases and the dates for the peak and end of the pandemic.
    In each metric, the median, 2.5 and 97.5 percentiles are provided. For more information, see the
    \strong{Details} section.\cr
-   \emph{Warning: These calculations are restricted to the argument \code{horizonLong} in the
-   \code{posterior_predict.pandemicEstimated} function. It might be necessary to increase the horizon to in
-   order to properly calculate the end of the pandemic and total number of cases.}
    }
-   \item{\code{mu}}{
+   \item{\code{mu}:}{
    A data frame with the median values of the mean number of new cases for each date (starting from the first
-   observed data point until the last date in the Long-term horizon).
+   observed data point until the last date in the long-term horizon).
    }
 }
 }
 \description{
-This function provides short and long-term predictions for the pandemic. 95% credible intervals are
-assigned for every future date predicted, as well as for the total number of cases, and dates for the peak
-and end of the pandemic.\cr
-Short-term predictions are made on the cumulative counts and are dependent on the previous assignment of the
-\code{horizonShort} argument in \code{posterior_predict.pandemicEstimated} function. Long-term predictions
-are based on the new cases and the argument \code{horizonLong} in \code{posterior_predict.pandemicEstimated}
-function.
+This function provides short and long-term predictions for the pandemic. 95\% credible intervals are
+assigned for the number of cases for every future date predicted, as well as for the total number of cases,
+and dates for the peak and end of the pandemic.\cr
+\cr
+Short-term predictions are made on the cumulative counts and long-term predictions
+are based on the new case counts.
 }
 \details{
 \subsection{Total Number of Cases}{
- The total number of cases is obtained by adding the predicted new cases to the cumulative total
- already observed in the data.
+ The total number of cases is obtained by adding the cumulative total cases observed in the data to the
+ predicted new cases for the next 1,000 days.
  }
  \subsection{Estimated Peak Dates}{
- The 95% credible interval for the peak of cases is selected such that the two limiting dates of the 97.5
+ The median, 2.5 and 97.5 percentiles are calculated on the mean number of new cases for the pandemic curve
+ (starting from the first observed data point until 1,000 days after the last date observed in the data).\cr
+ \cr
+ The 95\% credible interval for the peak of cases is selected such that the two limiting dates of the 97.5
  percentile curve coincides with the highest value of the 2.5 percentile curve. This guarantees that all
  possible curves belonging to the confidence band will peak within the defined interval.
  }
@@ -72,10 +74,10 @@ stats
 
 }
 \references{
-CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
 Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 }
 \seealso{
-\link{\code{load_covid}} \link{\code{pandemic_model}} \link{\code{posterior_predict.pandemicEstimated}}
-\link{\code{plot.pandemicPredicted}} \link{\code{print.pandemicStats}}
+\code{\link{load_covid}}, \code{\link{pandemic_model}}, \code{\link{posterior_predict.pandemicEstimated}}
+and \code{\link{plot.pandemicPredicted}}.
 }

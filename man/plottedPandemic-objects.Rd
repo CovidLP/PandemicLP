@@ -5,17 +5,17 @@
 \title{plottedPandemic objects: Plots for pandemic data using the plotly library}
 \description{
 The \pkg{PandemicLP} plotting function returns an object of S3 class
-\code{ploottedPandemic}, which is a list containing the components described below. \cr
+\code{plottedPandemic}, which is a list containing the components described below. \cr
 \cr
 }
 \section{Elements for \code{plottedPandemic} objects}{
 
 \describe{
   \item{\code{long}}{
-  The plotted long term prediction.
+  The plotted long-term prediction.
   }
   \item{\code{short}}{
-  The plotted shirt term prediction.
+  The plotted short-term prediction.
   }
 }
 }

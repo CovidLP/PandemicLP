@@ -50,7 +50,7 @@ The elements of this list are:
   \cr
 
   To provide Covid-19 data for Brazilian states and some other countries in the specified Y format,
-  you can use the \code{load_covid} function.\cr
+  you can use the \code{\link{load_covid}} function.\cr
   \cr
   For formatting other epidemiological data in the specified Y format, see the \strong{Examples} section in
    \code{\link{covid19BH}}.}
@@ -65,24 +65,24 @@ p percent of its population. The default is \code{p = 1}. This is a model restri
 See more in the \strong{Details} section.}
 
 \item{chains}{A positive integer specifying the number of Markov chains. The default is \code{1},
-which is default value used by CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).}
+which is default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).}
 
 \item{warmup}{A positive integer specifying the number of warmup (aka burnin) iterations per chain.
-These warmup samples are not used for inference.  The default is \code{2000}, which is the default value used by CovidLP app
-(\url{http://est.ufmg.br/covidlp/home/en/}).}
+These warmup samples are not used for inference.  The default is \code{2000}.}
 
-\item{thin}{A positive integer specifying the period for saving samples. The default is \code{3}, which is the default value used by CovidLP app
-(\url{http://est.ufmg.br/covidlp/home/en/}).
+\item{thin}{A positive integer specifying the period for saving samples. The default is \code{3},
+which is the default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).
 .}
 
 \item{sample_size}{A positive integer specifying the posterior sample's size per chain that will be used for inference.
-The total number of iterations per chain is \cr
- \code{warmup} + \code{thin} * \code{sample_size}. The default is \code{1000}, which is the default value used by CovidLP app
- (\url{http://est.ufmg.br/covidlp/home/en/}).}
+The total number of iterations per chain is: \cr
+ \code{warmup} + \code{thin} * \code{sample_size}\cr
+ The default is \code{1000}, which is the default value used by CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).}
 
 \item{init}{specification of the initial values of the parameters per chain. The default is \code{"random"}.
+See the \strong{Details} section for more info about model parameters.
 Any parameters whose values are not specified will receive initial values generated as described in
-\code{init = "random"}. Specification of the initial values for \code{stan_pandemic} can only be via list.
+\code{init = "random"}. Specification of the initial values for \code{\link{pandemic_model}} can only be via list.
 See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}.}
 
 \item{...}{Other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\code{rstan} package).
@@ -90,14 +90,11 @@ Additional arguments can be \code{control}, \code{cores}, etc...}
 
 \item{covidLPconfig}{\code{TRUE} or \code{FALSE}: flag indicating whether to use default
 values of the CovidLP app as input arguments.\cr
-\cr
 If \code{covidLPconfig = TRUE}, the \code{\link[rstan]{sampling}} uses the following configuration:
-\code{chains = 1}, \code{warmup = 5000}, \code{thin = 3},  \code{sample_size = 1000},\cr
+\code{chains = 1}, \code{warmup = 5000}, \code{thin = 3},  \code{sample_size = 1000},
 \code{init} = \code{list(list(a = 100 , b1 = log(1), c = 0.5, f = 1.01))}, \code{algorithm = "NUTS"},
-\code{control} = \code{list(max_treedepth = 50, adapt_delta = 0.999)};
-\code{p = 0.08} for \code{case_type = "confirmed"} or \cr
-\code{p = 0.02} for \code{case_type  = "deaths"}.\cr
-\cr
+\code{control} = \code{list(max_treedepth = 50, adapt_delta = 0.999)},
+\code{p = 0.08} for \code{case_type = "confirmed"} or \code{p = 0.02} for \code{case_type  = "deaths"}.\cr
 When using \code{covidLPconfig = TRUE} the convergence of the chains is not guaranteed.
 It only replicates the results of the fitted model with the contemplated data in
 the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).
@@ -105,7 +102,7 @@ For \code{covidLPconfig = FALSE}: each argument will be set to its default value
 unless the user specifies otherwise.}
 }
 \value{
-An object of S3 Class \link{pandemicEstimated-objects} representing the fitted results.
+An object of S3 Class \code{\link{pandemicEstimated-objects}} representing the fitted results.
 The \code{fit} component of the \code{pandemicEstimated} class is an object of S4 Class \code{\link[rstan]{stanfit}}.
 }
 \description{
@@ -149,7 +146,7 @@ f ~ Gamma(0.01, 0.01) \cr
 
 Model restrictions:\cr
 1.\code{a/b^f  <  p*population;  p in (0,1] }  :
-The maximum value of the cumulative total of cases at the end of the epidemic is p percent of the population.
+The maximum value of the cumulative total number of cases at the end of the epidemic is p percent of the population.
 p is a constant specified by the user as an input argument. The default is 1.
 This model restriction is necessary mainly for data at the beginning of the pandemic.
 Due to great uncertainty associated with the predictions, posterior samples can generate
@@ -158,10 +155,9 @@ much higher estimates than expected (unrealistic estimates) if this restriction 
 decreases slower than it increases. This behavior was observed for the Covid-19 data curve.\cr
 \cr
 
-In future versions of the \code{PandemicLP} package, the user will be allowed to change the priors selected.
+In future versions of the \pkg{PandemicLP} package, the user will be allowed to change the priors selected.
 }
 \examples{
-
 ##result of the pandemic_model function may take a few minutes
 
 \dontrun{
@@ -190,9 +186,9 @@ print(output3)
 #convergence diagnostics
 traceplot(output3)
 stan_ac(output3$fit,pars=c("a","b","c","f"))
-stan_dens(output3$fit,pars=c("a","b","c","f"))}
+stan_dens(output3$fit,pars=c("a","b","c","f"))
+
 #initival values for 2 chains:
-\dontrun{
 inits4=list(
  list(a=95,b=0.8,c=0.3,f=1.1), list(f=1.01)
 )
@@ -205,13 +201,12 @@ traceplot(output4)
 stan_ac(output4$fit,pars=c("a","b","c","f"))
 stan_dens(output4$fit,pars=c("a","b","c","f"))}
 
-
 }
 \references{
-CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
 Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 }
 \seealso{
 \code{\link{load_covid}}, \code{\link{posterior_predict.pandemicEstimated}},
-\code{\link{plot.pandemicPredicted}}
+\code{\link{pandemic_stats}} and \code{\link{plot.pandemicPredicted}}.
 }
