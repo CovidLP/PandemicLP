@@ -54,7 +54,7 @@
 #'
 #' @param p a numerical value greater than 0 and less than or equal to 1. It's a percentage.
 #' The maximum cumulative total number of cases for the end of the epidemic in a location should be
-#' p percent of its population. The default is \code{p = 1}. This is a model restriction.
+#' p percent of its population. The default is \code{p = 0.08}. This is a model restriction.
 #' See more in the \strong{Details} section.
 #'
 #' @param chains A positive integer specifying the number of Markov chains. The default is \code{1},
@@ -150,13 +150,22 @@
 #' ##result of the pandemic_model function may take a few minutes
 #'
 #' \dontrun{
-#' Y1=load_covid(country_name="Brazil",state_name="SP",last_date='2020-04-25')
-#' output1=pandemic_model(Y1)
+#' Y0=load_covid(country_name="Brazil",state_name="SP",last_date='2020-04-25')
+#' output0=pandemic_model(Y0)
+#' print(output0)
+#' #convergence diagnostics
+#' traceplot(output0)
+#' stan_ac(output0$fit,pars=c("a","b","c","f"))
+#' stan_dens(output0$fit,pars=c("a","b","c","f"))
+#'
+#' Y1=load_covid(country_name="Brazil",state_name="SP",last_date='2020-06-18')
+#' output1=pandemic_model(Y1,case_type="deaths",covidLPconfig=TRUE)
 #' print(output1)
 #' #convergence diagnostics
 #' traceplot(output1)
 #' stan_ac(output1$fit,pars=c("a","b","c","f"))
 #' stan_dens(output1$fit,pars=c("a","b","c","f"))
+#'
 #'
 #' Y2=load_covid(country_name="Argentina",last_date='2020-05-07')
 #' output2=pandemic_model(Y2,covidLPconfig=TRUE)
@@ -165,6 +174,7 @@
 #' traceplot(output2)
 #' stan_ac(output2$fit,pars=c("a","b","c","f"))
 #' stan_dens(output2$fit,pars=c("a","b","c","f"))
+#'
 #'
 #' #including initial values for parameters:
 #' inits3=list(
@@ -196,7 +206,7 @@
 #'
 #' @export
 
-pandemic_model = function(Y, case_type = "confirmed", p = 1, chains = 1, warmup = 2e3, thin = 3,
+pandemic_model = function(Y, case_type = "confirmed", p = 0.08, chains = 1, warmup = 2e3, thin = 3,
                         sample_size = 1e3, init = "random", ..., covidLPconfig = FALSE) {
 
   model_name="poisson_static_generalized_logistic"
