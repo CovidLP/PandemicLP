@@ -11,7 +11,7 @@ country_list()
 }
 \description{
 This function provides a list of 183 country names inside the Covid-19 database.
-The \code{country_name} argument inside the \code{load_covid} function should be spelled exactly
+The \code{country_name} argument inside the \code{\link{load_covid}} function should be spelled exactly
 as they are listed here. The user must be online for this function to work.
 }
 \seealso{

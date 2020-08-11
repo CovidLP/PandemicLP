@@ -7,9 +7,9 @@
 state_list()
 }
 \description{
-This function provides the state abbreviations to be used in the \code{load_covid} function
+This function provides the state abbreviations to be used in the \code{\link{load_covid}} function
 and the corresponding state names. Only brazilian states are currently available.
 }
 \seealso{
-\code{\link{load_covid}} \code{\link{country_list}}
+\code{\link{load_covid}} and \code{\link{country_list}}.
 }

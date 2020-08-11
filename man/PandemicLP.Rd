@@ -3,26 +3,35 @@
 \docType{package}
 \name{PandemicLP}
 \alias{PandemicLP}
-\title{pandemicLP: A package for testing the predict function for the pandemic predict package.}
+\title{PandemicLP: Modeling Pandemic Data}
 \description{
 \if{html}{\figure{logo.jpeg}{options: width="120px"}}\cr
-The pandemicLP package provides functions to fit a generalized logistic curve for long
-term prediction of epidemic and pandemic count data. Four main functions are the focus:
-\itemize{
-\item \link{load_covid} - Load COVID19 data from online repositories.
-\item \link{pandemic_model} - estimates the model.
-\item \link{posterior_predict.pandemicEstimated} - S3 method for the rstan::posterior_predict generic function.
-\item \link{plot.pandemicPredicted} - S3 method for the graphics::plot generic function.
-}
-}
-\details{
-Theoretical foundation can be found in \href{http://est.ufmg.br/covidlp/home/pt/}{est.ufmg.br/covidlp/home/pt}
+The \pkg{PandemicLP} package provides five main functions that enable the user to make short and long-term
+predictions of epidemic and pandemic count data. \cr
+\cr
+This package is a result of the joint work by professors and graduate students from the Statistics
+Department at Universidade Federal de Minas Gerais (UFMG). It originated as a challenge in a graduate course
+after the suspension of classes due to Covid-19.\cr
+\cr
+Theoretical foundation and more information about the project can be found in
+\href{http://est.ufmg.br/covidlp/home/en/}{est.ufmg.br/covidlp/home/en}
 }
 \examples{
 \dontrun{
-dataMG = load_covid("Brazil","MG")
-estimMG = stan_pandemic(dataMG)
-predMG = posterior_predict(estimMG)
-plot(predMG)}
+data = load_covid("Brazil")
+estim = pandemic_model(data)
+pred = posterior_predict(estim)
+stats = pandemic_stats(pred)
+plot(pred)}
 
+}
+\author{
+Authors:
+\itemize{
+\item{Debora de Freitas Magalhaes}
+\item{Marta Cristina Colozza Bianchi da Costa}
+\item{Guido Alberti Moreira}
+\item{Thais Pacheco Menezes}
+\item{Marcos Oliveira Prates}
+}
 }

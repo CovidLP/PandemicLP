@@ -7,15 +7,17 @@
 \method{plot}{pandemicPredicted}(object)
 }
 \arguments{
-\item{object}{Output of function posterior_predict.stanpandemic.}
+\item{object}{Output of function \code{\link{posterior_predict.pandemicEstimated}}.}
 }
 \value{
-A list containing two plots, long and short. The "long" is the one showing the long term predictions and the "short" is about the shor term predictions. If any of them wasn't plotted due to lack of prediction, its value returns NULL.
+A list containing two plots, long and short. "long" shows the long-term predictions
+and "short" the short-term predictions. If any of them did not get plotted due to lack of prediction,
+its value will return NULL.
 \item{\code{long}}{
-  The plotted long term prediction. The predictions is made on daily new cases or daily new deaths. If you want to plot the new cases, you need to use the argument cases_type in the function posterior_predict as "confirmed" (default). If you have interest in the deaths case, the argument must be "deaths".
+  The plotted long-term prediction. The predictions are made on daily new confirmed cases or daily new deaths.
   }
   \item{\code{short}}{
-  The plotted short term prediction. The predictions is made on daily accumulated cases or daily accumulated deaths. If you want to plot the new cases, you need to use the argument cases_type in the function posterior_predict as "confirmed" (default). If you have interest in the deaths case, the argument must be "deaths".
+  The plotted short-term prediction. The predictions are made on daily cumulative cases or daily cumulative deaths.
   }
 }
 \description{
@@ -24,12 +26,13 @@ S3 method that plots the predicted data into an interactive graphic.
 \examples{
 \dontrun{
 dataMG = load_covid("Brazil","MG")
-estimMG = stan_pandemic(dataMG)
+estimMG = pandemic_model(dataMG)
 predMG = posterior_predict(estimMG)
+statsMG = pandemic_stats(predMG)
 plot(predMG)}
 }
 \references{
-CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
 Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 }
 \seealso{

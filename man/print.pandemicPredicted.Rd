@@ -7,21 +7,26 @@
 \method{print}{pandemicPredicted}(object, summaryFun = median, printPred = "Long", truncView = 3)
 }
 \arguments{
-\item{summaryFun}{Use this function to summarize the predictions. Default argument is mean, but can be any function on a vector}
+\item{summaryFun}{Use this function to summarize the predictions. Default argument is median, but can be any function on a vector.}
 
-\item{printPred}{Valid values are 'Long' or 'Short'. Note that 'Short' will show cumulative predictions}
+\item{printPred}{Valid values are 'Long' or 'Short'. Note that 'Short' will show short-term cumulative predictions, while
+'Long' will return the long-term daily cases predicted.}
+
+\item{truncView}{How many predictions to print. Default is 3, which means that the method prints the first
+3 days predicted and the last 3 days of the prediction horizon.}
 }
 \description{
 S3 method designed to summarize the prediction obtained by the
-\link{posterior_predict.stanpandemic} function. It is not necessary to call function
-directly, only visualize the object directly, unless it is desired to change the default arguments.
+\code{\link{posterior_predict.pandemicEstimated}} function. It is not necessary to call function
+directly, unless it is desired to change the default arguments.
 }
 \examples{
-\dontrun{dataMG = load_covid("Brazil","MG")
-estimMG = stan_pandemic(dataMG)
+\dontrun{
+dataMG = load_covid("Brazil","MG")
+estimMG = pandemic_model(dataMG)
 predMG = posterior_predict(estimMG)
-predMG}
+print(predMG, summaryFun = mean, truncView = 5)}
 }
 \seealso{
-\link{posterior_predict.stanpandemic} and \link{plot.pandemicPredicted}
+\code{\link{posterior_predict.pandemicEstimated}} and \code{\link{plot.pandemicPredicted}}.
 }
