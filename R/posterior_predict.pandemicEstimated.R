@@ -13,32 +13,32 @@ pandemic_environment$fullPred = list()
 #' of a predictor affects (a function of) the outcome(s). With new observations of
 #' predictor variables we can use the posterior predictive distribution to generate
 #' predicted outcomes.
-#' @param object An object of class \code{pandemicEstimated} created by function \code{\link{pandemic_model}}.
-#' @param horizonLong How far into the future the long-term prediction is desired.
-#' @param horizonShort How far into the future the short-term prediction is desired.
+#' @param object An object of class pandemicEstimated created by function stan_pandemic.
+#' @param horizonLong How far into the future the long term prediction is desired.
+#' @param horizonShort How far into the future the short term prediction is desired.
 #' @references
-#' CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+#' CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
 #' Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
-#' @return An object of class \code{pandemicPredicted}. It includes the sampled predictive distribution
-#' the model used to predict, which is the same as the one used to estimate the data. This object can be used
-#' directly into the plot function and contains the following elements:
+#' @return An object of class pandemicPredicted. It includes the sampled predictive distribution,
+#' the model used to predict, which is the same as the one used to estimate the data, and relevant
+#' information for the plot function to be used directly. The list contains:
 #' \item{\code{predictive_Long}}{
-#'   A \code{M x horizonLong} matrix with the full sample of the predictive distribution
-#'   for the long-term prediction, where M is the sample size.
+#'   A M x horizonLong matrix with the full sample of the predictive distribution
+#'   for the long term prediction, where M is the sample size.
 #'   The prediction is for daily new cases.
 #'   }
 #'   \item{\code{predictive_Short}}{
-#'   A \code{M x horizonShort} matrix with the full sample of the predictive distribution
-#'   for the short-term prediction, where M is the sample size.
-#'   The prediction is for daily cumulative cases.
+#'   A M x horizonShort matrix with the full sample of the predictive distribution
+#'   for the short term prediction, where M is the sample size.
+#'   The prediction is for daily accumulated cases.
 #'   }
 #'   \item{\code{data}}{
-#'   The data passed on from the \code{\link{pandemicEstimated-objects}} under the element \code{Y$data}.
+#'   The data passed on from the \link{pandemicEstimated-objects} under the element \code{Y$data}.
 #'   }
 #'   \item{\code{location}}{
 #'   A string with the name of the location.
 #'   }
-#'   \item{\code{cases_type}}{
+#'    \item{\code{cases_type}}{
 #'   A string with either "confirmed" or "deaths" to represent the type of data that has been fitted and predicted.
 #'   }
 #'   \item{\code{pastMu}}{
@@ -47,10 +47,9 @@ pandemic_environment$fullPred = list()
 #'   \item{\code{futMu}}{
 #'   The predicted means of the data for the predicted data points.
 #'   }
-#' Function \code{\link{pandemic_stats}} provides a few useful statistics based on the predictions.
-#'
+#' Function \code{pandemic_stat} provides a few useful statistics based on the predictions.
 #' @seealso \code{\link{pandemic_model}}, \code{\link{pandemic_stats}} and \code{\link{plot.pandemicPredicted}}.
-#' @examples
+#' #' @examples
 #' \dontrun{
 #' dataMG = load_covid("Brazil","MG")
 #' estimMG = pandemic_model(dataMG)
@@ -79,14 +78,22 @@ posterior_predict.pandemicEstimated = function(object,horizonLong = 500, horizon
     pandemic_environment$fullPred$thousandShortPred = pred$yS + object$Y$data$cases[nrow(object$Y$data)]
   else
     pandemic_environment$fullPred$thousandShortPred = pred$yS + object$Y$data$deaths[nrow(object$Y$data)]
-    pandemic_environment$fullPred$thousandMus = pred$mu
+  pandemic_environment$fullPred$thousandMus = pred$mu
   y.futL = pandemic_environment$fullPred$thousandLongPred[,1:horizonLong]
   y.futS = pandemic_environment$fullPred$thousandShortPred[,1:horizonShort]
+  errorCheck = which(pandemic_environment$fullPred$thousandShortPred[,ncol(pandemic_environment$fullPred$thousandShortPred)] > pop)
+  if (length(errorCheck)){
+    message(paste0(length(errorCheck)," samples were removed from the prediction due to unrealistic results."))
+    pandemic_environment$fullPred$thousandShortPred = pandemic_environment$fullPred$thousandShortPred[-errorCheck,]
+    pandemic_environment$fullPred$thousandLongPred = pandemic_environment$fullPred$thousandLongPred[-errorCheck,]
+    y.futL = y.futL[-errorCheck,]
+    y.futS = y.futS[-errorCheck,]
+  }
 
   output <- list(predictive_Long = y.futL, predictive_Short = y.futS,
                  data = object$Y$data, location = object$Y$name, cases_type = object$cases.type,
                  pastMu = as.data.frame(object$fit)[grep("mu",names(chains))],
-                 futMu = pred$mu[,1:horizonLong])
+                 futMu = pred$mu[,1:horizonLong],errors = errorCheck)
 
   class(output) = "pandemicPredicted"
   return(output)
@@ -104,7 +111,7 @@ generatePredictedPoints_pandemic = function(M,c,h,n,m,ft){
       y[,i] = stats::rpois(M,mu[,i])
     } else if (grepl("negbin",m))
       for (i in 1:h){
-        mu[,i] = exp(log(c$f)+log(c$a)+log(c$c)-(c$c*(ft+i))-(c$f+1)*log(c$b+exp(-c$c*(ft+i)) )) # log scale
+        mu[,i] = log(c$f)+log(c$a)+log(c$c)-(c$c*(ft+i))-(c$f+1)*log(c$b+exp(-c$c*(ft+i)) ) # log scale
         y[,i] = stats::rpois(M,stats::rgamma(M,mu[,i]*c$aGamma,c$aGamma))
       } else
         stop(paste("Unknown model",m))
