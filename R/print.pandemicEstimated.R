@@ -85,10 +85,9 @@ print.pandemicEstimated=function(x,digits=3,...){
   cat("\n maximum total number of cases:    ", x$config.inputs$use_inputs$p,"*population")
   #cat("\n init:                           ", x$config.inputs$use_inputs$init,"\n")
   #cat("\n init:                           ", x[["fit"]]@stan_args[[1]][[6]],"\n")
-  init = data.frame(x$config.inputs$use_inputs$init[[1]][1],x$config.inputs$use_inputs$init[[1]][2],
-              x$config.inputs$use_inputs$init[[1]][3],x$config.inputs$use_inputs$init[[1]][4])
-  init = as.numeric(init[,order(colnames(init))])
-  cat("\n init (chain_id = 1):               a = ",init[1],", b = ",init[2],", c = ",init[3],", f = ",init[4],"\n")
+  cat("\n init (chain_id = 1):\n")
+
+  print(x$config.inputs$use_inputs$init[[1]])   #show only chain_id=1
 
 
   cat("\n------\n")
