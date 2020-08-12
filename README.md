@@ -45,3 +45,7 @@ cat(if( grepl("^darwin", R.version$os)) "\nCXX14FLAGS=-O3 -march=native -mtune=n
     "CXX14FLAGS = -fPIC",
     file = M, sep = "\n", append = TRUE)
 ```
+
+# If installation still fails
+
+If the steps above were tried for your OS and it still didn't work, please e-mail us at covidlp.team@gmail.com
