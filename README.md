@@ -1,4 +1,4 @@
-## Installing PandemicLP
+# Installing PandemicLP
 
 First, make sure you have the `devtools` package installed by typing 
 
@@ -14,13 +14,13 @@ devtools::install_github("CovidLP/PandemicLP", build_vignettes = TRUE)
 
 The option `build_vignettes = TRUE` will make the installation take longer, but it will make the example vignette available for viewing.
 
-# If installation fails on Mac OS
+## If installation fails on Mac OS
 
 Installation on Mac requires 3.6.2, so make sure it is up to date.
 
 If you are using the Catalina version of the Mac Operating System, go to [here](https://github.com/stan-dev/rstan/wiki/Installing-RStan-from-source-on-a-Mac) and follow the same instructions for installing rstan from source.
 
-# If installation fails on Windows
+## If installation fails on Windows
 
 In RStudio (preferably) or otherwise in R, execute once
 
@@ -46,6 +46,6 @@ cat(if( grepl("^darwin", R.version$os)) "\nCXX14FLAGS=-O3 -march=native -mtune=n
     file = M, sep = "\n", append = TRUE)
 ```
 
-# If installation still fails
+## If installation still fails
 
 If the steps above were tried for your OS and it still didn't work, please e-mail us at covidlp.team@gmail.com
