@@ -13,32 +13,32 @@ pandemic_environment$fullPred = list()
 #' of a predictor affects (a function of) the outcome(s). With new observations of
 #' predictor variables we can use the posterior predictive distribution to generate
 #' predicted outcomes.
-#' @param object An object of class pandemicEstimated created by function stan_pandemic.
-#' @param horizonLong How far into the future the long term prediction is desired.
-#' @param horizonShort How far into the future the short term prediction is desired.
+#' @param object An object of class \code{pandemicEstimated} created by function \code{\link{pandemic_model}}.
+#' @param horizonLong How far into the future the long-term prediction is desired.
+#' @param horizonShort How far into the future the short-term prediction is desired.
 #' @references
-#' CovidLPTeam, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
+#' CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Departamento de Estatistica. UFMG,
 #' Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
-#' @return An object of class pandemicPredicted. It includes the sampled predictive distribution,
-#' the model used to predict, which is the same as the one used to estimate the data, and relevant
-#' information for the plot function to be used directly. The list contains:
+#' @return An object of class \code{pandemicPredicted}. It includes the sampled predictive distribution
+#' the model used to predict, which is the same as the one used to estimate the data. This object can be used
+#' directly into the plot function and contains the following elements:
 #' \item{\code{predictive_Long}}{
-#'   A M x horizonLong matrix with the full sample of the predictive distribution
-#'   for the long term prediction, where M is the sample size.
+#'   A \code{M x horizonLong} matrix with the full sample of the predictive distribution
+#'   for the long-term prediction, where M is the sample size.
 #'   The prediction is for daily new cases.
 #'   }
 #'   \item{\code{predictive_Short}}{
-#'   A M x horizonShort matrix with the full sample of the predictive distribution
-#'   for the short term prediction, where M is the sample size.
-#'   The prediction is for daily accumulated cases.
+#'   A \code{M x horizonShort} matrix with the full sample of the predictive distribution
+#'   for the short-term prediction, where M is the sample size.
+#'   The prediction is for daily cumulative cases.
 #'   }
 #'   \item{\code{data}}{
-#'   The data passed on from the \link{pandemicEstimated-objects} under the element \code{Y$data}.
+#'   The data passed on from the \code{\link{pandemicEstimated-objects}} under the element \code{Y$data}.
 #'   }
 #'   \item{\code{location}}{
 #'   A string with the name of the location.
 #'   }
-#'    \item{\code{cases_type}}{
+#'   \item{\code{cases_type}}{
 #'   A string with either "confirmed" or "deaths" to represent the type of data that has been fitted and predicted.
 #'   }
 #'   \item{\code{pastMu}}{
@@ -47,9 +47,10 @@ pandemic_environment$fullPred = list()
 #'   \item{\code{futMu}}{
 #'   The predicted means of the data for the predicted data points.
 #'   }
-#' Function \code{pandemic_stat} provides a few useful statistics based on the predictions.
+#' Function \code{\link{pandemic_stats}} provides a few useful statistics based on the predictions.
+#'
 #' @seealso \code{\link{pandemic_model}}, \code{\link{pandemic_stats}} and \code{\link{plot.pandemicPredicted}}.
-#' #' @examples
+#' @examples
 #' \dontrun{
 #' dataMG = load_covid("Brazil","MG")
 #' estimMG = pandemic_model(dataMG)
@@ -60,8 +61,8 @@ posterior_predict.pandemicEstimated = function(object,horizonLong = 500, horizon
 
   if (class(object) != "pandemicEstimated") stop("Please use the output of the pandemic_model() function.")
   if (horizonShort <= 0) stop("Horizons must be positive.")
-  if (horizonLong < horizonShort) stop("Long term horizon may not be lesser than short term horizon.")
-  if (horizonLong > 1000) stop("Long term horizon larger than 1000 is not currently supported.")
+  if (horizonLong < horizonShort) stop("Long-term horizon may not be lesser than short term horizon.")
+  if (horizonLong > 1000) stop("Long-term horizon larger than 1000 is not currently supported.")
 
   chains = as.data.frame(object$fit)
   pop = object$Y$population
