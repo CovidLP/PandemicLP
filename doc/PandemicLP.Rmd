@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(PandemicLP)
 ```
 
-In this vignette, we present the main functionality of the pandemicLP package. The package uses the theory presented in http://est.ufmg.br/covidlp/home/pt/. As the model evolves, new versions of the package are released. This vignette, however, aims to only show the five basic functions of the package.
+In this vignette, we present the main functionality of the PandemicLP package. The package uses the theory presented in http://est.ufmg.br/covidlp/home/pt/. As the model evolves, new versions of the package are released. This vignette, however, aims to only show the five basic functions of the package.
 
 ## Loading data
 
