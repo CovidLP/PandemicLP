@@ -16,7 +16,7 @@ The option `build_vignettes = TRUE` will make the installation take longer, but 
 
 ## V8 dependency upon building from source
 
-Current version of rstan depends on the V8 JavaScript libraries. In order to install rstan, you might require to install it in your Unix-based system.
+Current version of rstan depends on the V8 JavaScript libraries. In order to install rstan, you might require to install it in your Unix-based system. On Windows, you might need to install R package V8 from the CRAN binaries by running `install.packages("V8")`.
 
 ## If installation fails on Mac OS
 
