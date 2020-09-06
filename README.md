@@ -14,6 +14,10 @@ devtools::install_github("CovidLP/PandemicLP", build_vignettes = TRUE)
 
 The option `build_vignettes = TRUE` will make the installation take longer, but it will make the example vignette available for viewing.
 
+## V8 dependency upon building from source
+
+Current version of rstan depends on the V8 JavaScript libraries. In order to install rstan, you might require to install it in your Unix-based system.
+
 ## If installation fails on Mac OS
 
 Installation on Mac requires 3.6.2, so make sure it is up to date.
