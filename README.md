@@ -8,6 +8,8 @@ If your system is Windows, you can install the binaries. Make sure your R versio
 install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.1.0.zip",repos=NULL)
 ```
 
+Note that the vignette will be readily available after this command is done running.
+
 ## Installing from source
 
 First, make sure you have the `devtools` package installed by typing 
