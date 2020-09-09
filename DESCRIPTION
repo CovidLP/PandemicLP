@@ -27,7 +27,8 @@ Imports:
     plotly (>= 4.9.2.1),
     dplyr (>= 1.0.1),
     curl (>= 4.3),
-    tidyr (>= 1.1.1)
+    tidyr (>= 1.1.1),
+    lubridate
 LinkingTo:
     BH (>= 1.66.0),
     Rcpp (>= 0.12.0),
