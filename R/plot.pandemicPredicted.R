@@ -231,10 +231,10 @@ plot.pandemicPredicted <- function(object){
       fig2 <- plotly::add_trace(fig2,x = ~dados$date, y = ~dados$new_deaths, type = 'scatter', mode = 'lines+markers', hoverinfo = "x+y", name = "Observed Data", mode = "lines+markers",
                                 hoverinfo = "x+y",
                                 marker = list(
-                                  color = 'rgb(235, 50, 35)',
+                                  color = 'rgb(100, 140, 240)',
                                   line = list(color = 'rgb(0, 0, 0)', width = 1)),
                                 line = list(
-                                  color = 'rgb(235, 50, 35)',
+                                  color = 'rgb(100, 140, 240)',
                                   width = 1.5)
 
 
@@ -328,10 +328,10 @@ plot.pandemicPredicted <- function(object){
       fig2 <- plotly::add_trace(fig2,x = ~dados$date, y = ~dados$deaths, type = 'scatter', mode = 'lines+markers', hoverinfo = "x+y", name = "Observed Data", mode = "lines+markers",
                                 hoverinfo = "x+y",
                                 marker = list(
-                                  color = 'rgb(235, 50, 35)',
+                                  color = 'rgb(100, 140, 240)',
                                   line = list(color = 'rgb(0, 0, 0)', width = 1)),
                                 line = list(
-                                  color = 'rgb(235, 50, 35)',
+                                  color = 'rgb(100, 140, 240)',
                                   width = 1.5)
 
 
