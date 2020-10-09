@@ -1,6 +1,5 @@
 # Environment created to exchange objects between package functions
 pandemic_environment = new.env()
-pandemic_environment$fullPred = list()
 
 #' Draw from the posterior predictive distribution for pandemic data
 #'
@@ -56,6 +55,7 @@ pandemic_environment$fullPred = list()
 #' estimMG = pandemic_model(dataMG)
 #' predMG = posterior_predict(estimMG)
 #' predMG}
+#' @importFrom methods slot
 #' @export
 posterior_predict.pandemicEstimated = function(object,horizonLong = 500, horizonShort = 14){
 
@@ -74,19 +74,20 @@ posterior_predict.pandemicEstimated = function(object,horizonLong = 500, horizon
 
   # generate points from the marginal predictive distribution
   pred = generatePredictedPoints_pandemic(M,chains,1000, NA_replacement, object$model_name, finalTime)
-  pandemic_environment$fullPred$thousandLongPred = pred$yL # For internal use
+  methods::slot(object$fit,"sim")$fullPred = list()
+  methods::slot(object$fit,"sim")$fullPred$thousandLongPred = pred$yL # For internal use
   if (object$cases.type == "confirmed")
-    pandemic_environment$fullPred$thousandShortPred = pred$yS + object$Y$data$cases[nrow(object$Y$data)]
+    methods::slot(object$fit,"sim")$fullPred$thousandShortPred = pred$yS + object$Y$data$cases[nrow(object$Y$data)]
   else
-    pandemic_environment$fullPred$thousandShortPred = pred$yS + object$Y$data$deaths[nrow(object$Y$data)]
-  pandemic_environment$fullPred$thousandMus = pred$mu
-  y.futL = pandemic_environment$fullPred$thousandLongPred[,1:horizonLong]
-  y.futS = pandemic_environment$fullPred$thousandShortPred[,1:horizonShort]
-  errorCheck = which(pandemic_environment$fullPred$thousandShortPred[,ncol(pandemic_environment$fullPred$thousandShortPred)] > pop)
+    methods::slot(object$fit,"sim")$fullPred$thousandShortPred = pred$yS + object$Y$data$deaths[nrow(object$Y$data)]
+  methods::slot(object$fit,"sim")$fullPred$thousandMus = pred$mu
+  y.futL = methods::slot(object$fit,"sim")$fullPred$thousandLongPred[,1:horizonLong]
+  y.futS = methods::slot(object$fit,"sim")$fullPred$thousandShortPred[,1:horizonShort]
+  errorCheck = which(methods::slot(object$fit,"sim")$fullPred$thousandShortPred[,ncol(methods::slot(object$fit,"sim")$fullPred$thousandShortPred)] > pop)
   if (length(errorCheck)){
     message(paste0(length(errorCheck)," samples were removed from the prediction due to unrealistic results."))
-    pandemic_environment$fullPred$thousandShortPred = pandemic_environment$fullPred$thousandShortPred[-errorCheck,]
-    pandemic_environment$fullPred$thousandLongPred = pandemic_environment$fullPred$thousandLongPred[-errorCheck,]
+    methods::slot(object$fit,"sim")$fullPred$thousandShortPred = methods::slot(object$fit,"sim")$fullPred$thousandShortPred[-errorCheck,]
+    methods::slot(object$fit,"sim")$fullPred$thousandLongPred = methods::slot(object$fit,"sim")$fullPred$thousandLongPred[-errorCheck,]
     y.futL = y.futL[-errorCheck,]
     y.futS = y.futS[-errorCheck,]
   }
@@ -94,7 +95,7 @@ posterior_predict.pandemicEstimated = function(object,horizonLong = 500, horizon
   output <- list(predictive_Long = y.futL, predictive_Short = y.futS,
                  data = object$Y$data, location = object$Y$name, cases_type = object$cases.type,
                  pastMu = as.data.frame(object$fit)[grep("mu",names(chains))],
-                 futMu = pred$mu[,1:horizonLong],errors = errorCheck)
+                 futMu = pred$mu[,1:horizonLong],fit = object$fit,errors = errorCheck)
 
   class(output) = "pandemicPredicted"
   return(output)

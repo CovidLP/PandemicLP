@@ -71,6 +71,7 @@
 #' \code{\link{load_covid}}, \code{\link{pandemic_model}}, \code{\link{posterior_predict.pandemicEstimated}}
 #' and \code{\link{plot.pandemicPredicted}}.
 #'
+#' @importFrom methods slot
 #' @export
 
 pandemic_stats <- function(object){
@@ -99,15 +100,15 @@ pandemic_stats <- function(object){
   }
 
   if(cumulative_y > 1000){
-    lowquant <- apply(pandemic_environment$fullPred$thousandLongPred,2,quantile,.025)
-    medquant <- apply(pandemic_environment$fullPred$thousandLongPred,2,quantile,.5)
-    highquant <- apply(pandemic_environment$fullPred$thousandLongPred,2,quantile,.975) #faz o quantil dos numeros novos
+    lowquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,quantile,.025)
+    medquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,quantile,.5)
+    highquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,quantile,.975) #faz o quantil dos numeros novos
   } else{
-    lowquant <- c(cumulative_y , apply(pandemic_environment$fullPred$thousandShortPred,2,quantile,.025)) #raz o quantil dos numeros acumulados
+    lowquant <- c(cumulative_y , apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,quantile,.025)) #raz o quantil dos numeros acumulados
     lowquant <- (lowquant - lag(lowquant, default = 0))[-1] #depois calcula os numero de novos casos a partir dos acumulados
-    medquant <- c(cumulative_y, apply(pandemic_environment$fullPred$thousandShortPred,2,quantile,.5))
+    medquant <- c(cumulative_y, apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,quantile,.5))
     medquant <- (medquant - lag(medquant,default = 0))[-1]
-    highquant <- c(cumulative_y, apply(pandemic_environment$fullPred$thousandShortPred,2,quantile,.975))
+    highquant <- c(cumulative_y, apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,quantile,.975))
     highquant <- (highquant - lag(highquant, default = 0))[-1]
   }
 
@@ -119,7 +120,7 @@ pandemic_stats <- function(object){
   peak2.5 <- peak50 <- peak97.5 <- NULL
   end2.5 <- end50 <- end97.5 <- NULL
 
-  chain_mu <-cbind(object$pastMu, pandemic_environment$fullPred$thousandMus)
+  chain_mu <-cbind(object$pastMu, methods::slot(object$fit,"sim")$fullPred$thousandMus)
 
   ### median dates
   mu50 <- apply(chain_mu, 2, quantile, probs = 0.5)      #quantil 50% das medias mu
