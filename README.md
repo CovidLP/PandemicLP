@@ -6,10 +6,10 @@ If your system is Windows or MacOS, you can install the binaries. Make sure your
 
 ```R
 # Windows
-install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.1.0.zip",repos=NULL)
+install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.1.1.zip",repos=NULL)
 
 # MacOS
-install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.1.0.tgz",repos=NULL)
+install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.1.1.tgz",repos=NULL)
 ```
 
 Note that the vignette will be readily available after this command is done running through the command `vignette("PandemicLP")`.
