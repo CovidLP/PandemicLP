@@ -2,7 +2,7 @@
 
 ## Installing binaries
 
-If your system is Windows or MacOS, you can install the binaries. Make sure your R version is updated to 4.0.2. If your R version is lower, then you are recommended to install the package from source, as instructed below. For installing the binaries, run the appropriate code for your version.
+If your system is Windows or MacOS, you can install the binaries. Make sure your R version is updated to 4.0.3. If your R version is lower, then you are recommended to install the package from source, as instructed below. For installing the binaries, run the appropriate code for your version.
 
 ```R
 # Windows
