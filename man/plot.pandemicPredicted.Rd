@@ -4,15 +4,26 @@
 \alias{plot.pandemicPredicted}
 \title{Plot pandemic predictions}
 \usage{
-\method{plot}{pandemicPredicted}(object)
+\method{plot}{pandemicPredicted}(x, term = "long", color = TRUE, ...)
 }
 \arguments{
-\item{object}{Output of function \code{\link{posterior_predict.pandemicEstimated}}.}
+\item{x}{Output of function \code{\link{posterior_predict.pandemicEstimated}}.}
+
+\item{term}{A string which indicates whether long term, short term or both plots should be generated.
+The argument must be a string being either 'long', 'short' or 'both'.}
+
+\item{color}{A logical variable indicating whether the plot should be colourful or in gray scales. 
+If TRUE then the plot is colourful otherwise the plot will be gray.}
+
+\item{...}{Currently unused.}
 }
 \value{
-A list containing two plots, long and short. "long" shows the long-term predictions
-and "short" the short-term predictions. If any of them did not get plotted due to lack of prediction,
-its value will return NULL.
+A list containing two objects, short and long. "long" shows the long-term predictions
+and "short" the short-term predictions. If any of them did not get plotted due to lack of prediction or due to the \code{term}
+argument, its value will return NULL.
+
+By default only the long-term plot is generated, which means that the short term plot returns NULL.
+This is changed with the \code{term} argument.
 \item{\code{long}}{
   The plotted long-term prediction. The predictions are made on daily new confirmed cases or daily new deaths.
   }
