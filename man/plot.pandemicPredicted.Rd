@@ -4,7 +4,7 @@
 \alias{plot.pandemicPredicted}
 \title{Plot pandemic predictions}
 \usage{
-\method{plot}{pandemicPredicted}(x, term = "long", color = TRUE, ...)
+\method{plot}{pandemicPredicted}(x, term = "long", color = TRUE, summary = TRUE, ...)
 }
 \arguments{
 \item{x}{Output of function \code{\link{posterior_predict.pandemicEstimated}}.}

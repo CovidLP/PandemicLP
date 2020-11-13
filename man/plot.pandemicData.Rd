@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.PandemicData.R
 \name{plot.pandemicData}
 \alias{plot.pandemicData}
-\title{Plot pandemic predictions}
+\title{Plot pandemic data}
 \usage{
 \method{plot}{pandemicData}(x, term = "both", color = TRUE, ...)
 }
