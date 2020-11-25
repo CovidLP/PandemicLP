@@ -4,10 +4,12 @@
 \alias{print.pandemicStats}
 \title{Print method for \code{pandemicStats} objects}
 \usage{
-\method{print}{pandemicStats}(object, ...)
+\method{print}{pandemicStats}(x, ...)
 }
 \arguments{
-\item{object}{An object of S3 class \code{\link{pandemicStats-objects}}.}
+\item{x}{An object of S3 class \code{\link{pandemicStats-objects}}.}
+
+\item{...}{Currently unused.}
 }
 \description{
 S3 method designed for \code{pandemicStats} objects. It displays a compact summary of the

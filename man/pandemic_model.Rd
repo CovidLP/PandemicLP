@@ -2,11 +2,13 @@
 % Please edit documentation in R/pandemic_model.R
 \name{pandemic_model}
 \alias{pandemic_model}
-\title{Bayesian logistic model for pandemic data via Stan}
+\title{Bayesian growth curve models for epidemiological data via Stan}
 \usage{
 pandemic_model(
   Y,
   case_type = "confirmed",
+  seasonal_effect = NULL,
+  n_waves = 1,
   p = 0.08,
   chains = 1,
   warmup = 2000,
@@ -18,15 +20,15 @@ pandemic_model(
 )
 }
 \arguments{
-\item{Y}{A list providing the epidemiological data for the model.
-The elements of this list are:
+\item{Y}{An object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}} or a list providing the epidemiological data for the model.
+The elements of this Y list are:
 
 \describe{
   \item{\code{data}:}{
   A data frame with at least the following columns:
 
   \describe{
-  \item{\code{date}:}{a date vector. It should be of class 'Date' and format 'YYYY-MM-dd'.}
+  \item{\code{date}:}{a date vector. It should be of class 'Date' and format 'YYYY-MM-DD'.}
 
   \item{\code{cases}:}{a numeric vector with the time series values of the cumulative number of cases.}
 
@@ -47,22 +49,25 @@ The elements of this list are:
    Country/State/Location selected.}
   }
 
-  \cr
 
-  To provide Covid-19 data for Brazilian states and some other countries in the specified Y format,
-  you can use the \code{\link{load_covid}} function.\cr
-  \cr
-  For formatting other epidemiological data in the specified Y format, see the \strong{Examples} section in
+  For formatting epidemiological data (not provided by the \code{load_covid} function) in the specified Y list format, see the \strong{Examples} section in
    \code{\link{covid19BH}}.}
 
 \item{case_type}{character string providing the type of cases of interest in modeling the epidemic.
 Current options are \code{"confirmed"} for confirmed cases or \code{"deaths"} for deaths.
 The default is \code{"confirmed"}.}
 
+\item{seasonal_effect}{string vector indicating the days of the week in which seasonal effect was observed.
+The vector can contain the full weekday name (sunday to saturday) or the first 3 letters,
+ up to a maximum of three weekdays. This argument could be used only for \code{n_waves=1}. For details go to \code{\link{models}}.}
+
+\item{n_waves}{integer 1 or 2. This argument indicates the number of waves to be adjusted by mean curve.
+The default is 1. For details go to \code{\link{models}}.}
+
 \item{p}{a numerical value greater than 0 and less than or equal to 1. It's a percentage.
 The maximum cumulative total number of cases for the end of the epidemic in a location should be
 p percent of its population. The default is \code{p = 0.08}. This is a model restriction.
-See more in the \strong{Details} section.}
+See more on the \code{\link{models}}.}
 
 \item{chains}{A positive integer specifying the number of Markov chains. The default is \code{1},
 which is default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).}
@@ -75,8 +80,10 @@ which is the default value used by the CovidLP app (\url{http://est.ufmg.br/covi
 .}
 
 \item{sample_size}{A positive integer specifying the posterior sample's size per chain that will be used for inference.
-The total number of iterations per chain is: \cr
- \code{warmup} + \code{thin} * \code{sample_size}\cr
+The total number of iterations per chain is:
+
+ \code{warmup} + \code{thin} * \code{sample_size}
+
  The default is \code{1000}, which is the default value used by CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).}
 
 \item{init}{specification of the initial values of the parameters per chain. The default is \code{"random"}.
@@ -89,12 +96,17 @@ See the detailed documentation for the init argument via list in \code{\link[rst
 Additional arguments can be \code{control}, \code{cores}, etc...}
 
 \item{covidLPconfig}{\code{TRUE} or \code{FALSE}: flag indicating whether to use default
-values of the CovidLP app as input arguments.\cr
+values of the CovidLP app as input arguments.
+
 If \code{covidLPconfig = TRUE}, the \code{\link[rstan]{sampling}} uses the following configuration:
 \code{chains = 1}, \code{warmup = 5000}, \code{thin = 3},  \code{sample_size = 1000},
-\code{init} = \code{list(list(a = 100 , b1 = log(1), c = 0.5, f = 1.01))}, \code{algorithm = "NUTS"},
+
 \code{control} = \code{list(max_treedepth = 50, adapt_delta = 0.999)},
-\code{p = 0.08} for \code{case_type = "confirmed"} or \code{p = 0.02} for \code{case_type  = "deaths"}.\cr
+\code{p = 0.08} for
+
+\code{case_type = "confirmed"} or \code{p = 0.02} for \code{case_type  = "deaths"},
+\code{init} a list with default initial values for the parameters of each model available.
+
 When using \code{covidLPconfig = TRUE} the convergence of the chains is not guaranteed.
 It only replicates the results of the fitted model with the contemplated data in
 the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).
@@ -106,85 +118,50 @@ An object of S3 Class \code{\link{pandemicEstimated-objects}} representing the f
 The \code{fit} component of the \code{pandemicEstimated} class is an object of S4 Class \code{\link[rstan]{stanfit}}.
 }
 \description{
-Bayesian inference for modeling epidemiological data or Covid-19 pandemic data using logistic models.
-This function draws the posterior samples of the parameters of the logistic model. The generalized logistic model
-was chosen because it allows asymmetry, which is a characteristic of epidemiological data curves.\cr
-\cr
-See more about the model in the \strong{Details} section. \cr
-\cr
-See \code{\link{posterior_predict.pandemicEstimated}} to make predictions and
+Bayesian inference for modeling epidemiological data or Covid-19 pandemic data using growth curve models.
+This function draws the posterior samples of the parameters of the growth curve models available in the \code{PandemicLP} package. The sampling algorithm is \code{"NUTS"},
+which is the No-U-Turn sampler variant of Hamiltonian Monte Carlo (Hoffman and Gelman 2011, Betancourt 2017).
+
+
+See which models are available in the \code{PandemicLP} package in \code{\link{models}}.
+
+
+See \code{\link{posterior_predict.pandemicEstimated}} to make predictions, \code{\link{pandemic_stats}} to provide
+a few useful statistics based on the predictions and
 \code{\link{plot.pandemicPredicted}} to plot the predicted values.
-}
-\details{
-The time series of the cumulative number of cases of an epidemic can be modeled by the logistic curve,
-with the Poisson distribuition, for both confirmed cases and deaths. The generalized logistc curve allows
-the adjustment of an asymmetric curve. This can be a relevant characteristic. The Covid-19 pandemic data curve,
-for example, has shown to have positive asymmetry. The derivative of the generalized logistic growth formula
-is used to model the number of new daily cases: \cr
-\cr
-Y(t) ~ Poisson(mu(t)) \cr
-
-mu(t) =  \code{(a-d)*f*c*e^(-c*t) / (b + e^(-c*t))^(f+1)};  \cr
-\cr
-where Y(t) is the number of new cases at time t = 1, 2, ... ;\cr
-parameters \code{a > 0 ,   b >= 0 ,  c > 0 ,  f > 0}  and \code{d = 0} is assumed. \cr
-\cr
-
-Properties:\cr
-1.	Infection rate: controlled by parameter c;\cr
-2.	Asymptote of the logistic curve: \code{a/b^f} . It represents the cumulative total number of cases at the end of the epidemic;\cr
-3.	Asymmetry: parameter f controls the curve's asymmetry;\cr
-4.	\code{b = 0}: exponential growth; \cr
-\cr
-
-Non-informative Priors:\cr
-a ~  Gamma(0.1, 0.1) \cr
-b ~ LogNormal(0, 20) \cr
-c ~ Gamma(2, 9) \cr
-f ~ Gamma(0.01, 0.01) \cr
-\cr
-
-Model restrictions:\cr
-1.\code{a/b^f  <  p*population;  p in (0,1] }  :
-The maximum value of the cumulative total number of cases at the end of the epidemic is p percent of the population.
-p is a constant specified by the user as an input argument. The default is 1.
-This model restriction is necessary mainly for data at the beginning of the pandemic.
-Due to great uncertainty associated with the predictions, posterior samples can generate
-much higher estimates than expected (unrealistic estimates) if this restriction is not applied. \cr
-2.  \code{f > 1} : This restriction forces a positive asymmetric fitted curve, which means that the number of cases
-decreases slower than it increases. This behavior was observed for the Covid-19 data curve.\cr
-\cr
-
-In future versions of the \pkg{PandemicLP} package, the user will be allowed to change the priors selected.
 }
 \examples{
 ##result of the pandemic_model function may take a few minutes
 
+### generalized logistic poisson model: ###############
 \dontrun{
 Y0=load_covid(country_name="Brazil",state_name="SP",last_date='2020-04-25')
+plot(Y0,cases="new")
 output0=pandemic_model(Y0)
 print(output0)
 #convergence diagnostics
 traceplot(output0)
+density(output0)
 stan_ac(output0$fit,pars=c("a","b","c","f"))
-stan_dens(output0$fit,pars=c("a","b","c","f"))
 
 Y1=load_covid(country_name="Brazil",state_name="SP",last_date='2020-06-18')
+plot(Y1,cases="new")
 output1=pandemic_model(Y1,case_type="deaths",covidLPconfig=TRUE)
 print(output1)
 #convergence diagnostics
 traceplot(output1)
+density(output1)
 stan_ac(output1$fit,pars=c("a","b","c","f"))
-stan_dens(output1$fit,pars=c("a","b","c","f"))
 
 
 Y2=load_covid(country_name="Argentina",last_date='2020-05-07')
+plot(Y2,cases="new")
 output2=pandemic_model(Y2,covidLPconfig=TRUE)
 print(output2)
 #convergence diagnostics
 traceplot(output2)
+density(output2)
 stan_ac(output2$fit,pars=c("a","b","c","f"))
-stan_dens(output2$fit,pars=c("a","b","c","f"))
 
 
 #including initial values for parameters:
@@ -195,8 +172,8 @@ output3=pandemic_model(Y2,init=inits3,chains=1,warmup=3000)
 print(output3)
 #convergence diagnostics
 traceplot(output3)
+density(output3)
 stan_ac(output3$fit,pars=c("a","b","c","f"))
-stan_dens(output3$fit,pars=c("a","b","c","f"))
 
 #initival values for 2 chains:
 inits4=list(
@@ -208,8 +185,39 @@ print(output4)
 output4$config.inputs$use_inputs$init
 #convergence diagnostics
 traceplot(output4)
+density(output4)
 stan_ac(output4$fit,pars=c("a","b","c","f"))
-stan_dens(output4$fit,pars=c("a","b","c","f"))}
+
+### seasonal model: ###############
+output5=pandemic_model(Y0,seasonal_effect=c("sunday","monday"))
+print(output5)
+#convergence diagnostics
+traceplot(output5)
+density(output5)
+stan_ac(output5$fit,pars=c("a","b","c","f","d_1","d_2"))
+
+## or, for 'seasonal_effect': strings vector with the 3 initial letters of the weekday(s)
+Y3=load_covid(country_name="Brazil",state_name="MG",last_date='2020-09-05')
+plot(Y3,cases="new")
+#weekdays effect : sunday and monday:
+output6=pandemic_model(Y3,seasonal_effect=c("sun","mon"),covidLPconfig=TRUE)
+print(output6)
+#convergence diagnostics
+traceplot(output6)
+density(output6)
+stan_ac(output6$fit,pars=c("a","b","c","f","d_1","d_2"))
+
+### multi_waves(2) model: ######################
+Y4=load_covid(country_name="US",last_date='2020-09-27')
+plot(Y4,cases="new")
+output7=pandemic_model(Y4,n_waves=2,covidLPconfig=TRUE)
+print(output7)
+#convergence diagnostics
+traceplot(output7)
+density(output7)
+stan_ac(output7$fit,pars=c("a1","b1","c1","alpha1","delta1","a2","b2","c2","alpha2","delta2"))
+}
+
 
 }
 \references{
@@ -218,5 +226,7 @@ Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 }
 \seealso{
 \code{\link{load_covid}}, \code{\link{posterior_predict.pandemicEstimated}},
-\code{\link{pandemic_stats}} and \code{\link{plot.pandemicPredicted}}.
+\code{\link{pandemic_stats}} and \code{\link{plot.pandemicPredicted}};
+\code{\link{summary.pandemicEstimated}}. See which models are available in the \code{PandemicLP}
+package in \code{\link{models}}.
 }

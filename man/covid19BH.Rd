@@ -7,34 +7,38 @@
 \format{
 This data frame has 103 observations and 6 variables.
 It contains the number of Covid-19 confirmed cases and deaths for the city of Belo Horizonte,
-from the date of the first notified case in 2020-03-16 to 2020-06-26.\cr
-\cr
-\describe{
-  \item{[,1] date}{dates in the YYYY-MM-DD format}
-  \item{[,2] new_confirmed}{number of new cases}
-  \item{[,3] new_deaths}{number of new deaths}
-  \item{[,4] last_available_confirmed}{cumulative number of cases}
-  \item{[,5] last_available_deaths}{cumulative number of deaths}
-  \item{[,6] estimated_population_2019}{size of Belo Horizonte's population}
+from the date of the first notified case in 2020-03-16 to 2020-06-26.
+
+
+\enumerate{
+  \item date - dates in the YYYY-MM-DD format
+  \item new_confirmed - number of new cases
+  \item new_deaths - number of new deaths
+  \item last_available_confirmed - cumulative number of cases
+  \item last_available_deaths - cumulative number of deaths
+  \item estimated_population_2019 - size of Belo Horizonte's population
  }
 }
 \source{
 \url{https://brasil.io/dataset/covid19}
 }
 \usage{
-data(covid19BH)
+covid19BH
 }
 \description{
 The purpose of this page is to show the user how to format the Y input argument
 in \code{\link{pandemic_model}} function, when epidemiological data was obtained
-outside of the \code{\link{load_covid}} function.\cr
-\cr
+outside of the \code{\link{load_covid}} function.
+
+
 The Covid-19 data for the city of Belo Horizonte, MG - Brazil will be used to illustrate
 how to correctly format the epidemiological data required in the \code{pandemic_model} function.
-See the \strong{Examples} section. \cr
-\cr
+See the \strong{Examples} section.
+
+
 For complete information on the required data format,
-check the \code{Y} input argument description in \cr
+check the \code{Y} input argument description in
+
 \code{?pandemic_model}.
 }
 \examples{
@@ -61,12 +65,14 @@ Y = list(data = data, name = "Belo Horizonte/MG", population = pop)
 ##pandemic_model function may take a few minutes...
 \dontrun{
 outputBH = pandemic_model(Y, control = list(max_treedepth = 50, adapt_delta = 0.999))
-print(outputBH)
+outputBH
+
+summary(outputBH)
 
 ##convergence diagnostics
 traceplot(outputBH)
+density(outputBH)
 stan_ac(outputBH$fit, pars = c("a","b","c","f"))
-stan_dens(outputBH$fit, pars = c("a","b","c","f"))
 
 ## making predictions
 predictions = posterior_predict(outputBH)

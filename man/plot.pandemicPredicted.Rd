@@ -4,16 +4,21 @@
 \alias{plot.pandemicPredicted}
 \title{Plot pandemic predictions}
 \usage{
-\method{plot}{pandemicPredicted}(x, term = "long", color = TRUE, summary = TRUE, ...)
+\method{plot}{pandemicPredicted}(x, y, term = "long", color = TRUE, summary = TRUE, ...)
 }
 \arguments{
 \item{x}{Output of function \code{\link{posterior_predict.pandemicEstimated}}.}
 
+\item{y}{This parameter does nothing}
+
 \item{term}{A string which indicates whether long term, short term or both plots should be generated.
 The argument must be a string being either 'long', 'short' or 'both'.}
 
-\item{color}{A logical variable indicating whether the plot should be colourful or in gray scales. 
-If TRUE then the plot is colourful otherwise the plot will be gray.}
+\item{color}{A logical variable indicating whether the plot should be colorful or in gray scales.
+If TRUE then the plot is colorful otherwise the plot will be gray.}
+
+\item{summary}{A logical variable indicating whether the plot should contains the summary statistics about the pandemic or not.
+If TRUE then the plot shows the statistics otherwise no.}
 
 \item{...}{Currently unused.}
 }

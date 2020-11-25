@@ -4,12 +4,17 @@
 \alias{print.pandemicEstimated}
 \title{Print method for \code{pandemicEstimated} objects}
 \usage{
-\method{print}{pandemicEstimated}(x, digits = 3, ...)
+\method{print}{pandemicEstimated}(x, digits = 3, probs = c(0.025, 0.5, 0.975), info = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of S3 class \code{\link{pandemicEstimated-objects}}.}
 
 \item{digits}{Number of digits to use for formatting numbers.}
+
+\item{probs}{A numeric vector of quantiles of interest. The default is
+\code{c(0.025,0.5,0.975)}.}
+
+\item{info}{TRUE or FALSE: more details for output interpretation. The Default is TRUE.}
 
 \item{...}{Currently unused.}
 }
@@ -19,20 +24,21 @@ Returns \code{x}, invisibly.
 \description{
 The print method for \code{pandemicEstimated} object of class S3 displays a compact summary of the
 fitted model. See the \strong{Details} section below for descriptions of the different components of the printed
-output. \cr
-\cr
-The \code{fit} component of the \code{\link{pandemicEstimated-objects}} object generated
-by the \code{\link{pandemic_model}} function can be summarised to provide more information.
-Check \code{?'summary,stanfit-method'} for additional summary statistics and diagnostics.
+output.  For additional summary statistics and diagnostics use \code{\link{summary.pandemicEstimated}}.
 }
 \details{
+\subsection{Point estimates}{
+Regardless of the estimation algorithm, point estimates are mean and (or) quantiles computed from simulations.
+For models fit using MCMC ("sampling", this is default algorithim of \code{pandemic_model} function),  the posterior sample
+is used. For others estimation algorithm see \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
+
+}
+
 \subsection{Convergence and efficiency diagnostics for Markov Chains}{
 
-Included in the summary are: split effective sample sizes (n_eff), Monte Carlo standard errors
-(se_mean) and split Rhats.\cr
-\cr
-The Monte Carlo standard error provides relevant information for a posterior sample with more than one chain.\cr
-\cr
+Included in the print are: split effective sample sizes (n_eff) and split Rhats.
+
+
 The R-hat convergence diagnostic compares the
 between- and within-chain estimates for model parameters and other univariate
 quantities of interest. If chains have not mixed well (ie, the between- and
@@ -41,21 +47,15 @@ We recommend running at least four chains by default and only using the
 sample if R-hat is less than 1.05.
 
 }
-\subsection{covidLPconfig}{
-This subsection shows the main input settings used by the fitted model, and indicates whether default settings
-of the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/})
-were used (\code{covidLPconfig = TRUE} or \code{FALSE}).
-Check the default settings of the CovidLP app in \code{\link{pandemic_model}}.
-}
+
 \subsection{Priors}{
 
 A list with information about the prior distributions used and model restrictions (if there are any).
-In future versions of the package \pkg{PandemicLP}, the user will be allowed to modify the priors.
-For more information, see the \strong{Details} section of \code{\link{pandemic_model}}.
+For more information go to \code{\link{models}}.
 
 
 }
 }
 \seealso{
-\code{\link{summary,stanfit-method}}
+\code{\link{summary.pandemicEstimated}}.
 }

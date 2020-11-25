@@ -4,10 +4,12 @@
 \alias{traceplot,pandemicEstimated-method}
 \title{Draw traceplot of the parameters for the pandemic model}
 \usage{
-\S4method{traceplot}{pandemicEstimated}(object)
+\S4method{traceplot}{pandemicEstimated}(object, ...)
 }
 \arguments{
 \item{object}{Output of the \code{\link{pandemic_model}} function}
+
+\item{...}{Aditional parameters passed on to the \code{\link[rstan]{traceplot}} function}
 }
 \description{
 Uses stan's traceplot function to draw the traceplots for the relevant parameters of the estimated model.
@@ -19,5 +21,5 @@ estimMG = pandemic_model(dataMG)
 traceplot(estimMG)}
 }
 \seealso{
-\code{\link{pandemic_model}}
+\code{\link{pandemic_model}} and \code{\link[rstan]{traceplot}}
 }

@@ -71,44 +71,46 @@
 #' \code{\link{load_covid}}, \code{\link{pandemic_model}}, \code{\link{posterior_predict.pandemicEstimated}}
 #' and \code{\link{plot.pandemicPredicted}}.
 #'
+#' @importFrom stats quantile median
 #' @importFrom methods slot
 #' @export
 
 pandemic_stats <- function(object){
 
   if (class(object) != "pandemicPredicted") stop("Please use the output of the posterior_predict() function.")
-  if( missing(object)) stop("object is a required argument. See help(pandemic_stats) for more information.")
+  if(missing(object)) stop("object is a required argument. See help(pandemic_stats) for more information.")
 
   t = length(object$data[[1]])
   ST_horizon = ncol(object$predictive_Short)
   LT_horizon = ncol(object$predictive_Long)
-  date_full <- as.Date( object$data$date[1]:(max(object$data$date) + 1000), origin = "1970-01-01")
+  longHorizon = ncol(methods::slot(object$fit,"sim")$fullPred$thousandLongPred)
+  date_full <- as.Date(object$data$date[1]:(max(object$data$date) + longHorizon), origin = "1970-01-01")
 
   ### list output ST predicition:
   ST_predict <- data.frame( date  = date_full[(t+1):(t+ST_horizon)],
-                            q2.5  = apply(object$predictive_Short,2,quantile,.025),
-                            med   = apply(object$predictive_Short,2,quantile,.5),
-                            q97.5 = apply(object$predictive_Short,2,quantile,.975),
+                            q2.5  = apply(object$predictive_Short,2,stats::quantile,.025),
+                            med   = apply(object$predictive_Short,2,stats::median),
+                            q97.5 = apply(object$predictive_Short,2,stats::quantile,.975),
                             mean  = colMeans(object$predictive_Short))
   row.names(ST_predict) <- NULL
 
   ### total number of cases
   if(object$cases_type == "confirmed"){
-    cumulative_y =  object$data$cases[t]    #casos acumulados até o tempo t.
+    cumulative_y =  object$data$cases[t]
   } else{
     cumulative_y =  object$data$deaths[t]
   }
 
   if(cumulative_y > 1000){
-    lowquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,quantile,.025)
-    medquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,quantile,.5)
-    highquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,quantile,.975) #faz o quantil dos numeros novos
+    lowquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,stats::quantile,.025)
+    medquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,stats::median)
+    highquant <- apply(methods::slot(object$fit,"sim")$fullPred$thousandLongPred,2,stats::quantile,.975)
   } else{
-    lowquant <- c(cumulative_y , apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,quantile,.025)) #raz o quantil dos numeros acumulados
-    lowquant <- (lowquant - lag(lowquant, default = 0))[-1] #depois calcula os numero de novos casos a partir dos acumulados
-    medquant <- c(cumulative_y, apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,quantile,.5))
+    lowquant <- c(cumulative_y , apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,stats::quantile,.025))
+    lowquant <- (lowquant - lag(lowquant, default = 0))[-1]
+    medquant <- c(cumulative_y, apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,stats::median))
     medquant <- (medquant - lag(medquant,default = 0))[-1]
-    highquant <- c(cumulative_y, apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,quantile,.975))
+    highquant <- c(cumulative_y, apply(methods::slot(object$fit,"sim")$fullPred$thousandShortPred,2,stats::quantile,.975))
     highquant <- (highquant - lag(highquant, default = 0))[-1]
   }
 
@@ -120,54 +122,66 @@ pandemic_stats <- function(object){
   peak2.5 <- peak50 <- peak97.5 <- NULL
   end2.5 <- end50 <- end97.5 <- NULL
 
-  chain_mu <-cbind(object$pastMu, methods::slot(object$fit,"sim")$fullPred$thousandMus)
+  index_season <-NULL
+  if(!is.null(object$seasonal_effect)){
+    s_code <- seasonal_code(date_full, object$seasonal_effect)
+    for (i in 1:length(s_code)){
+      index_aux <- which((seq(1,(t+longHorizon),1) - s_code[i]) %% 7 == 0)
+      index_season<-c(index_aux, index_season)
+    }
+    index_season<-sort(index_season)
+  }
+
+
+  chain_mu <- cbind(object$pastMu, methods::slot(object$fit,"sim")$fullPred$thousandMus)
 
   ### median dates
-  mu50 <- apply(chain_mu, 2, quantile, probs = 0.5)      #quantil 50% das medias mu
+  mu50 <- apply(chain_mu, 2, stats::quantile, probs = 0.5)
   peak50 <- date_full[which.max(mu50)]
 
   q <- .99
   med_cumulative <- apply(as.matrix(mu50),2,cumsum)
-  med_percent<- med_cumulative / med_cumulative[t + 1000] #calcula o quanto cada numero acumulado representa do numero total de casos
-  med_end <- which(med_percent - q > 0)[1] #pega o primeiro que ultrapassa 99% dos casos
+  med_percent<- med_cumulative / med_cumulative[t + longHorizon]
+  med_end <- which(med_percent - q > 0)[1]
   end50 <- date_full[med_end]
 
-  ### calculates the upper and lower bound dates:
-  mu25 <- apply(chain_mu, 2, quantile, probs = 0.025)   #curva do quantil 25% das médias mu
-  mu975 <- apply(chain_mu, 2, quantile, probs = .975)   # curva do quantil 97.5% das médias mu
+  ### calculates the upper and lower bound dates for the peak:
+  mu25 <- apply(chain_mu, 2, stats::quantile, probs = 0.025)
+  mu975 <- apply(chain_mu, 2, stats::quantile, probs = .975)
 
-  Maxq2.5 <- which.max(mu25)  #indica o indice do max mu do quantil 2.5
-  aux <- mu975 - mu25[Maxq2.5]  #subtrai o max do LI do vetor do vetor de medias do LS
-  aux2 <- aux[ Maxq2.5 : (t + 1000)] #seleciona aux do indice max do LI de mu ate t+L0
-  val <- ifelse( length(aux2[aux2 < 0]) > 0, min(aux2[aux2 > 0]), aux[length(aux)])  #seleciona o minimo desse vetor, desde que seja um numero positivo
+  mu25_aux <- if(is.null(object$seasonal_effect)) mu25 else mu25[-index_season]
+  posMaxq2.5 <- which.max(mu25_aux)
+  aux <- if (is.null(object$seasonal_effect)) mu975 - mu25_aux[posMaxq2.5] else  mu975[-index_season] - mu25_aux[posMaxq2.5]
+  aux2 <- aux[ posMaxq2.5 : length(aux)]
+  val <- ifelse( length(aux2[aux2 < 0]) > 0, min(aux2[aux2 > 0]), aux[length(aux)])
   date_max <- which(aux == val)
 
-  aux <- mu975 - mu25[Maxq2.5]
-  aux2 <- aux[1:Maxq2.5]
+  aux <- if(is.null(object$seasonal_effect)) mu975 - mu25_aux[posMaxq2.5] else mu975[-index_season] - mu25_aux[posMaxq2.5]
+  aux2 <- aux[1:posMaxq2.5]
   val <- min(aux2[aux2>0])
   date_min <- which(aux == val)
 
-  peak2.5  <- date_full[date_min]   #limite inferior data pico
-  peak97.5 <- date_full[date_max]  #limite superior data pico
+  date_full_aux <- if(is.null(object$seasonal_effect)) date_full else date_full[-index_season]
+  peak2.5  <- date_full_aux[date_min]
+  peak97.5 <- date_full_aux[date_max]
 
-  ###calcula IC  fim da pandemia:
-
+  ##calculates the upper and lower bound dates for the end of the pandemic:
   low_cumulative <- apply(as.matrix(mu25),2,cumsum)
-  low_percent <- low_cumulative / low_cumulative[t + 1000]
+  low_percent <- low_cumulative / low_cumulative[t + longHorizon]
   low_end <- which(low_percent - q > 0)[1]
-  end2.5 <- date_full[low_end]             #limite inferior data fim
+  end2.5 <- date_full[low_end]
 
   high_cumulative <- apply(as.matrix(mu975),2,cumsum)
-  high_percent <- high_cumulative / high_cumulative[t + 1000]
+  high_percent <- high_cumulative / high_cumulative[t + longHorizon]
   high_end <- which( high_percent - q > 0)[1]
-  end97.5 <- date_full[high_end]            #limite superior data fim
+  end97.5 <- date_full[high_end]
 
   #### LT predictions:
   LT_predict <- data.frame( date  = date_full[(t+1):(t+LT_horizon)],
                             q2.5  = lowquant[1:LT_horizon],
                             med   = medquant[1:LT_horizon],
                             q97.5 = highquant[1:LT_horizon],
-                            mean  = colMeans(object$predictive_Long))   ##precisa? [,1:L0]
+                            mean  = colMeans(object$predictive_Long))
   row.names(LT_predict) <- NULL
 
   ## Long-term summary

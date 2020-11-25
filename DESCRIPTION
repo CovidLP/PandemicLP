@@ -1,34 +1,38 @@
 Package: PandemicLP
 Type: Package
 Title: Long term prediction for epidemic and pandemic data
-Version: 0.1.1
-Date: 2020-07-17
-Authors@R: c(person("Débora", "de Freitas Magalhães", email = "deborafmag@gmail.com", role = "aut"),
-            person("Marta Cristina", "Colozza Bianchi da Costa", email = "marta_bianchi@ufg.br", role = "aut"),
-            person("Guido", "Alberti Moreira", email = "guidoalber@gmail.com", role = c("cre","aut")),
-            person("Thais", "Pacheco Menezes", email = "thaispacheco1207@gmail.com", role = "aut"),
-            person("Marcos", "Oliveira Prates", email = "marcosop@est.ufmg.br", role = "aut"))
-Maintainer: CovidLP team <covidlp.team@gmail.com>
-Description: The long term prediction is based on the theory in \href{http://est.ufmg.br/covidlp/home/pt/}{est.ufmg.br/covidlp/home/pt}.
-    The package is updated along with the model in the app, so it is recommended that it is kept up to date.
+Version: 0.2.0
+Date: 2020-11-25
+Authors@R: c(person("Débora", "de Freitas Magalhães", email = "deborafmag@gmail.com", role = "ctb"),
+            person("Marta Cristina", "Colozza Bianchi da Costa", email = "marta_bianchi@ufg.br", role = "ctb"),
+            person("Guido", "Alberti Moreira", email = "guidoalber@gmail.com", role = c("cre","ctb"),comment=c(ORCID="0000-0001-7557-0874")),
+            person("Thais", "Pacheco Menezes", email = "thaispacheco1207@gmail.com", role = "ctb"),
+            person("Marcos", "Oliveira Prates", email = "marcosop@est.ufmg.br", role = "ctb"))
+Contact: CovidLP team <covidlp.team@gmail.com>
+Maintainer: Guido Alberti Moreira <guidoalber@gmail.com>
+Description: This package implements the methodology described in <http://est.ufmg.br/covidlp/home/pt/> which can be
+    also found in help(models). Implemented models are currently the Poisson distribution. The mean function can be the
+    basic generalized logistic form, or the seasonal effect which has under- or over-reporting effects in up to three
+    weekdays, or the two curves form. Bayesian inference is made available through the stan software and its diagnostic
+    functions pool can be used. Plot methods are implemented to mimic the graphics from the shiny app in the URL using
+    the plotly library.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Biarch: true
 Depends:
-    R (>= 3.4.0),
-    rstan (>= 2.18.1)
-Imports:
-    methods,
-    Rcpp (>= 0.12.0),
-    RcppParallel (>= 5.0.1),
+    R (>= 3.5.0),
     rstan (>= 2.18.1),
     rstantools (>= 2.1.1),
+    stats
+Imports:
+    utils,
+    methods,
+    Rcpp (>= 0.12.0),
     plotly (>= 4.9.2.1),
     dplyr (>= 1.0.1),
     curl (>= 4.3),
-    tidyr (>= 1.1.1),
-    lubridate
+    tidyr (>= 1.1.1)
 LinkingTo:
     BH (>= 1.66.0),
     Rcpp (>= 0.12.0),
@@ -38,8 +42,9 @@ LinkingTo:
     StanHeaders (>= 2.18.0)
 Suggests:
     knitr,
-    rmarkdown
-URL: http://est.ufmg.br/covidlp/home/pt/
+    rmarkdown,
+    webshot
+URL: <http://est.ufmg.br/covidlp/home/pt/>
 VignetteBuilder: knitr
 SystemRequirements: GNU make
 RoxygenNote: 7.1.1

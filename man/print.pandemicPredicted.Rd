@@ -4,9 +4,11 @@
 \alias{print.pandemicPredicted}
 \title{Prints prediction summary of pandemic model}
 \usage{
-\method{print}{pandemicPredicted}(object, summaryFun = median, printPred = "Long", truncView = 3)
+\method{print}{pandemicPredicted}(x, summaryFun = stats::median, printPred = "Long", truncView = 3, ...)
 }
 \arguments{
+\item{x}{An object of S3 class \code{\link{pandemicPredicted-objects}}.}
+
 \item{summaryFun}{Use this function to summarize the predictions. Default argument is median, but can be any function on a vector.}
 
 \item{printPred}{Valid values are 'Long' or 'Short'. Note that 'Short' will show short-term cumulative predictions, while
@@ -14,6 +16,8 @@
 
 \item{truncView}{How many predictions to print. Default is 3, which means that the method prints the first
 3 days predicted and the last 3 days of the prediction horizon.}
+
+\item{...}{Currently unused.}
 }
 \description{
 S3 method designed to summarize the prediction obtained by the

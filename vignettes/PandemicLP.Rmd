@@ -22,17 +22,20 @@ In this vignette, we present the main functionality of the PandemicLP package. T
 
 ## Loading data
 
-Function `load_covid()` loads data from online repositories. The first argument is a string with the country's name. Use `country_list()` for a complete list of possibilities. The second argument is another string with the state's name *if* the country is "Brazil". Use `state_list()` for a similar list. Finally, you can use the last_date argument if you don't want to use all the data and compare the predictions with the data.
+Function `load_covid()` loads Covid-19 data from online repositories. The first argument is a string with the country's name. Use `country_list()` for a complete list of possibilities. The second argument is another string with the state's name *if* the country is "Brazil". Use `state_list()` for a similar list. Finally, you can use the last_date argument if you don't want to use all the data and compare the predictions with updated data. After loading the data using `load_covid()`, it can be plotted using the `plot` generic function.
 
-```{r}
+```{r, fig.asp=2/(sqrt(5)+1), fig.width=8, fig.align='center', warnings = FALSE}
 MGdata = load_covid("Brazil","MG")
+plot(MGdata)$new
 ```
+
+External data can also be loaded and estimated using the package. For that purpose, it needs to be put in an adequate format. Please read `help("covid19BH")` for an example of using external data to fit and predict one of the package models.
 
 ## Estimating model
 
 The model is estimated with function `pandemic_model`. It currently uses [rstan](https://github.com/stan-dev/rstan) to draw samples from the posterior distribution. The first argument can be either the output of the `load_covid()` function or a list with the proper elements. Customized control of the stan algorithm can be also set in this function. You can choose to fit the 'confirmed' or 'deaths' series. Use the option `covidLPconfig = TRUE` to use the same configuration of the app in https://dest-ufmg.shinyapps.io/app_COVID19/.
 
-```{r,}
+```{r}
 MGestimated = pandemic_model(MGdata, case_type = "deaths", covidLPconfig = TRUE)
 ```
 
@@ -46,7 +49,7 @@ Convergence diagnostics can be used on the 'fit' element of the output. In parti
 
 ```{r, fig.asp=2/(sqrt(5)+1), fig.align='center', fig.width=4}
 traceplot(MGestimated)+theme(legend.position = "")
-rstan::stan_dens(MGestimated$fit,pars=c("a","b","c","f"))
+density(MGestimated)
 ```
 
 Note: `traceplot` can be used directly on the output, without a reference to the 'fit' element nor the parameters.
@@ -72,10 +75,10 @@ pandemic_stats(MGpredicted)
 
 ## Plotting
 
-Generic function `plot` can be used on the prediction to plot the predictions using the `plotly` package, whose figure is interactive. Two plots are outputted, which can be stored for later use.
+Generic function `plot` can be used on the prediction to plot the predictions using the `plotly` package, whose figure is interactive. Up to two plots are outputted, which can be stored for later use.
 
 ```{r, fig.asp=2/(sqrt(5)+1), fig.width=8, fig.align='center', warnings = FALSE}
-MGplots = plot(MGpredicted)
+MGplots = plot(MGpredicted,term="both")
 MGplots$long
 MGplots$short
 ```

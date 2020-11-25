@@ -1,21 +1,5 @@
 # Installing PandemicLP
 
-## Installing binaries
-
-If your system is Windows or MacOS, you can install the binaries. Make sure your R version is updated to 4.0.3. If your R version is lower, then you are recommended to install the package from source, as instructed below. For installing the binaries, run the appropriate code for your version.
-
-```R
-# Windows
-install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.1.1.zip",repos=NULL)
-
-# MacOS
-install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.1.1.tgz",repos=NULL)
-```
-
-Note that the vignette will be readily available after this command is done running through the command `vignette("PandemicLP")`.
-
-## Installing from source
-
 First, make sure you have the `devtools` package installed by typing 
 
 ```R
@@ -29,10 +13,6 @@ devtools::install_github("CovidLP/PandemicLP", build_vignettes = TRUE)
 ```
 
 The option `build_vignettes = TRUE` will make the installation take longer, but it will make the example vignette available for viewing.
-
-## V8 dependency upon building from source
-
-Current version of rstan depends on the V8 JavaScript libraries. In order to install rstan, you might require to install it in your Unix-based system. On Windows, you might need to install R package V8 from the CRAN binaries by running `install.packages("V8")`.
 
 ## If installation fails on Mac OS
 

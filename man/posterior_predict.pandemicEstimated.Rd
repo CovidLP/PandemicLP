@@ -4,7 +4,7 @@
 \alias{posterior_predict.pandemicEstimated}
 \title{Draw from the posterior predictive distribution for pandemic data}
 \usage{
-\method{posterior_predict}{pandemicEstimated}(object, horizonLong = 500, horizonShort = 14)
+\method{posterior_predict}{pandemicEstimated}(object, horizonLong = 500, horizonShort = 14, ...)
 }
 \arguments{
 \item{object}{An object of class \code{pandemicEstimated} created by function \code{\link{pandemic_model}}.}
@@ -12,6 +12,8 @@
 \item{horizonLong}{How far into the future the long-term prediction is desired.}
 
 \item{horizonShort}{How far into the future the short-term prediction is desired.}
+
+\item{...}{Currently unused.}
 }
 \value{
 An object of class \code{pandemicPredicted}. It includes the sampled predictive distribution
@@ -67,5 +69,6 @@ CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Depart
 Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 }
 \seealso{
-\code{\link{pandemic_model}}, \code{\link{pandemic_stats}} and \code{\link{plot.pandemicPredicted}}.
+\code{\link{pandemic_model}}, \code{\link{pandemic_stats}} and \code{\link{plot.pandemicPredicted}}. Details
+about the models behind the calculations can be seen in \code{\link{models}}.
 }

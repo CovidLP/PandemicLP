@@ -5,14 +5,19 @@
 \title{pandemicEstimated objects: Fitted PandemicLP model}
 \description{
 The \pkg{PandemicLP} model-fitting functions return an object of S3 class
-\code{pandemicEstimated}, which is a list containing the components described below. \cr
-\cr
+\code{pandemicEstimated}, which is a list containing the components described below.
 }
 \section{Elements for \code{pandemicEstimated} objects}{
 
 \describe{
   \item{\code{model_name}}{
   The model name used.
+  }
+  \item{\code{multiwaves}}{
+  number of waves.
+  }
+  \item{\code{seasonal_effect}}{
+  String vector of the  weekdays' name with sazonal effect. Only for one wave model.
   }
   \item{\code{cases.type}}{
   The type of cases of interest used in modeling the epidemic.

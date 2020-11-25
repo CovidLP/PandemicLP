@@ -4,13 +4,15 @@
 \alias{plot.pandemicData}
 \title{Plot pandemic data}
 \usage{
-\method{plot}{pandemicData}(x, term = "both", color = TRUE, ...)
+\method{plot}{pandemicData}(x, y, cases = "new", color = TRUE, ...)
 }
 \arguments{
 \item{x}{Output of function \code{\link{load_covid}}.}
 
-\item{term}{A string which indicates whether new cases, cumulated cases or both plots should be generated.
-The argument must be a string being either 'new', 'cumulated' or 'both'.}
+\item{y}{This parameter does nothing}
+
+\item{cases}{A string which indicates whether new cases, cumulative cases or both plots should be generated.
+The argument must be a string being either 'new', 'cumulative' or 'both'.}
 
 \item{color}{A string which indicates whether the plot should be colorful or in gray scales.
 The argument must be a string being either TRUE or FALSE.}
@@ -18,17 +20,17 @@ The argument must be a string being either TRUE or FALSE.}
 \item{...}{Currently unused.}
 }
 \value{
-A list containing two objects, new and cumulated. "new" shows the plot for the new cases/deaths
-and "cumulated" shows the plot for the cumulated cases/deaths. If any of them did not get plotted due to lack of prediction or due to the \code{term}
+A list containing two objects, new and cumulative "new" shows the plot for the new cases/deaths
+and "cumulative" shows the plot for the cumulative cases/deaths. If any of them did not get plotted due to lack of prediction or due to the \code{cases}
 argument, its value will return NULL.
 
 By default both plot are generated.
-This is changed with the \code{term} argument.
+This is changed with the \code{cases} argument.
 \item{\code{new}}{
   The plotted new cases/deaths. The plots are for daily new confirmed cases and daily new deaths.
   }
-  \item{\code{cumulated.}}{
-  The plotted cumulated cases/deaths. The plots are for daily cumulative cases or daily cumulative deaths.
+  \item{\code{cumulative}}{
+  The plotted cumulative cases/deaths. The plots are for daily cumulative cases or daily cumulative deaths.
   }
 }
 \description{
