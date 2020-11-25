@@ -7,7 +7,7 @@ Authors@R: c(person("Débora", "de Freitas Magalhães", email = "deborafmag@gmai
             person("Marta Cristina", "Colozza Bianchi da Costa", email = "marta_bianchi@ufg.br", role = "ctb"),
             person("Guido", "Alberti Moreira", email = "guidoalber@gmail.com", role = c("cre","ctb"),comment=c(ORCID="0000-0001-7557-0874")),
             person("Thais", "Pacheco Menezes", email = "thaispacheco1207@gmail.com", role = "ctb"),
-            person("Marcos", "Oliveira Prates", email = "marcosop@est.ufmg.br", role = "ctb",comment=c(ORCID="0000-0001-8077-4898")))
+            person("Marcos", "Oliveira Prates", email = "marcosop@est.ufmg.br", role = "ctb"))
 Contact: CovidLP team <covidlp.team@gmail.com>
 Maintainer: Guido Alberti Moreira <guidoalber@gmail.com>
 Description: This package implements the methodology described in <http://est.ufmg.br/covidlp/home/pt/> which can be
