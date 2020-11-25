@@ -7,10 +7,14 @@
 using namespace Rcpp;
 
 
+RcppExport SEXP _rcpp_module_boot_stan_fit4multiwaves_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4poisson_static_generalized_logistic_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4seasonal_mod();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_rcpp_module_boot_stan_fit4multiwaves_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4multiwaves_mod, 0},
     {"_rcpp_module_boot_stan_fit4poisson_static_generalized_logistic_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4poisson_static_generalized_logistic_mod, 0},
+    {"_rcpp_module_boot_stan_fit4seasonal_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4seasonal_mod, 0},
     {NULL, NULL, 0}
 };
 
