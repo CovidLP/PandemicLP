@@ -8,21 +8,7 @@ PandemicLP is now on CRAN. To install the stable version, run
 install.packages("PandemicLP")
 ```
 
-## Installing binaries
-
-If your system is Windows or MacOS, you can install the binaries. Make sure your R version is updated to 4.0.2. If your R version is lower, then you are recommended to install the package from source, as instructed below. For installing the binaries, run the appropriate code for your version.
-
-```R
-# Windows
-install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.2.0.zip",repos=NULL)
-
-# MacOS
-install.packages("http://github.com/CovidLP/PandemicLP/raw/master/binaries/PandemicLP_0.2.0.tgz",repos=NULL)
-```
-
-Note that the vignette will be readily available after this command is done running through the command `vignette("PandemicLP")`.
-
-## Installing from source
+## Installing from github source
 
 First, make sure you have the `devtools` package installed by typing 
 
