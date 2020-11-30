@@ -1,4 +1,4 @@
-PandemicLP is a package in the [R](www.r-project.org) programming language. It can be used for predicting pandemic and epidemic long term cases and deaths counts. The methodology can be checkout out in the [CovidLP](http://est.ufmg.br/covidlp/home/pt/) website.
+PandemicLP is a package in the [R](www.r-project.org) programming language. It can be used for predicting pandemic and epidemic long term cases and deaths counts. The methodology can be checked out in the [CovidLP](http://est.ufmg.br/covidlp/home/pt/) website.
 
 # Installing PandemicLP
 
