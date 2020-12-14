@@ -149,7 +149,7 @@ plot.pandemicPredicted <- function(x,y,term = "long",color = TRUE,summary = TRUE
                                             ## Add pred dates to the x axis
                                             dtick = 14*86400000,
                                             tickformat = dt_format),
-                               yaxis = list(title = paste0("Cumulative ",ifelse(test_conf_death,"New Cases","New Deaths"))),
+                               yaxis = list(title = paste0("Cumulative ",ifelse(test_conf_death,"Cases","Deaths"))),
                                shapes = list(type = "line", opacity = 0.7, line = list(color = "black", width = 1),
                                              y0 = 0, y1 = 1, yref = "paper",
                                              x0 = last_date_n, x1 = last_date_n),
