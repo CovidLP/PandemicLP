@@ -9,7 +9,7 @@ This document explains the models used in the PandemicLP package in detail.
 \section{Growth curve for the mean cases}{
 
 The count data for number of cases or deaths is modeled according to an epidemiological model of growth.
-In particular, the average counts are \eqn{mu(t)} modeled with a generalized logistic curve:
+In particular, the average counts are \eqn{\mu(t)} modeled with a generalized logistic curve:
 \deqn{\mu(t) = a c f \frac{e^{-c t}}{(b+e^{-c t})^{f+1}}.}
 All parameters, that is \eqn{a,b,c} and \eqn{f} are positive.
 
