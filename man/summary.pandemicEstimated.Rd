@@ -13,7 +13,7 @@
 \arguments{
 \item{x}{an object of class \code{"summary.pandemicEstimated"}.}
 
-\item{...}{Currently unused.}
+\item{...}{currently unused.}
 
 \item{object}{an object of S3 class \code{\link{pandemicEstimated-objects}}.}
 
