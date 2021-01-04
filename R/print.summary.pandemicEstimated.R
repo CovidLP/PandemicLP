@@ -2,8 +2,8 @@
 #' @rdname summary.pandemicEstimated
 #' @method print summary.pandemicEstimated
 #'
-#' @param x An object of class \code{"summary.pandemicEstimated"}.
-#' @param ... Currently unused.
+#' @param x an object of class \code{"summary.pandemicEstimated"}.
+#' @param ... currently unused.
 #' @importFrom utils head
 #' @importFrom utils tail
 #' @export
