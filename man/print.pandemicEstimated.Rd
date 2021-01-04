@@ -7,11 +7,11 @@
 \method{print}{pandemicEstimated}(x, digits = 3, probs = c(0.025, 0.5, 0.975), info = TRUE, ...)
 }
 \arguments{
-\item{x}{An object of S3 class \code{\link{pandemicEstimated-objects}}.}
+\item{x}{an object of S3 class \code{\link{pandemicEstimated-objects}}.}
 
-\item{digits}{Number of digits to use for formatting numbers.}
+\item{digits}{number of digits to use for formatting numbers.}
 
-\item{probs}{A numeric vector of quantiles of interest. The default is
+\item{probs}{a numeric vector of quantiles of interest. The default is
 \code{c(0.025,0.5,0.975)}.}
 
 \item{info}{TRUE or FALSE: more details for output interpretation. The Default is TRUE.}
