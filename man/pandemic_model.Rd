@@ -20,12 +20,12 @@ pandemic_model(
 )
 }
 \arguments{
-\item{Y}{An object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}} or a list providing the epidemiological data for the model.
+\item{Y}{an object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}} or a list providing the epidemiological data for the model.
 The elements of this Y list are:
 
 \describe{
   \item{\code{data}:}{
-  A data frame with at least the following columns:
+  a data frame with at least the following columns:
 
   \describe{
   \item{\code{date}:}{a date vector. It should be of class 'Date' and format 'YYYY-MM-DD'.}
@@ -53,9 +53,8 @@ The elements of this Y list are:
   For formatting epidemiological data (not provided by the \code{load_covid} function) in the specified Y list format, see the \strong{Examples} section in
    \code{\link{covid19BH}}.}
 
-\item{case_type}{character string providing the type of cases of interest in modeling the epidemic.
-Current options are \code{"confirmed"} for confirmed cases or \code{"deaths"} for deaths.
-The default is \code{"confirmed"}.}
+\item{case_type}{a string providing the type of cases of interest in modelling the epidemic. 
+Current options are \code{"confirmed"} for confirmed cases or \code{"deaths"} for deaths. The default is \code{"confirmed"}.}
 
 \item{seasonal_effect}{string vector indicating the days of the week in which seasonal effect was observed.
 The vector can contain the full weekday name (sunday to saturday) or the first 3 letters,
@@ -69,17 +68,17 @@ The maximum cumulative total number of cases for the end of the epidemic in a lo
 p percent of its population. The default is \code{p = 0.08}. This is a model restriction.
 See more on the \code{\link{models}}.}
 
-\item{chains}{A positive integer specifying the number of Markov chains. The default is \code{1},
+\item{chains}{a positive integer specifying the number of Markov chains. The default is \code{1},
 which is default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).}
 
-\item{warmup}{A positive integer specifying the number of warmup (aka burnin) iterations per chain.
+\item{warmup}{a positive integer specifying the number of warmup (aka burnin) iterations per chain.
 These warmup samples are not used for inference.  The default is \code{2000}.}
 
-\item{thin}{A positive integer specifying the period for saving samples. The default is \code{3},
+\item{thin}{a positive integer specifying the period for saving samples. The default is \code{3},
 which is the default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).
 .}
 
-\item{sample_size}{A positive integer specifying the posterior sample's size per chain that will be used for inference.
+\item{sample_size}{a positive integer specifying the posterior sample's size per chain that will be used for inference.
 The total number of iterations per chain is:
 
  \code{warmup} + \code{thin} * \code{sample_size}
@@ -92,7 +91,7 @@ Any parameters whose values are not specified will receive initial values genera
 \code{init = "random"}. Specification of the initial values for \code{\link{pandemic_model}} can only be via list.
 See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}.}
 
-\item{...}{Other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
+\item{...}{other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
 Additional arguments can be \code{control}, \code{cores}, etc...}
 
 \item{covidLPconfig}{\code{TRUE} or \code{FALSE}: flag indicating whether to use default
