@@ -349,7 +349,7 @@ fitmodel=function(Y,case_type,seasonal_effect,n_waves,p, chains, warmup, thin, s
 #' a few useful statistics based on the predictions and
 #' \code{\link{plot.pandemicPredicted}} to plot the predicted values.
 #'
-#' @param Y An object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}} or a list providing the epidemiological data for the model.
+#' @param Y an object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}} or a list providing the epidemiological data for the model.
 #' The elements of this Y list are:
 #'
 #' \describe{
