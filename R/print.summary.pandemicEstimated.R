@@ -99,7 +99,7 @@ print.summary.pandemicEstimated=function(x,...){
   cat("\n------\n")
   cat("*For help interpreting the printed output see ?summary.pandemicEstimated\n")
   cat("*For more information see ?'summary,stanfit-method'\n")
-  cat("*For details on the model, priors and restrictions, see the Details section in ?pandemic_model\n")
+  cat("*For details on the model, priors and restrictions, see ?models\n")
   #cat("**a/b^f represents the assymptote of the cumulative cases curve")
   }
 
