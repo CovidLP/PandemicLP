@@ -16,7 +16,7 @@
 
 \item{info}{TRUE or FALSE: more details for output interpretation. The Default is TRUE.}
 
-\item{...}{Currently unused.}
+\item{...}{currently unused.}
 }
 \value{
 Returns \code{x}, invisibly.
