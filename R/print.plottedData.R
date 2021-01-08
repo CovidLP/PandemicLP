@@ -33,6 +33,6 @@ print.plottedPandemicData = function(x, ...){
     print(x$cumulative)
     } else if (plotnew) print(x$new) else print(x$cumulative)
 
-  cat('\nThe plot shows the confirmed cases and deaths series. Click legend to toggle individual series.')
+  cat('\nThe plot shows the confirmed cases and deaths series. Click legend to toggle individual series.\n')
   invisible(x)
 }
