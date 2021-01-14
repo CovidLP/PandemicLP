@@ -84,14 +84,14 @@ print.summary.pandemicEstimated=function(x,...){
 
   if(x$n_waves==1){              #gen logistic ou gen logistic with seasonal effect
     cat("\nRestrictions:")
-    cat("\n 1: ", "a/b^f","<",x$config.inputs$use_inputs$p,"*population")
+    cat("\n 1: ", "a/b^f","<",x$p,"*population")
     cat("\n 2: ", "f > 1\n")
   }
 
   if(x$n_waves==2){              #multiwaves:  2waves
     cat("\nRestrictions:")
-    cat("\n 1: ", "a_1/b_1","<",x$config.inputs$use_inputs$p,"*population")
-    cat("\n 2: ", "a_2/b_2","<",x$config.inputs$use_inputs$p,"*population\n")
+    cat("\n 1: ", "a_1/b_1","<",x$p,"*population")
+    cat("\n 2: ", "a_2/b_2","<",x$p,"*population\n")
   }
 
 
