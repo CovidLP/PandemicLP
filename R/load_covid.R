@@ -1,24 +1,24 @@
 #' Load Covid-19 Data
 #'
-#' This function pulls Covid-19 data up to a certain date, for a specified country (and state, if \code{country_name = "Brazil"}).
+#' @description This function pulls Covid-19 data up to a certain date, for a specified country (and state, if \code{country_name = "Brazil"}).
 #' The output of this function is in the correct format to be used directly into the model adjustment function
-#' \code{\link{pandemic_model}} included in this package.\cr
-#' \cr
-#' The user must online for this function to work.
+#' \code{\link{pandemic_model}} included in this package.
+#' 
+#' The user must be online for this function to work.
 #'
-#' @param country_name Character string specifying the country of interest.
+#' @param country_name string specifying the country of interest.
 #' Check \code{country_list()} for the list of countries available in the database.
-#' @param state_name Optional character string specifying the state of interest - only brazilians states currently
+#' @param state_name optional string specifying the state of interest - only brazilian states currently
 #' available in the database. \code{state_name} should be either \code{NULL} or a string of length 2.
 #' Check \code{state_list()} for the state abbreviations that will be used and the corresponding state names.
-#' @param last_date Optional date, character or factor argument specifying the last date in the data.
-#' It should be in the YYYY-MM-DD or YYYY/MM/DD format.The default is the most recent date available in the database.
+#' @param last_date optional date, character or factor argument specifying the last date in the data.
+#' It should be in the YYYY-MM-DD or YYYY/MM/DD format. The default is the most recent date available in the database.
 #'
 #' @return An object of S3 class \code{pandemicData}. It is a list with 3 items:
 #' \describe{
 #'   \item{\code{data}:}{ data frame with the number of cumulative cases, new cases, cumulative deaths and new deaths associated
 #'   with Covid-19 for each date, up to the \code{last_date} in the specified region.}
-#'   \item{\code{name}:}{ character string with the country name (and state name, if available).}
+#'   \item{\code{name}:}{ string with the country name (and state name, if available).}
 #'   \item{\code{population}:}{numeric object that contains the population size of the given region.}
 #' }
 #'

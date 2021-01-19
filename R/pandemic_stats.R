@@ -1,34 +1,35 @@
 #' Relevant Statistics of the Pandemic Model
 #'
-#' This function provides short and long-term predictions for the pandemic. 95\% credible intervals are
-#' assigned for the number of cases for every future date predicted, as well as for the total number of cases,
-#' and dates for the peak and end of the pandemic.\cr
-#' \cr
+#' @description This function provides short and long-term predictions for the pandemic. 95\% credible intervals are
+#' assigned to the number of cases for every future date predicted, as well as for the total number of cases,
+#' and dates for the peak and end of the pandemic.
+#' 
+#' 
 #' Short-term predictions are made on the cumulative counts and long-term predictions
 #' are based on the new case counts.
 #'
-#' @param object an object of S3 class \code{pandemicPredicted} created by function
-#'  \code{\link{posterior_predict.pandemicEstimated}}.
+#' @param object an object of S3 class \code{pandemicPredicted} created by method
+#'  \code{\link{posterior_predict.pandemicEstimated}} of function \code{posterior_predict}.
 #'
 #' @return An object of S3 class \code{pandemicStats}. This object is a list containing the following elements:
 #' \itemize{
 #'    \item{\code{data}:}{
-#'    A list with a data frame containing the observed pandemic data, a character string with the location name
-#'    and a character string indicating the type of cases predicted.
+#'    A list with a data frame containing the observed pandemic data, a string with the location name
+#'    and a string indicating the type of cases predicted.
 #'    }
 #'    \item{\code{ST_predict}:}{
 #'    A data frame with the short-term predictions for the number of cumulative cases. For each future date predicted,
-#'    the mean, median, 2.5 and 97.5 percentiles are provided.\cr
+#'    the mean, median, 2.5\% and 97.5\% percentiles are provided.\cr
 #'    The short-term horizon is determined by the \code{horizonShort} argument in the \code{posterior_predict} function.
 #'    }
 #'    \item{\code{LT_predict}:}{
 #'    A data frame with the long-term predictions for the number of new cases. For each future date predicted,
-#'    the mean, median, 2.5 and 97.5 percentiles are provided.\cr
+#'    the mean, median, 2.5\% and 97.5\% percentiles are provided.\cr
 #'    The long-term horizon is determined by the \code{horizonLong} argument in the \code{posterior_predict} function.
 #'    }
 #'    \item{\code{LT_summary}:}{
 #'    A list with the estimated total number of cases and the dates for the peak and end of the pandemic.
-#'    In each metric, the median, 2.5 and 97.5 percentiles are provided. For more information, see the
+#'    In each metric, the median, 2.5\% and 97.5\% percentiles are provided. For more information, see the
 #'    \strong{Details} section.\cr
 #'    }
 #'    \item{\code{mu}:}{
@@ -43,15 +44,17 @@
 #'  predicted new cases for the next 1,000 days.
 #'  }
 #'  \subsection{Estimated Peak Dates}{
-#'  The median, 2.5 and 97.5 percentiles are calculated on the mean number of new cases for the pandemic curve
-#'  (starting from the first observed data point until 1,000 days after the last date observed in the data).\cr
-#'  \cr
-#'  The 95\% credible interval for the peak of cases is selected such that the two limiting dates of the 97.5
-#'  percentile curve coincides with the highest value of the 2.5 percentile curve. This guarantees that all
-#'  possible curves belonging to the confidence band will peak within the defined interval.
+#'  The peak of the pandemic curve represents the highest number of daily cases reported.
+#'  
+#'  
+#'  The median, 2.5\% and 97.5\% percentiles are calculated on the mean number of new cases for the pandemic curve
+#'  (starting from the first observed data point until 1,000 days after the last date observed in the data).
+#'  The 95\% credible interval for the peak of cases is selected such that the two limiting dates of the 97.5\%
+#'  percentile curve coincides with the highest value of the 2.5\% percentile curve. This guarantees that all
+#'  possible curves belonging to the confidence band will peak within the defined interval. 
 #'  }
 #'  \subsection{End of the Pandemic Dates}{
-#'  Represents the 99 percentile of the total number of cases in the pandemic.
+#'  Represents the 99\% percentile of the total number of cases in the pandemic.
 #'  }
 #'
 #' @references
