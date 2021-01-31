@@ -392,9 +392,9 @@ fitmodel=function(Y,case_type,seasonal_effect,n_waves,p, chains, warmup, thin, s
 #' @param n_waves integer 1 or 2. This argument indicates the number of waves to be adjusted by mean curve.
 #' The default is 1. For details go to \code{\link{models}}.
 #'
-#' @param p a numerical value greater than 0 and less than or equal to 1. It's a percentage.
-#' The maximum cumulative total number of cases for the end of the epidemic in a location should be
-#' p percent of its population. The default is \code{p = 0.08}. This is a model restriction.
+#' @param p a numerical value greater than 0 and less than or equal to 1. It is 
+#'the percentage of the maximum cumulative total number of cases until the end of the
+#'epidemic in relation to the population of the location. The default is \code{p = 0.08}. This is a model restriction.
 #' See more on the \code{\link{models}}.
 #'
 #' @param chains a positive integer specifying the number of Markov chains. The default is \code{1},
@@ -415,7 +415,7 @@ fitmodel=function(Y,case_type,seasonal_effect,n_waves,p, chains, warmup, thin, s
 #'  The default is \code{1000}, which is the default value used by CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).
 #'
 #' @param init specification of the initial values of the parameters per chain. The default is \code{"random"}.
-#' See the \strong{Details} section for more info about model parameters.
+#' Go to  \code{\link{models}} for more info about model parameters.
 #' Any parameters whose values are not specified will receive initial values generated as described in
 #' \code{init = "random"}. Specification of the initial values for \code{\link{pandemic_model}} can only be via list.
 #' See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}.
