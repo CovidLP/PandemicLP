@@ -372,7 +372,7 @@ fitmodel=function(Y,case_type,seasonal_effect,n_waves,p, chains, warmup, thin, s
 #'
 #'   }
 #'
-#'   \item{\code{name}:}{a character string providing the name of Country/State/Location of the epidemiological data.}
+#'   \item{\code{name}:}{a string providing the name of Country/State/Location of the epidemiological data.}
 #'
 #'   \item{\code{population}:}{a positive integer specifying the population size of the
 #'    Country/State/Location selected.}
