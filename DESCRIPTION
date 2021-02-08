@@ -2,7 +2,7 @@ Package: PandemicLP
 Type: Package
 Title: Long Term Prediction for Epidemic and Pandemic Data
 Version: 0.2.1
-Date: 2020-12-14
+Date: 2021-02-08
 Authors@R: c(person("Débora", "de Freitas Magalhães", email = "deborafmag@gmail.com", role = "aut"),
             person("Marta Cristina", "Colozza Bianchi da Costa", email = "marta_bianchi@ufg.br", role = "aut"),
             person("Guido", "Alberti Moreira", email = "guidoalber@gmail.com", role = c("cre","aut"),comment=c(ORCID="0000-0001-7557-0874")),
