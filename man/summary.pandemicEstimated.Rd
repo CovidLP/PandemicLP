@@ -13,14 +13,14 @@
 \arguments{
 \item{x}{an object of class \code{"summary.pandemicEstimated"}.}
 
-\item{...}{currently unused.}
+\item{...}{Currently unused.}
 
-\item{object}{an object of S3 class \code{\link{pandemicEstimated-objects}}.}
+\item{object}{An object of S3 class \code{\link{pandemicEstimated-objects}}.}
 
-\item{probs}{a numeric vector of quantiles of interest. The default is
+\item{probs}{A numeric vector of quantiles of interest. The default is
 \code{c(0.025,0.5,0.975)}.}
 
-\item{digits}{number of digits to use for formatting numbers.}
+\item{digits}{Number of digits to use for formatting numbers.}
 
 \item{info}{TRUE or FALSE: more details for output interpretation. The Default is TRUE.}
 }

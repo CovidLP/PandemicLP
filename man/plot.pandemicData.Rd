@@ -24,7 +24,7 @@ A list containing two objects, new and cumulative "new" shows the plot for the n
 and "cumulative" shows the plot for the cumulative cases/deaths. If any of them did not get plotted due to lack of prediction or due to the \code{cases}
 argument, its value will return NULL.
 
-By default both plot are generated.
+By default, only the plot with new cases is generated.
 This is changed with the \code{cases} argument.
 \item{\code{new}}{
   The plotted new cases/deaths. The plots are for daily new confirmed cases and daily new deaths.

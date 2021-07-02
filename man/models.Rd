@@ -61,7 +61,7 @@ for reference.
 
 Two arguments in the function change the fitted model, as described below:
 \itemize{
-  \item 'seasonal': By leaving this argument \code{NULL}, the standard model is fitted. By supplying it with a vector
+  \item 'seasonal_effect': By leaving this argument \code{NULL}, the standard model is fitted. By supplying it with a vector
   of up to three weekdays, the desired seasonal effects are added to the model.
   \item 'n_waves': By leaving this argument equal to 1, the standard model is fitted. By changing it to
   2 implies a two waves model. Future versions of the package will allow for more waves.}

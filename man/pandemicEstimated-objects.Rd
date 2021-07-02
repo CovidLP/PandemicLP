@@ -13,11 +13,14 @@ The \pkg{PandemicLP} model-fitting functions return an object of S3 class
   \item{\code{model_name}}{
   the model name used.
   }
+  \item{\code{family}}{
+  string indicating data distribution.
+  }
   \item{\code{multiwaves}}{
   number of waves.
   }
   \item{\code{seasonal_effect}}{
-  string vector of the  weekdays' name with sazonal effect. Only for one wave model.
+  string vector of the  weekdays' name with sazonal effect.
   }
   \item{\code{cases.type}}{
   the type of cases of interest used in modeling the epidemic.

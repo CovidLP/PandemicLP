@@ -1,14 +1,4 @@
-PandemicLP is a package in the [R](www.r-project.org) programming language. It can be used for predicting pandemic and epidemic long term cases and deaths counts. The methodology can be checked out in the [CovidLP](http://est.ufmg.br/covidlp/home/pt/) website.
-
 # Installing PandemicLP
-
-PandemicLP is now on CRAN. To install the stable version, run
-
-```R
-install.packages("PandemicLP")
-```
-
-## Installing from github source
 
 First, make sure you have the `devtools` package installed by typing 
 

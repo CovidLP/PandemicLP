@@ -38,3 +38,7 @@
 #' @import methods
 #' @import dplyr
 NULL
+
+.onUnload <- function (libpath) {
+  library.dynam.unload("PandemicLP", libpath)
+}

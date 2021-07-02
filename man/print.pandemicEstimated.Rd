@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{an object of S3 class \code{\link{pandemicEstimated-objects}}.}
 
-\item{digits}{number of digits to use for formatting numbers.}
+\item{digits}{Number of digits to use for formatting numbers.}
 
 \item{probs}{a numeric vector of quantiles of interest. The default is
 \code{c(0.025,0.5,0.975)}.}

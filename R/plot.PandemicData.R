@@ -46,6 +46,11 @@ plot.pandemicData <- function(x,y,cases = "new",color = TRUE,...){
   cases = tolower(cases)
   if(!(cases %in% c("both","new","cumulative"))) stop("Invalid \'cases\' argument. Please read \'help(plot.pandemicData)\' for available options.")
 
+  if(cases == "new" & is.null(x$data$new_cases) & is.null(x$data$new_deaths)) stop("Invalid \'cases\' argument. The data only contain cumulative data (\'cases\' argument should be \'Cumulative\')")
+  if(cases == "both" & is.null(x$data$new_cases) & is.null(x$data$new_deaths)) stop("Invalid \'cases\' argument. The data only contain cumulative data (\'cases\' argument should be \'Cumulative\')")
+  if(cases == "cumulative" & is.null(x$data$cases) & is.null(x$data$deaths)) stop("Invalid \'cases\' argument. The data only contain daily data (\'cases\' argument should be \'New\')")
+  if(cases == "both" & is.null(x$data$cases) & is.null(x$data$deaths)) stop("Invalid \'cases\' argument. The data only contain daily data (\'cases\' argument should be \'New\')")
+
   cat(paste0("Plotting Data \n"))
 
   if(cases == "both") {
@@ -74,41 +79,60 @@ plot.pandemicData <- function(x,y,cases = "new",color = TRUE,...){
       data_plot_deaths = dados$deaths
     }
 
-    if(selTerm == "new"){
+    cases_deaths_test <- ifelse(ncol(dados)==5,"Complete",ifelse(is.null(data_plot_deaths), "Cases","Deaths"))
+    if(cases_deaths_test == "Complete"){
+      yaxis <- ifelse(selTerm == "new","New Cases per Day", "Cumulative Cases")
 
+      fig2 <- plotly::add_trace(plotly::plot_ly(dados),x = dados$date, y = data_plot_cases,
+                                type = 'scatter', mode = 'lines+markers', name = "Confirmed cases",
+                                hoverinfo = "x+y",
+                                marker = list(
+                                  color =  ifelse(color == TRUE,blu,'rgb(160,160,160)'),
+                                  line = list(color = ifelse(color == TRUE,dblu,'rgb(160,160,160)'), width = 1),
+                                  size = 5
+                                ),
+                                line = list(
+                                  color = ifelse(color == TRUE,blu,'rgb(160,160,160)'),
+                                  width = 1.5
+                                )
+      )
+
+      fig2 <- plotly::add_trace(fig2,x = dados$date, y = data_plot_deaths,
+                                type = 'scatter', mode = 'lines+markers', name = "Deaths",
+                                hoverinfo = "x+y",
+                                marker = list(
+                                  color = ifelse(color == TRUE,red,'rgb(96,96,96)'),
+                                  line = list(color = ifelse(color == TRUE,dred,'rgb(96,96,96)'), width = 1),
+                                  size = 5
+                                ),
+                                line = list(
+                                  color = ifelse(color == TRUE,red,'rgb(96,96,96)'),
+                                  width = 1.5
+                                )
+      )
     } else {
+      yaxis <- ifelse(selTerm == "new",ifelse(cases_deaths_test == "Cases","New Cases per Day","New Deaths per Day"),
+                      ifelse(cases_deaths_test == "Cases","Cumulative Cases","Cumulative Deaths"))
+      if(cases_deaths_test == "Cases"){
+        dados_plot = data_plot_cases
+      } else{
+        dados_plot = data_plot_deaths
+      }
 
+      fig2 <- plotly::add_trace(plotly::plot_ly(dados),x = dados$date, y = dados_plot,
+                                type = 'scatter', mode = 'lines+markers', name = ifelse(cases_deaths_test == "Cases","Confirmed cases","Confirmed Deats"),
+                                hoverinfo = "x+y",
+                                marker = list(
+                                  color =  ifelse(color == TRUE,ifelse(cases_deaths_test == "Cases",blu,red),'rgb(160,160,160)'),
+                                  line = list(color = ifelse(color == TRUE,ifelse(cases_deaths_test == "Cases",dblu,dred),'rgb(160,160,160)'), width = 1),
+                                  size = 5
+                                ),
+                                line = list(
+                                  color = ifelse(color == TRUE,ifelse(cases_deaths_test == "Cases",blu,red),'rgb(160,160,160)'),
+                                  width = 1.5
+                                )
+      )
     }
-
-    yaxis <- ifelse(selTerm == "new","New Cases per Day", "Cumulative Cases")
-
-    fig2 <- plotly::add_trace(plotly::plot_ly(dados),x = dados$date, y = data_plot_cases,
-                              type = 'scatter', mode = 'lines+markers', name = "Confirmed cases",
-                              hoverinfo = "x+y",
-                              marker = list(
-                                color =  ifelse(color == TRUE,blu,'rgb(160,160,160)'),
-                                line = list(color = ifelse(color == TRUE,dblu,'rgb(160,160,160)'), width = 1),
-                                size = 5
-                              ),
-                              line = list(
-                                color = ifelse(color == TRUE,blu,'rgb(160,160,160)'),
-                                width = 1.5
-                              )
-    )
-
-    fig2 <- plotly::add_trace(fig2,x = dados$date, y = data_plot_deaths,
-                              type = 'scatter', mode = 'lines+markers', name = "Deaths",
-                              hoverinfo = "x+y",
-                              marker = list(
-                                color = ifelse(color == TRUE,red,'rgb(96,96,96)'),
-                                line = list(color = ifelse(color == TRUE,dred,'rgb(96,96,96)'), width = 1),
-                                size = 5
-                              ),
-                              line = list(
-                                color = ifelse(color == TRUE,red,'rgb(96,96,96)'),
-                                width = 1.5
-                              )
-    )
 
     fig2 <- plotly::layout(fig2,title = title,
                            ## Add pred dates to the x axis

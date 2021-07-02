@@ -7,9 +7,12 @@
 pandemic_model(
   Y,
   case_type = "confirmed",
+  family = "poisson",
   seasonal_effect = NULL,
   n_waves = 1,
   p = 0.08,
+  phiTrunc = 0,
+  fTrunc = 1,
   chains = 1,
   warmup = 2000,
   thin = 3,
@@ -20,12 +23,14 @@ pandemic_model(
 )
 }
 \arguments{
-\item{Y}{an object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}} or a list providing the epidemiological data for the model.
+\item{Y}{an object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}}
+or a list providing the epidemiological data for the model.
 The elements of this Y list are:
 
 \describe{
   \item{\code{data}:}{
-  a data frame with at least the following columns:
+  a data frame with at least the 2 columns \code{date} and \code{new_cases} (or \code{new_deaths}).
+  It can also contain all following columns:
 
   \describe{
   \item{\code{date}:}{a date vector. It should be of class 'Date' and format 'YYYY-MM-DD'.}
@@ -50,29 +55,44 @@ The elements of this Y list are:
   }
 
 
-  For formatting epidemiological data (not provided by the \code{load_covid} function) in the specified Y list format, see the \strong{Examples} section in
+  For formatting epidemiological data (not provided by the \code{load_covid} function) in the specified Y list format,
+  see the ??? function, the vignette ???? or \strong{Examples} section in
    \code{\link{covid19BH}}.}
 
-\item{case_type}{a string providing the type of cases of interest in modelling the epidemic. 
-Current options are \code{"confirmed"} for confirmed cases or \code{"deaths"} for deaths. The default is \code{"confirmed"}.}
+\item{case_type}{a string providing the type of cases of interest in modelling the epidemic.
+Current options are \code{"confirmed"} for confirmed cases or \code{"deaths"} for deaths. The default is \code{"confirmed"}.
+This argument is not required when data frame \code{Y$data} (on the input argument \code{Y}) contains only information
+from one of the data series \code{new_cases} or \code{new_deaths}.}
+
+\item{family}{"poisson" or "negbin". This argument indicates the data distribution.
+The default is \code{family="poisson"}.}
 
 \item{seasonal_effect}{string vector indicating the days of the week in which seasonal effect was observed.
 The vector can contain the full weekday name (sunday to saturday) or the first 3 letters,
- up to a maximum of three weekdays. This argument could be used only for \code{n_waves=1}. For details go to \code{\link{models}}.}
+ up to a maximum of three weekdays. For details go to \code{\link{models}}.}
 
-\item{n_waves}{integer 1 or 2. This argument indicates the number of waves to be adjusted by mean curve.
+\item{n_waves}{a integer positive. This argument indicates the number of waves to be adjusted by mean curve.
 The default is 1. For details go to \code{\link{models}}.}
 
-\item{p}{a numerical value greater than 0 and less than or equal to 1. It is 
+\item{p}{a numerical value greater than 0 and less than or equal to 1. It is
 the percentage of the maximum cumulative total number of cases until the end of the
 epidemic in relation to the population of the location. The default is \code{p = 0.08}. This is a model restriction.
 See more on the \code{\link{models}}.}
+
+\item{phiTrunc}{a positive real number (or zero). This argument indicates a truncation on the priori of
+the 'phi' parameter of the Negative Binomial models. This input argument is required only when \code{family="negbin"}.
+The default is \code{phiTrunc=0}. See more on the \code{\link{models}}.}
+
+\item{fTrunc}{a positive real number (or zero). This argument indicates a truncation on the priori of
+the 'f' parameter of the Negative Binomial model with single wave. This input argument is required only when \code{family="negbin"}.
+The default is \code{fTrunc=1}. See more on the \code{\link{models}}.}
 
 \item{chains}{a positive integer specifying the number of Markov chains. The default is \code{1},
 which is default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).}
 
 \item{warmup}{a positive integer specifying the number of warmup (aka burnin) iterations per chain.
-These warmup samples are not used for inference.  The default is \code{2000}.}
+These warmup samples are not used for inference.  The default is \code{2000}, if \code{family="negbin"}
+the value default becomes \code{warmup=5000}.}
 
 \item{thin}{a positive integer specifying the period for saving samples. The default is \code{3},
 which is the default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).
@@ -95,7 +115,7 @@ See the detailed documentation for the init argument via list in \code{\link[rst
 Additional arguments can be \code{control}, \code{cores}, etc...}
 
 \item{covidLPconfig}{\code{TRUE} or \code{FALSE}: flag indicating whether to use default
-values of the CovidLP app as input arguments.
+values of the CovidLP app as input arguments. This argument is disabled when \code{family="negbin"}.
 
 If \code{covidLPconfig = TRUE}, the \code{\link[rstan]{sampling}} uses the following configuration:
 \code{chains = 1}, \code{warmup = 5000}, \code{thin = 3},  \code{sample_size = 1000},
