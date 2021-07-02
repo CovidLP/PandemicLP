@@ -1,8 +1,16 @@
-PandemicLP v0.2.1 (Release date: ??-??-??)
+PandemicLP v0.3.0 (Release date: 2021-07-02)
+==============
+
+Changes:
+
+*Consolidated changes from last version.
+
+
+PandemicLP v0.2.1 (Release date: 2021-05-08)
 ==============
 
 Changes:
 
 *Y input argument of the pandemic_model function allows to include a single data series 'new_cases' or 'new_deaths'.
-*plot.pandemicData allowing different data configurations (can pass only cases or only deaths)
+*plot.pandemicData allowing different data configurations (can pass only cases or only deaths).
 *Inclusion of new models: multiWave with seasonal effect; models with negative binomial distribution.
