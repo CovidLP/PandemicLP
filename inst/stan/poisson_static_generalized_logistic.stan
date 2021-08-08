@@ -19,7 +19,7 @@ parameters {
 
   real<lower=1> f;
   real<lower=-30> b01;
-  real<lower=0, upper=p*pop*exp(f*b01)> a;
+  real<lower=0, upper=p * pop * exp(f * b01)> a;
   real<lower=0> c;
 
 }

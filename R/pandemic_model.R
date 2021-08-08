@@ -476,10 +476,14 @@ fitmodel=function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n_wa
       }
     }
 
+    fitted_median <- apply(as.data.frame(mod_sim)[grep("mu",names(mod_sim))], 2, median)
+    names(fitted_median) <- paste0("error_",1:length(fitted_median))
     output=list(model_name=name,family=family,n_waves=n_waves,
                 seasonal_effect=seasonal_effect, cases.type=case_type,
                 config.inputs=list(covidLPconfig=covidLPconfig,use_inputs=use_inputs),
-                priors=priors,fit=mod_sim,Y=Y)
+                priors=priors,fit=mod_sim,Y=Y,
+                nominal_errors = config$data_stan$y - fitted_median,
+                relative_errors = (config$data_stan$y - fitted_median)/config$data_stan$y)
 
     return(output)
 
