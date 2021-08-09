@@ -3,7 +3,7 @@
 #' @description This function pulls Covid-19 data up to a certain date, for a specified country (and state, if \code{country_name = "Brazil"}).
 #' The output of this function is in the correct format to be used directly into the model adjustment function
 #' \code{\link{pandemic_model}} included in this package.
-#' 
+#'
 #' The user must be online for this function to work.
 #'
 #' @param country_name string specifying the country of interest.
@@ -48,7 +48,7 @@
 
 load_covid <- function(country_name, state_name = NULL, last_date){
 
-  if(curl::has_internet() == F) stop("The user must be online to use this function")
+  if(!curl::has_internet()) stop("The user must be online to use this function")
 
   baseURLbr <-"https://raw.githubusercontent.com/covid19br/covid19br.github.io/master/dados"
   baseURL<-"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series"
@@ -57,8 +57,8 @@ load_covid <- function(country_name, state_name = NULL, last_date){
 
   # Error checking
   if(nchar(state_name) == 2 && !is.null(state_name)) {state_name <- toupper(state_name)}
-  if(class(country_name) == "character" ) country_name <- capitalize(tolower(country_name)) else stop("country_name must be a character string")
-  if(!is.null(state_name) && class(state_name) != "character") stop("state_name must be a string of length 2")
+  if(is.character(country_name)) country_name <- capitalize(tolower(country_name)) else stop("country_name must be a character string")
+  if(!is.null(state_name) && !is.character(state_name)) stop("state_name must be a string of length 2")
   if(!(country_name %in% country_list)) stop("This country_name could not be found in the database. Use country_list() for available options")
   if(country_name != "Brazil" && !is.null(state_name)) warning("Selected country_name does not have state_name options available")
   if(nchar(state_name) != 2 && !is.null(state_name)) stop("state_name must be a string of length 2")
@@ -67,16 +67,16 @@ load_covid <- function(country_name, state_name = NULL, last_date){
 
   if (country_name != "Brazil") { # Loading Brazil country and states data. Different database as other countries
     covidworld <- try(utils::read.csv(file.path(baseURL,"time_series_covid19_confirmed_global.csv"), check.names=FALSE, stringsAsFactors=FALSE))
-    if (class(covidworld) == "try-error") stop("Something went wrong retrieving the data from the repository. If the problem persists, please try again later or contact us at covidlp.team@gmail.com.")
-    current_date <- as.Date(stats::variable.names(covidworld[dim(covidworld)[2]]), format = "%m/%d/%y")
+    if (is(covidworld, "try-error")) stop("Something went wrong retrieving the data from the repository. If the problem persists, please try again later or contact us at covidlp.team@gmail.com.")
+    current_date <- as.Date(stats::variable.names(covidworld[ncol(covidworld)]), format = "%m/%d/%y")
   } else {
     covidbr <- try(utils::read.csv(file.path(baseURLbr,"EstadosCov19.csv"), check.names=FALSE, stringsAsFactors=FALSE))
-    if (class(covidbr) == "try-error") stop("Something went wrong retrieving the data from the repository. If the problem persists, please try again later or contact us at covidlp.team@gmail.com.")
+    if (is(covidbr,"try-error")) stop("Something went wrong retrieving the data from the repository. If the problem persists, please try again later or contact us at covidlp.team@gmail.com.")
     current_date <- as.Date(max(covidbr$data))
   }
   if(missing(last_date)) last_date <- current_date
   if(last_date > current_date) warning(paste0("Invalid last_date. Database only contains data up to ", current_date))
-  if(class(last_date) == "character" || class(last_date) == "factor") {
+  if(is.character(last_date) || is.factor(last_date)) {
     last_date<- try(as.Date(last_date))
     if(class(last_date) == "try-error" || is.na(last_date))
       stop("last_date format must be YYYY-MM-DD or YYYY/MM/DD")
@@ -167,7 +167,7 @@ load_covid <- function(country_name, state_name = NULL, last_date){
     }
   }
 
-  if(dim(Y)[1] == 0) warning("last_date assignment resulted in an empty data frame")
+  if(dim(Y)[1] == 0) warning("last_date assignment resulted in an empty data frame.")
 
   list_out = list(data = as.data.frame(Y),
                   name = ifelse(is.null(state_name), paste0(country_name), paste0(country_name,"_",state_name)),
