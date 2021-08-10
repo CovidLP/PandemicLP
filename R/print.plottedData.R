@@ -20,11 +20,11 @@
 #' @seealso \code{\link{load_covid}} and \code{\link{plot.pandemicData}}
 #' @export
 print.plottedPandemicData = function(x, ...){
-  if (class(x) != "plottedPandemicData") stop("Please use the output of the plot.pandemicData method()")
+  if (!is(x, "plottedPandemicData")) stop("Please use the output of the plot.pandemicData method()")
 
   plotnew = !is.null(x$new)
   plotcumulative = !is.null(x$cumulative)
-  if (!any(plotnew,plotcumulative)) stop("No plots found.")
+  if (!any(plotnew, plotcumulative)) stop("No plots found.")
 
   if (plotnew & plotcumulative){
     print(x$new)

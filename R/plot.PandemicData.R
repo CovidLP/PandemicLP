@@ -35,15 +35,15 @@
 #'
 #' @method plot pandemicData
 #' @export
-plot.pandemicData <- function(x,y,cases = "new",color = TRUE,...){
+plot.pandemicData <- function(x, y, cases = "new", color = TRUE, ...){
 
-  if(class(x) == "pandemicData" | class(x) == "list") {
+  if(is(x, "pandemicData") | is.list(x)) {
     test <- 'ok'
   } else {
-    stop("Please use the output of the load_covid() function or a list")
+    stop("Please use the output of the load_covid() function or a list.")
   }
 
-  cases = tolower(cases)
+  cases <- tolower(cases)
   if(!(cases %in% c("both","new","cumulative"))) stop("Invalid \'cases\' argument. Please read \'help(plot.pandemicData)\' for available options.")
 
   if(cases == "new" & is.null(x$data$new_cases) & is.null(x$data$new_deaths)) stop("Invalid \'cases\' argument. The data only contain cumulative data (\'cases\' argument should be \'Cumulative\')")
@@ -51,7 +51,7 @@ plot.pandemicData <- function(x,y,cases = "new",color = TRUE,...){
   if(cases == "cumulative" & is.null(x$data$cases) & is.null(x$data$deaths)) stop("Invalid \'cases\' argument. The data only contain daily data (\'cases\' argument should be \'New\')")
   if(cases == "both" & is.null(x$data$cases) & is.null(x$data$deaths)) stop("Invalid \'cases\' argument. The data only contain daily data (\'cases\' argument should be \'New\')")
 
-  cat(paste0("Plotting Data \n"))
+  cat(paste0("Plotting Data.\n"))
 
   if(cases == "both") {
     terms <- c("new","cumulative")
@@ -66,7 +66,8 @@ plot.pandemicData <- function(x,y,cases = "new",color = TRUE,...){
   dred <- 'rgb(100, 30, 30)'
   dt_format <- "%d/%b/%y"
 
-  title <- ifelse(grepl("_", x$name, fixed=TRUE) == TRUE, paste(substr(x$name,1,5), "/", substr(x$name,8,9),sep = ""),
+  title <- ifelse(grepl("_", x$name, fixed = TRUE),
+                  sub("_", "/", x$name),
                   x$name)
 
   for(selTerm in terms){
@@ -79,11 +80,11 @@ plot.pandemicData <- function(x,y,cases = "new",color = TRUE,...){
       data_plot_deaths = dados$deaths
     }
 
-    cases_deaths_test <- ifelse(ncol(dados)==5,"Complete",ifelse(is.null(data_plot_deaths), "Cases","Deaths"))
+    cases_deaths_test <- ifelse(ncol(dados) == 5, "Complete", ifelse(is.null(data_plot_deaths), "Cases", "Deaths"))
     if(cases_deaths_test == "Complete"){
       yaxis <- ifelse(selTerm == "new","New Cases per Day", "Cumulative Cases")
 
-      fig2 <- plotly::add_trace(plotly::plot_ly(dados),x = dados$date, y = data_plot_cases,
+      fig2 <- plotly::add_trace(plotly::plot_ly(dados), x = dados$date, y = data_plot_cases,
                                 type = 'scatter', mode = 'lines+markers', name = "Confirmed cases",
                                 hoverinfo = "x+y",
                                 marker = list(
