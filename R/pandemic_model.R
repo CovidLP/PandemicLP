@@ -6,16 +6,16 @@
 ####### auxiliar function "seasonal_code( dates,s_e): coding the days of the week with seasonal effect
 # dates = observed dates vector; s_e = seasonal_effects =  string vector with full weekdays' name
 
-seasonal_code=function(dates,s_e){
+seasonal_code <- function(dates, s_e){
 
-  if(is.null(s_e)) code=NULL else {       #model doesn't have seasonal effect
+  if(is.null(s_e)) code <- NULL else {       #model doesn't have seasonal effect
 
     week=c("sunday", "monday", "tuesday", "wednesday", "thursday",
            "friday", "saturday")[as.POSIXlt(as.Date(dates[1:7]))$wday + 1]
 
     code=c()
     for(i in 1:length(s_e)){
-      code[i]=which(week==s_e[i])
+      code[i] <- which(week == s_e[i])
     }
   }
   return(code)
@@ -257,11 +257,11 @@ return(out)
 
 including_auxparameters=function(init){    #if init="random" :  this auxiliar function is not necessary
 
-  if(class(init)=="list") {
+  if(is.list(init)) {
 
     for(j in 1:length(init)){     #including b1_1, excluding b1 (multiwaves): user view
 
-      k=which(names(init[[j]])=="b")
+      k = which(names(init[[j]])=="b")
 
       if(length(k)!=0){
         init[[j]]$b1= log(init[[j]]$b)
@@ -334,15 +334,15 @@ if(class(init)=="list"){
 #' @importClassesFrom rstan stanfit
 
 
-fitmodel=function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n_waves,p,
+fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n_waves,p,
                   phiTrunc, fTrunc,
                   chains, warmup, thin, sample_size, init,...,covidLPconfig){
 
 ########### stan configuration
 
-  s_code=seasonal_code(Y$data$date,seasonal_effect)    #codifing seasonal_effect
+  s_code <- seasonal_code(Y$data$date, seasonal_effect)    #codifing seasonal_effect
 
-  config=config_stan(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,     #confit stan
+  config <- config_stan(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,     #confit stan
                      chains,init,covidLPconfig)
 
   init=including_auxparameters(config$init)    #replace initial values, by user, by initial values of the auxiliar paremeters ( when necessary) for datastan
@@ -381,7 +381,7 @@ fitmodel=function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n_wa
 }
 
 
-  if(class(mod_sim) != "try-error"){
+  if(!is(mod_sim, "try-error")){
 
 ########### preparing output:
 
@@ -477,8 +477,8 @@ fitmodel=function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n_wa
     }
 
     fitted_median <- apply(as.data.frame(mod_sim)[grep("mu",names(mod_sim))], 2, median)
-    names(fitted_median) <- paste0("error_",1:length(fitted_median))
-    output=list(model_name=name,family=family,n_waves=n_waves,
+    names(fitted_median) <- paste0("error_", 1:length(fitted_median))
+    output <- list(model_name=name,family=family,n_waves=n_waves,
                 seasonal_effect=seasonal_effect, cases.type=case_type,
                 config.inputs=list(covidLPconfig=covidLPconfig,use_inputs=use_inputs),
                 priors=priors,fit=mod_sim,Y=Y,
@@ -725,108 +725,105 @@ fitmodel=function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n_wa
 #'
 #' @export
 
-pandemic_model = function(Y, case_type = "confirmed",family="poisson", seasonal_effect=NULL, n_waves=1, p = 0.08,
-                          phiTrunc=0, fTrunc=1, chains = 1, warmup = 2e3, thin = 3,
+pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal_effect = NULL, n_waves = 1, p = 0.08,
+                          phiTrunc = 0, fTrunc = 1, chains = 1, warmup = 2e3, thin = 3,
                           sample_size = 1e3, init = "random", ..., covidLPconfig = FALSE) {
 
-  points = list(...)
+  points <- list(...)
 
-  if(!is.null(points[["algorithm"]])) stop("The input 'algorithm' of the Stan sampler cannot be used: The sampling algorithm is 'NUTS' in pandemic_model function")
+  if(!is.null(points[["algorithm"]])) stop("The input 'algorithm' of the Stan sampler cannot be used: The sampling algorithm is 'NUTS' in pandemic_model function.")
 
 
   ############### preparing data and warning for user  whend data is not load_covid
 
   if(missing(Y)) stop("Y is a required argument. See help(pandemic_model)")
-  if(!("list" %in% class(Y)) && !("pandemicData" %in% class(Y))) stop("Y should be a list or an objectof S3 Class 'pandemicData'. See help(pandemic_model) and help(load_covid)")
+  if(!is.list(Y) && !is(Y, "pandemicData")) stop("Y should be a list or an object of S3 Class 'pandemicData'. See help(pandemic_model) and help(load_covid).")
 
-  names(Y)=tolower(names(Y))
-  if(!("data" %in% names(Y)) | !("name" %in% names(Y)) |!("population" %in% names(Y))) stop("object list Y should have elementes 'data', 'name', 'population'. See help(pandemic_model)")
-  if(!("data.frame" %in% class(Y$data))) stop("Y$data should be a data.frame. See help(pandemic_model)")
+  names(Y) <- tolower(names(Y))
+  if(!(all(c("data", "name", "population") %in% names(Y)))) stop("object list Y should have elementes 'data', 'name', 'population'. See help(pandemic_model).")
+  if(!is.data.frame(Y$data)) stop("Y$data should be a data.frame. See help(pandemic_model).")
 
-  data_cases = NULL  #indicator of the Y$data full: both 'new_cases' and 'new_deaths'.
-  names(Y$data)=tolower(names(Y$data))
+  data_cases <-  NULL  #indicator of the Y$data full: both 'new_cases' and 'new_deaths'.
+  names(Y$data) <- tolower(names(Y$data))
 
   # Y$data with 'new_deaths' and without 'new_cases':
-  if(!("new_cases" %in% names(Y$data)) && "new_deaths" %in% names(Y$data) && class(Y$data$new_deaths) %in% c("integer","numeric")){
-  data_cases=FALSE
-  Y$data=cbind(Y$data,new_cases=Y$data$new_deaths)
+  if(!("new_cases" %in% names(Y$data)) && "new_deaths" %in% names(Y$data) && is.numeric(Y$data$new_deaths)){
+  data_cases <- FALSE
+  Y$data <- cbind(Y$data, new_cases = Y$data$new_deaths)
   #Y$data with 'new_cases' and without 'new_deaths':
-  } else if(!("new_deaths" %in% names(Y$data)) && "new_cases" %in% names(Y$data) && class(Y$data$new_cases) %in% c("integer","numeric")){
-    data_cases=TRUE
-    Y$data=cbind(Y$data,new_deaths=Y$data$new_cases)
-  } else if(!("new_cases" %in% names(Y$data)) && !("new_deaths" %in% names(Y$data))) stop("data frame Y$data should have at least one of the 'new_cases' or 'new_deaths' data series.")
+  } else if(!("new_deaths" %in% names(Y$data)) && "new_cases" %in% names(Y$data) && is.numeric(Y$data$new_cases)){
+    data_cases <- TRUE
+    Y$data <- cbind(Y$data, new_deaths = Y$data$new_cases)
+  } else if(!any(c("new_cases", "new_deaths") %in% names(Y$data))) stop("data frame Y$data should have at least one of the 'new_cases' or 'new_deaths' data series.")
 
 
   #Y$data without either 'cumulative cases':
-  if("new_cases" %in% names(Y$data) && !("cases" %in% names(Y$data)) && class(Y$data$new_cases) %in% c("integer","numeric")) {
-    Y$data=cbind(Y$data,cases=cumsum(Y$data$new_cases))
+  if("new_cases" %in% names(Y$data) && !("cases" %in% names(Y$data)) && is.numeric(Y$data$new_cases)) {
+    Y$data <- cbind(Y$data, cases = cumsum(Y$data$new_cases))
   }
-  if("new_deaths" %in% names(Y$data) && !("deaths" %in% names(Y$data)) && class(Y$data$new_deaths) %in% c("integer","numeric")) {
-    Y$data=cbind(Y$data,deaths=cumsum(Y$data$new_deaths))
+  if("new_deaths" %in% names(Y$data) && !("deaths" %in% names(Y$data)) && is.numeric(Y$data$new_deaths)) {
+    Y$data <- cbind(Y$data, deaths = cumsum(Y$data$new_deaths))
   }
 
-
-  if(!("date" %in% names(Y$data)) | !("cases" %in% names(Y$data)) |!("deaths" %in% names(Y$data))  |!("new_cases" %in% names(Y$data))  |!("new_deaths" %in% names(Y$data)) ) stop("Y$data should be a data.frame with column names: 'date' and at least one of the 'new_cases' or 'new_deaths'. See help(pandemic_model)")
-  if(!("Date" %in% class(Y$data$date))) stop("Y$data$date should be of class 'Date' and format 'YYYY-MM-dd' " )
-  if(!(class(Y$data$cases) %in% c("integer","numeric")) | !(class(Y$data$deaths) %in% c("integer","numeric")) | !(class(Y$data$new_cases) %in% c("integer","numeric")) | !(class(Y$data$new_deaths) %in% c("integer","numeric"))) stop( "Y$data: values in 'cases', 'deaths', 'new_cases' and 'new_deaths' columns should be as.integer or as.numeric")
+  if(!all(c("date", "cases", "deaths", "new_cases", "new_deaths") %in% names(Y$data))) stop("Y$data should be a data.frame with column names: 'date' and at least one of the 'new_cases' or 'new_deaths'. See help(pandemic_model)")
+  if(!is(Y$data$date, "Date")) stop("Y$data$date should be of class 'Date' and format 'YYYY-MM-dd' " )
+  if(!all(is.numeric(Y$data$cases), is.numeric(Y$data$deaths), is.numeric(Y$data$new_cases), is.numeric(Y$data$new_deaths))) stop( "Y$data: values in 'cases', 'deaths', 'new_cases' and 'new_deaths' columns should be as.integer or as.numeric")
 
   #data processing: new_cases, new_deaths < 0:
-  while(any(Y$data$new_cases <0)){
-    pos <- which(Y$data$new_cases <0)
+  while(any(Y$data$new_cases < 0)){
+    pos <- which(Y$data$new_cases < 0)
     for(j in pos){
-      Y$data$new_cases[j-1] = Y$data$new_cases[j] + Y$data$new_cases[j-1]
+      Y$data$new_cases[j - 1] = Y$data$new_cases[j] + Y$data$new_cases[j - 1]
       Y$data$new_cases[j] = 0
-      Y$data$cases[j-1] = Y$data$cases[j]
+      Y$data$cases[j - 1] = Y$data$cases[j]
     }
   }
 
-  while(any(Y$data$new_deaths <0)){
-    pos <- which(Y$data$new_deaths <0)
+  while(any(Y$data$new_deaths < 0)){
+    pos <- which(Y$data$new_deaths < 0)
     for(j in pos){
-      Y$data$new_deaths[j-1] = Y$data$new_deaths[j] + Y$data$new_deaths[j-1]
+      Y$data$new_deaths[j - 1] = Y$data$new_deaths[j] + Y$data$new_deaths[j - 1]
       Y$data$new_deaths[j] = 0
-      Y$data$deaths[j-1] = Y$data$deaths[j]
+      Y$data$deaths[j - 1] = Y$data$deaths[j]
     }
   }
 
 
-  if(is.null(Y$name[[1]])) stop("name of Country/State/Location  should be informed in Y$name as character")
-  if(!("character" %in% class(Y$name[[1]]))) stop("name of Country/State/Location should be informed in Y$name as character")
+  if(is.null(Y$name[[1]])) stop("name of Country/State/Location should be informed in Y$name as character")
+  if(!(is.character(Y$name[[1]]))) stop("name of Country/State/Location should be informed in Y$name as character")
 
 
   if(is.null(Y$population)) stop("Country/State/Location population should be informed in Y$population")
-  if(!(class(Y$population) %in% c("integer","numeric"))) stop("Country/State/Location population should be informed in Y$population as.numeric or as.integer")
+  if(!(is.numeric(Y$population))) stop("Country/State/Location population should be informed in Y$population as.numeric or as.integer")
 
   ########## warning for user for the inputs:  case_type, p, init, family, phiTrunc, fTrunc
 
-  case_type=tolower(case_type)
-  if(case_type!="deaths" && case_type!="confirmed") stop("ERROR input 'case_type': choose 'deaths' or 'confirmed' for the fit model")
+  case_type <- tolower(case_type)
+  if(case_type != "deaths" && case_type != "confirmed") stop("ERROR input 'case_type': choose 'deaths' or 'confirmed' for the fit model")
 
   if(!is.null(data_cases)){    #data_cases=NULL indicator Y$data with both 'new_cases' and 'new_deaths'.
-  if(data_cases){case_type="confirmed"} else {case_type="deaths"} #data_cases=TRUE: user data with 'new_cases',=FALSE with 'new_deaths'
-  } else {
-    case_type=case_type
+  if(data_cases){case_type <- "confirmed"} else {case_type <- "deaths"} #data_cases=TRUE: user data with 'new_cases',=FALSE with 'new_deaths'
   }
 
-  family=tolower(family)
-  if(family!="poisson" && family!="negbin") stop("This package supports only the negative binomial and poisson distributions for the data.")
+  family <- tolower(family)
+  if(family != "poisson" && family != "negbin") stop("This package supports only the negative binomial and poisson distributions for the data.")
 
-  if(class(p)!="numeric" | p <= 0 | p >1) stop("p should be a percent of Country/State/Location population, 0<p<=1")
+  if(!is.numeric(p) | p <= 0 | p >1) stop("p should be a percent of Country/State/Location population, 0 < p <= 1")
 
-  if(class(init)=="function") stop("pandemic_model does not allow initial values via function. See you help(pandemic_model)")
+  if(is.function(init)) stop("pandemic_model does not allow initial values via function. See you help(pandemic_model)")
 
-  if(family=="negbin"){
-  if(class(phiTrunc)!="numeric" | class(fTrunc)!="numeric" |  phiTrunc < 0  |  fTrunc < 0) stop("phiTrunc, fTrunc should be a positive real or zero")
-  } else if(phiTrunc!=0 | fTrunc!=1){
+  if(family == "negbin"){
+  if(!is.numeric(phiTrunc) | !is.numeric(fTrunc) | phiTrunc < 0 | fTrunc < 0) stop("phiTrunc, fTrunc should be a positive real or zero")
+  } else if(phiTrunc != 0 | fTrunc != 1){
     warning("The phiTrunc and fTrunc input arguments are disabled for models with poisson distribution.")
     }
 
 
   ####  warning: seasonal_effect
   if(!is.null(seasonal_effect)){
-    if(class(seasonal_effect) != "character") stop("ERROR input 'seasonal_effect': vector of a maximum of three week days (sunday to saturday)")
+    if(!is.character(seasonal_effect)) stop("ERROR input 'seasonal_effect': vector of a maximum of three week days (sunday to saturday)")
     if(length(seasonal_effect) > 3) stop("ERROR input 'seasonal_effect': vector of a maximum of three week days (sunday to saturday)")
-    seasonal_effect=tolower(seasonal_effect)
+    seasonal_effect <- tolower(seasonal_effect)
 
   #transforms 3 initial letters of the weekday's name in full name
     for (s in 1:length(seasonal_effect))
@@ -839,61 +836,57 @@ pandemic_model = function(Y, case_type = "confirmed",family="poisson", seasonal_
                   seasonal_effect[s] = "friday" else if (seasonal_effect[s] == "sat")
                     seasonal_effect[s] = "saturday"
 
-    days=c("sunday", "monday", "tuesday", "wednesday", "thursday","friday", "saturday")
+    days <- c("sunday", "monday", "tuesday", "wednesday", "thursday","friday", "saturday")
     if(!(seasonal_effect[1] %in% days)  ) stop("ERROR input 'seasonal_effect': vector of a maximum of three week days (sunday to saturday)")
-    if(!(seasonal_effect[2] %in% c(days,NA))  ) stop("ERROR input 'seasonal_effect': vector of a maximum of three week days (sunday to saturday)")
-    if(!(seasonal_effect[3] %in% c(days,NA))  ) stop("ERROR input 'seasonal_effect': vector of a maximum of three week days (sunday to saturday)")
+    if(!(seasonal_effect[2] %in% c(days, NA))  ) stop("ERROR input 'seasonal_effect': vector of a maximum of three week days (sunday to saturday)")
+    if(!(seasonal_effect[3] %in% c(days, NA))  ) stop("ERROR input 'seasonal_effect': vector of a maximum of three week days (sunday to saturday)")
     ### warning: unsupported  seasonal effect with multiplewaves >=2:
 
     #if(n_waves!=1) stop("current version of the PandemicLP package only supports seasonal effect for the one wave models")
   }
 
-  if (any(table(seasonal_effect)>1)) stop("ERROR input 'seasonal_effect': cannot repeat weekday")
+  if (any(table(seasonal_effect) > 1)) stop("ERROR input 'seasonal_effect': cannot repeat weekday")
 
   ### warning: n_waves:
 
-  if( !(class(n_waves) %in% c("numeric","integer")) | n_waves <=0 ) stop("input 'n_waves' must be a positive integer.")
-  #if(n_waves>=4) warning("current version of the PandemicLP package tested with up to 3 waves.")
+  if( !is.numeric(n_waves) | n_waves != floor(n_waves) | n_waves <= 0 ) stop("input 'n_waves' must be a positive integer.")
 
   #observation:
   # if !(is.null(seasonal_effect)) -->  seasonal model, in current version!
 
 
-  ######## warning for user whend used covidLPconfig=TRUE:
-
-  if(covidLPconfig && family=="negbin") {
-    covidLPconfig=FALSE
+  ######## warning for user when covidLPconfig = TRUE:
+  if(covidLPconfig){
+  if(family == "negbin") {
+    covidLPconfig <- FALSE
     warning("The covidLPconfig setting is disabled for models with negative binomial distribution.")
   }
 
-  if(covidLPconfig){
+  if(!is.null(points[["control"]])) stop("The input 'control' cannot be used when covidLPconfig = TRUE: CovidLPconfig settings control sampler behavior")
 
-    if(!is.null(points[["control"]])) stop("The input 'control' cannot be used when covidLPconfig = TRUE: CovidLPconfig settings control sampler behavior")
+  if(chains!=1 | warmup!=2e3 | thin!=3 | sample_size !=1e3 | init != "random" ){
+    warning("There is at least one configuration different from the ones provided in CovidLPconfig: CovidLPconfig settings will be used")
+  }
 
-
-    if(chains!=1 | warmup!=2e3 | thin!=3 | sample_size !=1e3 | init != "random" ){
+  if(  p != 0.08 ){
+    if(case_type=="confirmed"){
       warning("There is at least one configuration different from the ones provided in CovidLPconfig: CovidLPconfig settings will be used")
     }
-
-    if(  p!=0.08 ){
-      if(case_type=="confirmed"){
-        warning("There is at least one configuration different from the ones provided in CovidLPconfig: CovidLPconfig settings will be used")
-      }
-      if(case_type=="deaths" && p!=0.02){
-        warning("There is at least one configuration different from the ones provided in CovidLPconfig: CovidLPconfig settings will be used")
-      }
+    if(case_type == "deaths" && p != 0.02){
+      warning("There is at least one configuration different from the ones provided in CovidLPconfig: CovidLPconfig settings will be used")
     }
+  }
 
   }
 
   ######################################## fitted model:
 
-  fit=fitmodel(Y=Y,data_cases=data_cases,family=family,case_type=case_type,
-               seasonal_effect=seasonal_effect, n_waves=n_waves, p=p,phiTrunc=phiTrunc,
+  fit <- fitmodel(Y=Y,data_cases=data_cases,family=family,case_type=case_type,
+               seasonal_effect=seasonal_effect, n_waves=n_waves, p = p, phiTrunc = phiTrunc,
                fTrunc=fTrunc, chains=chains, warmup=warmup,
-                thin=thin, sample_size=sample_size, init=init,..., covidLPconfig=covidLPconfig)
+                thin=thin, sample_size=sample_size, init=init,..., covidLPconfig = covidLPconfig)
 
-  class(fit)="pandemicEstimated"
+  class(fit) <- "pandemicEstimated"
 
   return(fit)
 
