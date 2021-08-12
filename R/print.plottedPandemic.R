@@ -17,7 +17,7 @@
 #' @seealso \code{\link{posterior_predict.pandemicEstimated}} and \code{\link{plot.pandemicPredicted}}
 #' @export
 print.plottedPandemic = function(x, ...){
-  if (class(x) != "plottedPandemic") stop("Please use the output of the plot.pandemicPredicted method()")
+  if (!is(x, "plottedPandemic")) stop("Please use the output of the plot.pandemicPredicted method()")
 
   plotLong = !is.null(x$long)
   plotShort = !is.null(x$short)

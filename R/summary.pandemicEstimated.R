@@ -72,7 +72,7 @@
 #' @export
 summary.pandemicEstimated=function(object,probs=c(0.025,0.5,0.975),digits=3,info=TRUE,...){
 
-  if(class(digits)!= "numeric" | class(info)!= "logical"){
+  if(!is.numeric(digits) | !is.logical(info)){
     stop("error in 'digits' or 'info'. View ?summary.pandemicEstimated")
   }
 

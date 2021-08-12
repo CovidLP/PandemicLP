@@ -62,25 +62,25 @@ pandemic_environment = new.env()
 #' @importFrom rstantools posterior_predict
 #' @importFrom methods slot
 #' @export
-posterior_predict.pandemicEstimated = function(object,horizonLong = 500, horizonShort = 14,...){
+posterior_predict.pandemicEstimated = function(object, horizonLong = 500, horizonShort = 14, ...){
 
-  if (class(object) != "pandemicEstimated") stop("Please use the output of the pandemic_model() function.")
+  if (is(object, "pandemicEstimated")) stop("Please use the output of the pandemic_model() function.")
   if (horizonShort <= 0) stop("Horizons must be positive.")
   if (horizonLong < horizonShort) stop("Long-term horizon may not be lesser than short term horizon.")
   #if (horizonLong > 1000) stop("Long-term horizon larger than 1000 is not currently supported.")
 
-  chains = as.data.frame(object$fit)
-  pop = object$Y$population
-  longPred = max(1000,horizonLong)
+  chains <- as.data.frame(object$fit)
+  pop <- object$Y$population
+  longPred <- max(1000, horizonLong)
 
   M = nrow(chains) ## Total iterations
-  NA_replacement = 2*object$Y$population ## Set a NA replacement
+  NA_replacement = 2 * object$Y$population ## Set a NA replacement
 
   finalTime = sum(grepl("mu", names(chains))) ## How many mu's
 
   # generate points from the marginal predictive distribution
   if (length(object$seasonal_effect)){
-    ss_code = c(seasonal_code(object$Y$data$date,object$seasonal_effect), 0, 0)
+    ss_code = c(seasonal_code(object$Y$data$date, object$seasonal_effect), 0, 0)
     s_code = list(s1 = rep(ss_code[1], object$n_waves),
                   s2 = rep(ss_code[2], object$n_waves),
                   s3 = rep(ss_code[3], object$n_waves))

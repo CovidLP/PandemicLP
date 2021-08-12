@@ -38,7 +38,7 @@
 #' @method plot pandemicPredicted
 #' @export
 plot.pandemicPredicted <- function(x,y,term = "long",color = TRUE,summary = TRUE,...){
-  if(class(x) != "pandemicPredicted") stop("Please use the output of the posterior_predict.pandemicEstimated method()")
+  if(!is(x, "pandemicPredicted")) stop("Please use the output of the posterior_predict.pandemicEstimated method()")
   term = tolower(term)
   if(!(term %in% c("long","short","both"))) stop("Invalid \'term\' argument. Please read \'help(plot.pandemicPredicted)\' for available options.")
 
@@ -79,14 +79,14 @@ plot.pandemicPredicted <- function(x,y,term = "long",color = TRUE,summary = TRUE
     red <- 'rgb(200, 30, 30)'
     dred <- 'rgb(100, 30, 30)'
 
-    color_lines <- ifelse(color == TRUE,ifelse(test_conf_death,dblu,dred),'rgb(192,192,192)')
-    color_markers <- ifelse(color == TRUE,ifelse(test_conf_death,blu,red),'rgb(160,160,160)')
-    color_mu <- ifelse(color==TRUE,'rgb(230, 115, 0)','rgb(96,96,96)')
+    color_lines <- ifelse(color, ifelse(test_conf_death,dblu,dred),'rgb(192,192,192)')
+    color_markers <- ifelse(color, ifelse(test_conf_death,blu,red),'rgb(160,160,160)')
+    color_mu <- ifelse(color, 'rgb(230, 115, 0)', 'rgb(96,96,96)')
     dt_format <- "%d/%b/%y"
     f1 <- list(family = "Arial", size = 10, color = "rgb(30, 30, 30)")
 
     # y_t median for future times
-    fig2 <- plotly::add_trace(plotly::plot_ly(data),x = ~date, y = ~med, type= "scatter", name = "Prediction", mode = "markers",
+    fig2 <- plotly::add_trace(plotly::plot_ly(data), x = ~date, y = ~med, type= "scatter", name = "Prediction", mode = "markers",
                               marker=list(color='rgb(0,0,0)', dash='solid', width=2.5))
 
     # past observations

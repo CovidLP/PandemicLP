@@ -78,7 +78,7 @@
 print.pandemicEstimated=function(x,digits=3,probs=c(0.025,0.5,0.975),info=TRUE,...){
 
 
-  if(class(digits)!= "numeric" | class(info)!= "logical"){
+  if(!is.numeric(digits) | !is.logical(info)){
     stop("error in 'digits' or 'info'. View ?print.pandemicEstimated")
   }
 
@@ -100,7 +100,7 @@ print.pandemicEstimated=function(x,digits=3,probs=c(0.025,0.5,0.975),info=TRUE,.
 
 
   # display parameters selection:
-  pars=names(x$fit)[which( !grepl("mu",names(x$fit)) & !grepl("lp__",names(x$fit)) )]
+  pars <- names(x$fit)[which( !grepl("mu",names(x$fit)) & !grepl("lp__",names(x$fit)) )]
 
   cat("\n------\n")
   cat("Parameters:\n")
