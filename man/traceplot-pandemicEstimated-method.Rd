@@ -4,7 +4,7 @@
 \alias{traceplot,pandemicEstimated-method}
 \title{Draw traceplot of the parameters for the pandemic model}
 \usage{
-\S4method{traceplot}{pandemicEstimated}(object, ...)
+\S4method{traceplot}{pandemicEstimated}(object, waves = 1:object$n_waves, ...)
 }
 \arguments{
 \item{object}{Output of the \code{\link{pandemic_model}} function}

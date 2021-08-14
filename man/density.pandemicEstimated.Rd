@@ -4,7 +4,7 @@
 \alias{density.pandemicEstimated}
 \title{Draw estimated density of the parameters for the pandemic model}
 \usage{
-\method{density}{pandemicEstimated}(x, ...)
+\method{density}{pandemicEstimated}(x, waves = 1:object$n_waves, ...)
 }
 \arguments{
 \item{x}{Output of the \code{\link{pandemic_model}} function}
