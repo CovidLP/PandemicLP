@@ -50,13 +50,15 @@ data <- list()
 outputs <- list()
 preds <- list()
 states <- state_list()
+## Using pre-generated results for speed
+load(system.file("extdata", "PandemicLP_SumRegions.rda", package = "PandemicLP")) # load outputs
 for(i in 1:length(regions)) { 
   if (is.na(match(regions[i],states$state_abb))){
     data[[i]] <- load_covid(country_name=regions[i],last_date=last_date)
   } else {
     data[[i]] <- load_covid(country_name="Brazil", state_name = regions[i],last_date=last_date)
   }
-  outputs[[i]] <- pandemic_model(data[[i]],case_type = case_type, covidLPconfig = TRUE)
+  #outputs[[i]] <- pandemic_model(data[[i]],case_type = case_type, covidLPconfig = TRUE)
   preds[[i]] <- posterior_predict(outputs[[i]])
 }
 ```

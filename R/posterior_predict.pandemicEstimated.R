@@ -64,7 +64,7 @@ pandemic_environment = new.env()
 #' @export
 posterior_predict.pandemicEstimated = function(object, horizonLong = 500, horizonShort = 14, ...){
 
-  if (is(object, "pandemicEstimated")) stop("Please use the output of the pandemic_model() function.")
+  if (!is(object, "pandemicEstimated")) stop("Please use the output of the pandemic_model() function.")
   if (horizonShort <= 0) stop("Horizons must be positive.")
   if (horizonLong < horizonShort) stop("Long-term horizon may not be lesser than short term horizon.")
   #if (horizonLong > 1000) stop("Long-term horizon larger than 1000 is not currently supported.")

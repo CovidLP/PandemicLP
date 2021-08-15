@@ -1,15 +1,23 @@
+# Auxiliary function to build the correct parameters string vector
+build_params <- function(object, waves){
+  if (grepl("multi", object$model_name))
+    out <- paste0("a[",waves,"]", "b[",waves,"]", "c[",waves,"]", "alpha[",waves,"]", "delta[",waves,"]")
+  else
+    out <- c("a", "b", "c", "f")
+  if (grepl("negbin", object$model_name))
+    out <- c(out, "phi")
+  if (!is.null(object$seasonal_effect))
+    out <- c(out, paste0("d_", 1:length(object$seasonal_effect)))
+
+  out
+}
+
 #' @importFrom methods setOldClass
 methods::setOldClass("pandemicEstimated")
 
-traceplot_pandemicEstimated = function(object, ...){
-  if (object$model_name == "poisson: static generalized logistic") p = c("a","b","c","f") else
-  if (object$model_name == "negbin: static generalized logistic") p = c("a","b","c","f","phi") else
-  if (object$model_name == "poisson: static seasonal generalized logistic"){
-    p = c("a","b","c","f",paste0("d_",1:length(object$seasonal_effect)))
-  } else
-  if (object$model_name == "poisson: multi_waves(2)") p = c("a1","b1","c1","alpha1","delta1",
-                                                    "a2","b2","c2","alpha2","delta2")
-  rstan::traceplot(object$fit,pars=p,...)
+#' @importFrom rstan traceplot
+traceplot_pandemicEstimated = function(object, waves = 1:object$n_waves, ...){
+  rstan::traceplot(object$fit, pars = build_params(object, waves), ...)
 }
 
 #' Draw traceplot of the parameters for the pandemic model
@@ -23,7 +31,6 @@ traceplot_pandemicEstimated = function(object, ...){
 #' dataMG = load_covid("Brazil","MG")
 #' estimMG = pandemic_model(dataMG)
 #' traceplot(estimMG)}
-#' @importFrom rstan traceplot
 #' @exportMethod traceplot
 setMethod("traceplot","pandemicEstimated",traceplot_pandemicEstimated)
 
@@ -43,13 +50,6 @@ setMethod("traceplot","pandemicEstimated",traceplot_pandemicEstimated)
 #' @importFrom rstan stan_dens
 #' @method density pandemicEstimated
 #' @export
-density.pandemicEstimated = function(x, ...){
-  if (x$model_name == "poisson: static generalized logistic") p = c("a","b","c","f") else
-    if (x$model_name == "negbin: static generalized logistic") p = c("a","b","c","f","phi") else
-      if (x$model_name == "poisson: static seasonal generalized logistic"){
-        p = c("a","b","c","f",paste0("d_",1:length(x$seasonal_effect)))
-      } else
-        if (x$model_name == "poisson: multi_waves(2)") p = c("a1","b1","c1","alpha1","delta1",
-                                                          "a2","b2","c2","alpha2","delta2")
-        rstan::stan_dens(x$fit,pars=p,...)
+density.pandemicEstimated = function(x, waves = 1:object$n_waves, ...){
+        rstan::stan_dens(x$fit,pars=build_params(x, waves),...)
 }
