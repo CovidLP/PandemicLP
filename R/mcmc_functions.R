@@ -1,13 +1,18 @@
 # Auxiliary function to build the correct parameters string vector
 build_params <- function(object, waves){
-  if (grepl("multi", object$model_name))
-    out <- paste0("a[",waves,"]", "b[",waves,"]", "c[",waves,"]", "alpha[",waves,"]", "delta[",waves,"]")
-  else
+  if (grepl("multi", object$model_name)){
+    out <- c(paste0("a[",waves,"]"), paste0("b[",waves,"]"), paste0("c[",waves,"]"),
+             paste0("alpha[",waves,"]"), paste0("delta[",waves,"]"))
+    if (!is.null(object$seasonal_effect))
+      out <- c(out, paste0(paste0("d_", 1:length(object$seasonal_effect)), "[", waves, "]"))
+  }
+  else{
     out <- c("a", "b", "c", "f")
+    if (!is.null(object$seasonal_effect))
+      out <- c(out, paste0("d_", 1:length(object$seasonal_effect)))
+  }
   if (grepl("negbin", object$model_name))
     out <- c(out, "phi")
-  if (!is.null(object$seasonal_effect))
-    out <- c(out, paste0("d_", 1:length(object$seasonal_effect)))
 
   out
 }
@@ -50,6 +55,6 @@ setMethod("traceplot","pandemicEstimated",traceplot_pandemicEstimated)
 #' @importFrom rstan stan_dens
 #' @method density pandemicEstimated
 #' @export
-density.pandemicEstimated = function(x, waves = 1:object$n_waves, ...){
+density.pandemicEstimated = function(x, waves = 1:x$n_waves, ...){
         rstan::stan_dens(x$fit,pars=build_params(x, waves),...)
 }
