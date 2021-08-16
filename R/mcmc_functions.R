@@ -29,6 +29,9 @@ traceplot_pandemicEstimated = function(object, waves = 1:object$n_waves, ...){
 #'
 #' Uses stan's traceplot function to draw the traceplots for the relevant parameters of the estimated model.
 #' @param object Output of the \code{\link{pandemic_model}} function
+#' @param waves If the estimated model has more than 1 wave, this
+#' parameter controls which waves parameters are shown. Default are all
+#' waves.
 #' @param ... Aditional parameters passed on to the \code{\link[rstan]{traceplot}} function
 #' @seealso \code{\link{pandemic_model}} and \code{\link[rstan]{traceplot}}
 #' @examples
@@ -44,6 +47,9 @@ setMethod("traceplot","pandemicEstimated",traceplot_pandemicEstimated)
 #' Uses stan's stan_dens function to draw the marginal posterior for the relevant parameters of the estimated model.
 #' Defined as a method for the stats::density generic function.
 #' @param x Output of the \code{\link{pandemic_model}} function
+#' @param waves If the estimated model has more than 1 wave, this
+#' parameter controls which waves parameters are shown. Default are all
+#' waves.
 #' @param ... Additional parameters passed on the \code{\link[rstan]{stan_dens}} function
 #' @seealso \code{\link{pandemic_model}} and \code{\link[rstan]{stan_dens}}.
 #' @examples

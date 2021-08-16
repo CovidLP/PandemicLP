@@ -4,10 +4,14 @@
 \alias{density.pandemicEstimated}
 \title{Draw estimated density of the parameters for the pandemic model}
 \usage{
-\method{density}{pandemicEstimated}(x, waves = 1:object$n_waves, ...)
+\method{density}{pandemicEstimated}(x, waves = 1:x$n_waves, ...)
 }
 \arguments{
 \item{x}{Output of the \code{\link{pandemic_model}} function}
+
+\item{waves}{If the estimated model has more than 1 wave, this
+parameter controls which waves parameters are shown. Default are all
+waves.}
 
 \item{...}{Additional parameters passed on the \code{\link[rstan]{stan_dens}} function}
 }
