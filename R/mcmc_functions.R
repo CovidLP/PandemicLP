@@ -62,5 +62,5 @@ setMethod("traceplot","pandemicEstimated",traceplot_pandemicEstimated)
 #' @method density pandemicEstimated
 #' @export
 density.pandemicEstimated = function(x, waves = 1:x$n_waves, ...){
-        rstan::stan_dens(x$fit,pars=build_params(x, waves),...)
+        rstan::stan_dens(x$fit, pars = build_params(x, waves),...)
 }
