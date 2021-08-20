@@ -287,7 +287,7 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
     for (c in 1:chains){
       # Set up
       temp_init <- list()
-      last_iter <- all_iterations[last, (c - 1) %% init$fit@sim$chains + 1, ] ## Make sure to cycle correctly through old chains
+      last_iter <- colMeans(all_iterations[, (c - 1) %% init$fit@sim$chains + 1, ]) ## Make sure to cycle correctly through old chains
 
       if (n_waves == 1) # Waves parameters - begin
         if (init$n_waves == 1){
@@ -311,16 +311,22 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
           temp_init$delta <- seq(1, ceiling((n_waves - 1) * (t / n_waves)) + 1,
                                  by = floor(t / n_waves))
         } else {
-          temp_init$a <- array(last_iter[pars == paste0("a[", 1:min(n_waves,
-                                                                    init$n_waves),"]")])
-          temp_init$b <- last_iter[pars == paste0("b[", 1:min(n_waves,
-                                                              init$n_waves),"]")]
-          temp_init$c <- array(last_iter[pars == paste0("c[", 1:min(n_waves,
-                                                                    init$n_waves),"]")])
-          temp_init$alpha <- last_iter[pars == paste0("alpha[", 1:min(n_waves,
-                                                                      init$n_waves),"]")]
-          temp_init$delta <- last_iter[pars == paste0("delta[", 1:min(n_waves,
-                                                                      init$n_waves),"]")]
+          extra <- max(0, n_waves - init$n_waves)
+          temp_init$a <- array(c(last_iter[match(paste0("a[", 1:min(n_waves,
+                                                                    init$n_waves),"]"), pars)],
+                               rep(100, extra)))
+          temp_init$b <- c(last_iter[match(paste0("b[", 1:min(n_waves,
+                                                              init$n_waves),"]"), pars)],
+                           rep(0.01, extra))
+          temp_init$c <- array(c(last_iter[match(paste0("c[", 1:min(n_waves,
+                                                                    init$n_waves),"]"), pars)],
+                                 rep(0.5, extra)))
+          temp_init$alpha <- c(last_iter[match(paste0("alpha[", 1:min(n_waves,
+                                                                      init$n_waves),"]"), pars)],
+                               rep(0.01, extra))
+          temp_init$delta <- c(last_iter[match(paste0("delta[", 1:min(n_waves,
+                                                                      init$n_waves),"]"), pars)],
+                               rep(0, extra))
         } # Waves parameters - end
       new_init[[c]] <- temp_init
     }
