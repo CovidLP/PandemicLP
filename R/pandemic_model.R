@@ -314,7 +314,7 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
           extra <- max(0, n_waves - init$n_waves)
           temp_init$a <- array(c(last_iter[match(paste0("a[", 1:min(n_waves,
                                                                     init$n_waves),"]"), pars)],
-                               rep(100, extra)))
+                               rep(1, extra)))
           temp_init$b <- c(last_iter[match(paste0("b[", 1:min(n_waves,
                                                               init$n_waves),"]"), pars)],
                            rep(0.01, extra))
