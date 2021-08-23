@@ -32,7 +32,7 @@ data {
 
 parameters {
   vector[nCurves] b1;
-  real<lower=0, upper=min(p*pop*exp(b1))> a[nCurves];
+  real<lower = 0, upper = min(p * pop * exp(b1))> a[nCurves];
   //real<lower=0> a[nCurves];
   real<lower=0> c[nCurves];
 
