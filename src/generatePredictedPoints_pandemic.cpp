@@ -256,8 +256,8 @@ public:
   negbin_multiWave(DataFrame pars, unsigned int nW,
                    std::vector<unsigned int> s,
                    std::vector<unsigned int> ss,
-                   std::vector<unsigned int> sss) : multiWave(pars, nW),
-                   negbin(pars), seasonal(pars, s, ss, sss) {}
+                   std::vector<unsigned int> sss) : negbin(pars),
+                   seasonal(pars, s, ss, sss), multiWave(pars, nW) {}
 private:
   void predict(R_xlen_t pos, R_xlen_t t, double N)
   {

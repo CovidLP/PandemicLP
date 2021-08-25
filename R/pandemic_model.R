@@ -282,7 +282,7 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
     new_init <- list()
     pars <- names(init$fit)
     all_iterations <- as.array(init$fit)
-    last <- dim(all_iterations)[1]
+    #last <- dim(all_iterations)[1]
 
     for (c in 1:chains){
       # Set up
@@ -314,10 +314,10 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
           extra <- max(0, n_waves - init$n_waves)
           temp_init$a <- array(c(last_iter[match(paste0("a[", 1:min(n_waves,
                                                                     init$n_waves),"]"), pars)],
-                               rep(1, extra)))
+                               rep(0.01, extra)))
           temp_init$b <- c(last_iter[match(paste0("b[", 1:min(n_waves,
                                                               init$n_waves),"]"), pars)],
-                           rep(0.01, extra))
+                           rep(1, extra))
           temp_init$c <- array(c(last_iter[match(paste0("c[", 1:min(n_waves,
                                                                     init$n_waves),"]"), pars)],
                                  rep(0.5, extra)))

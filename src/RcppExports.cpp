@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // generatePredictedPoints_pandemicC
 List generatePredictedPoints_pandemicC(R_xlen_t M, DataFrame chains, R_xlen_t horizon, double NA_rep, String model_name, R_xlen_t final_time, R_xlen_t nWaves, List s_code);
 RcppExport SEXP _PandemicLP_generatePredictedPoints_pandemicC(SEXP MSEXP, SEXP chainsSEXP, SEXP horizonSEXP, SEXP NA_repSEXP, SEXP model_nameSEXP, SEXP final_timeSEXP, SEXP nWavesSEXP, SEXP s_codeSEXP) {
