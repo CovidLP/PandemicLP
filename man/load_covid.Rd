@@ -3,10 +3,6 @@
 \name{load_covid}
 \alias{load_covid}
 \title{Load Covid-19 Data}
-\source{
-\url{https://github.com/CSSEGISandData/COVID-19}\cr
-\url{https://github.com/covid19br/covid19br.github.io}
-}
 \usage{
 load_covid(country_name, state_name = NULL, last_date)
 }
@@ -31,17 +27,21 @@ An object of S3 class \code{pandemicData}. It is a list with 3 items:
 }
 }
 \description{
-This function pulls Covid-19 data up to a certain date, for a specified country (and state, if \code{country_name = "Brazil"}).
-The output of this function is in the correct format to be used directly into the model adjustment function
+This function pulls Covid-19 data up to a certain date, for a specified country
+(and state, if \code{country_name = "Brazil"}).The output of this function is in the correct format to be used directly into the model adjustment function
 \code{\link{pandemic_model}} included in this package.
-
-The user must be online for this function to work.
+}
+\details{
+The current version of this function uses the \code{covid19br} package
+to retrieve the data. Be aware that the country names might have
+been altered between different package versions. Check \code{country_list()} for the
+updated list of \code{country_name} options.
 }
 \examples{
 \dontrun{
 load_covid("Brazil","MG")
 load_covid(country_name = "India", last_date = "2020-06-15")
-load_covid("US")
+load_covid("United States of America")
 load_covid(country_name = "italy")}
 
 }

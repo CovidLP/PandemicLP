@@ -712,7 +712,7 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 #' stan_ac(output6$fit,pars=c("a","b","c","f","d_1","d_2"))
 #'
 #' ### multi_waves(2) model: ######################
-#' Y4=load_covid(country_name="US",last_date='2020-09-27')
+#' Y4=load_covid(country_name="United States of America",last_date='2020-09-27')
 #' plot(Y4,cases="new")
 #' output7=pandemic_model(Y4,n_waves=2,covidLPconfig=TRUE)
 #' print(output7)

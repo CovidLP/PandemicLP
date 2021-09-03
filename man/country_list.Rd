@@ -3,16 +3,13 @@
 \name{country_list}
 \alias{country_list}
 \title{List of countries available in the Covid-19 database}
-\source{
-\url{https://github.com/CSSEGISandData/COVID-19}
-}
 \usage{
 country_list()
 }
 \description{
-This function provides a list of 183 country names inside the Covid-19 database.
-The \code{country_name} argument inside the \code{\link{load_covid}} function should be spelled exactly
-as they are listed here. The user must be online for this function to work.
+This function provides a list of country names inside the Covid-19 database.
+The \code{country_name} argument inside the \code{\link{load_covid}} function should be spelled
+as they are listed here.
 }
 \seealso{
 \code{\link{load_covid}}

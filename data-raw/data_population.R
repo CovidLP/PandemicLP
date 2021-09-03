@@ -1,9 +1,17 @@
-# Saves dataset with population size for each country and each brazilian state
-# https://github.com/thaispaiva/app_COVID19/tree/master/R/pop
+# Saves dataset with population size for each country and the list
+# of countries available to model using PandemicLP
 
-popURL = "https://github.com/CovidLP/app_COVID19/tree/master/R/pop"
+#data set for country's population
+country_pop <- utils::read.csv("data-raw/pop_WR.csv")
 
-country_pop <- read.csv(file.path(popURL,"pop_WR.csv"))
-br_pop <- read.csv(file.path(popURL,"pop_BR.csv"))
+#data set with the list of countries
+covid <- covid19br::downloadCovid19(level="world")
 
-usethis::use_data(country_pop, br_pop, internal = TRUE, overwrite = TRUE)
+countries <- unique(covid$country)
+countries <- countries[-which(countries %in% c("Diamond Princess",
+                      "MS Zaandam","Summer Olympics 2020", "Vatican",
+                      "Taiwan","Palestine"))]
+countries <- sort(countries)
+
+#generate R\sysdata.rda file
+usethis::use_data(country_pop, countries, internal = TRUE, overwrite = TRUE)
