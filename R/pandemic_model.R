@@ -56,7 +56,7 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
     if (case_type == "deaths") p <- 0.08 * 0.25
 
     fun <- CovidLP(t, n_waves)[[family]]
-    data_stan <- c(data_stan, fun[[mu_params]], fun[[seasonal]])
+    data_stan <- c(data_stan, fun[["mu_params"]], fun[["seasonal"]])
   }
 
   #### guido shorter code - begin
