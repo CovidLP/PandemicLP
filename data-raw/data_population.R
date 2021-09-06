@@ -13,5 +13,5 @@ countries <- countries[-which(countries %in% c("Diamond Princess",
                       "Taiwan","Palestine"))]
 countries <- sort(countries)
 
-#generate R\sysdata.rda file
+#generate R/sysdata.rda file
 usethis::use_data(country_pop, countries, internal = TRUE, overwrite = TRUE)
