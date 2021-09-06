@@ -91,25 +91,33 @@ load_covid <- function(country_name, state_name = NULL, last_date){
 
     if(is.null(state_name)){
 
+      # Avoiding error message from CRAN
       Y <- covidbr
-      Y <- dplyr::select(Y, date, cases = accumCases,
+      eval(parse(
+        text = 'Y <- dplyr::select(Y, date, cases = accumCases,
                          deaths = accumDeaths,
                          new_cases = newCases,
                          new_deaths = newDeaths,
                          population = pop)
-      Y <- dplyr::filter(Y, Y$date >= initial_date & Y$date <= last_date)
+      Y <- dplyr::filter(Y, Y$date >= initial_date & Y$date <= last_date)'
+      ))
+
 
     } else {
 
+      # Avoiding error message from CRAN
       Y <- covidstates
-      Y <- dplyr::select(Y, date, cases = accumCases,
+      eval(parse(
+        text = '
+        Y <- dplyr::select(Y, date, cases = accumCases,
                          deaths = accumDeaths,
                          new_cases = newCases,
                          new_deaths = newDeaths,
                          population = pop,
                          name = state)
       Y <- dplyr::arrange(Y, Y$name, Y$date)
-      Y <- dplyr::filter(Y, Y$date >= initial_date & Y$date <= last_date & Y$name == state_name)
+      Y <- dplyr::filter(Y, Y$date >= initial_date & Y$date <= last_date & Y$name == state_name)'
+      ))
 
     }
 
@@ -117,13 +125,17 @@ load_covid <- function(country_name, state_name = NULL, last_date){
 
     pop <- country_pop$pop[which(country_pop$country == country_name)]
 
+    # Avoiding error message from CRAN
     Y <- covidworld
-    Y <- dplyr::select(Y, date, cases = accumCases,
+    eval(parse(
+      text = '
+      Y <- dplyr::select(Y, date, cases = accumCases,
                        deaths = accumDeaths,
                        new_cases = newCases,
                        new_deaths = newDeaths,
                        name = country)
-    Y <- dplyr::filter(Y, Y$date >= initial_date & Y$date <= last_date & Y$name == country_name)
+    Y <- dplyr::filter(Y, Y$date >= initial_date & Y$date <= last_date & Y$name == country_name)'
+    ))
 
   }
 
