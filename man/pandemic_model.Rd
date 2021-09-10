@@ -109,7 +109,9 @@ The total number of iterations per chain is:
 Go to  \code{\link{models}} for more info about model parameters.
 Any parameters whose values are not specified will receive initial values generated as described in
 \code{init = "random"}. Specification of the initial values for \code{\link{pandemic_model}} can only be via list.
-See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}.}
+See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}. Alternatively
+it can be an output of the \code{pandemic_model()} function, which uses the last stored iteration
+from that object as the initial values. If the models are different, an analogy is made.}
 
 \item{...}{other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
 Additional arguments can be \code{control}, \code{cores}, etc...}

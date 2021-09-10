@@ -37,7 +37,7 @@ class seasonal
 public:
   seasonal(DataFrame pars, std::vector<unsigned int> s,
            std::vector<unsigned int> ss,
-           std::vector<unsigned int> sss) : s1(s),s2(ss),s3(sss)
+           std::vector<unsigned int> sss) : s1(s), s2(ss), s3(sss)
   {
     int nW = s.size();
     R_xlen_t M = pars.nrows();
@@ -244,7 +244,7 @@ private:
         pow(d2(i, 0), !((t - s2[0]) % 7) * (s2[0] > 0)) *
         pow(d3(i, 0), !((t - s3[0]) % 7) * (s3[0] > 0));
       y = R::rpois(R::rgamma(phi[i] * mu(i, pos), 1 / phi[i]));
-      yL(i,pos) = dealNA(y, N);
+      yL(i, pos) = dealNA(y, N);
     }
   }
 };
@@ -257,7 +257,11 @@ public:
                    std::vector<unsigned int> s,
                    std::vector<unsigned int> ss,
                    std::vector<unsigned int> sss) : negbin(pars),
+<<<<<<< HEAD
                    seasonal(pars, s, ss, sss), multiWave(pars,nW) {}
+=======
+                   seasonal(pars, s, ss, sss), multiWave(pars, nW) {}
+>>>>>>> app_helper
 private:
   void predict(R_xlen_t pos, R_xlen_t t, double N)
   {
@@ -266,14 +270,14 @@ private:
     for (i = 0; i < ch_size; i++)
     {
       mu(i, pos) = 0;
-      for (j=0;j<nWaves;j++)
-      {mu(i,pos) += exp(muFun(t, a(i, j), b(i, j), c(i, j), 1, true) +
+      for (j = 0; j < nWaves; j++)
+      {mu(i, pos) += exp(muFun(t, a(i, j), b(i, j), c(i, j), 1, true) +
         R::pnorm(alpha(i, j) * (t - delta(i, j)), 0, 1, true, true)) *
         pow(d1(i, j), !((t - s1[j]) % 7) * (s1[j] > 0)) *
         pow(d2(i, j), !((t - s2[j]) % 7) * (s2[j] > 0)) *
         pow(d3(i, j), !((t - s3[j]) % 7) * (s3[j] > 0));}
       y = R::rpois(R::rgamma(phi[i] * mu(i, pos), 1 / phi[i]));
-      yL(i, pos) = dealNA(y,N);
+      yL(i, pos) = dealNA(y, N);
     }
   }
 };
@@ -319,7 +323,7 @@ List generatePredictedPoints_pandemicC(R_xlen_t M, DataFrame chains,
 
 double muFun(R_xlen_t t, double a, double b, double c, double f, bool logScale)
 {
-  double out = log(f)+log(a)+log(c)-(c*t)-(f+1)*log( b+exp(-c*t) );
+  double out = log(f) + log(a) + log(c) - (c * t) - (f + 1) * log( b + exp(-c * t) );
   if (logScale)
   {
     return out;
@@ -331,7 +335,7 @@ double muFun(R_xlen_t t, double a, double b, double c, double f, bool logScale)
 }
 
 inline double dealNA(double y, double NA_replacement){
-  return (R_IsNA(y)?NA_replacement:y);
+  return (R_IsNA(y) ? NA_replacement : y);
 }
 
 inline bool checkDFnames(DataFrame df, std::string check)

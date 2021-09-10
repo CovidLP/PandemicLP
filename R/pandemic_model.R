@@ -1,4 +1,16 @@
-##### hidden environment:
+# App configuration
+CovidLP <- function(t, n_waves)
+  list(
+    poisson = list(mu_params = ifelse(n_waves == 1,
+      list(a = 100, b1 = log(1), c = .5, f = 1.01),
+      list(a = rep(1, n_waves), b1 = rep(log(1), n_waves), c = rep(0.5, n_waves),
+                   alpha = rep(0.01, n_waves), delta = seq(1, ceiling((n_waves - 1) * (t / n_waves)) +
+                                                             1, by = floor(t / n_waves)))),
+      seasonal = list(d_1 = rep(1, n_waves), d_2 = rep(1, n_waves),
+                      d_3 = rep(1, n_waves))
+    )
+  )
+
 #pandemic_environment$weekdays=c("sunday", "monday", "tuesday", "wednesday", "thursday",
 #                                "friday", "saturday")
 
@@ -23,232 +35,310 @@ seasonal_code <- function(dates, s_e){
 
 
 ### auxiliar function 'config_stan'
-#provide the settings for the STAN sampler
+config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,chains,init,covidLPconfig){
 
-config_stan=function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,chains,init,covidLPconfig){
+  number_iterations <- warmup + thin * sample_size
 
-  if(covidLPconfig){   # for all models, exception negbin
+  if (case_type == "confirmed") cases <- "new_cases"
+  if (case_type == "deaths") cases <- "new_deaths"    #nature of the occurrence
 
-    warmup= 5e3; thin=3; sample_size= 1e3; chains= 1
+  i <- which(colnames(Y$data) == cases) # i-column data Y for  data stan
+  t <- dim(Y$data)[1]                   # n = t  ; n= nrows(Y$data) for data stan
 
-    if(n_waves>=2) {warmup=8e3}  # multiwaves models
+  data_stan <- list(y = Y$data[[i]], n = t, pop = Y$population, p = p) #for all models
 
-    if(case_type=="confirmed"){ p=0.08 }
-    if(case_type=="deaths") {p=0.08*0.25}
+  if (covidLPconfig && family == "poisson"){ # negbin models don't have a recommended setting yet
 
+    warmup <- 5e3; thin=3; sample_size<- 1e3; chains <- 1
+
+    if (n_waves >= 2) {warmup=8e3}  # multiwaves models
+    if (case_type == "confirmed") p <- 0.08
+    if (case_type == "deaths") p <- 0.08 * 0.25
+
+    fun <- CovidLP(t, n_waves)[[family]]
+    data_stan <- c(data_stan, fun[["mu_params"]], fun[["seasonal"]])
   }
 
-#  if(family=="negbin"){     #on the family negbin the covidLPconfig argument is disabled
-#    warmup=5e3
-#    }
-
-  number_iterations= warmup + thin*sample_size
-
-if(case_type=="confirmed") cases="new_cases"
-if(case_type=="deaths") cases="new_deaths"    #nature of the occurrence
-
-i=which(colnames(Y$data)==cases) # i-column data Y for  data stan
-t=dim(Y$data)[1]                 # n = t  ; n= nrows(Y$data) for data stan
-
-data_stan = list(y=Y$data[[i]], n=t, pop=Y$population, p=p) #for all model
-
-#####poisson models without seasonal effect:
-
-if(is.null(s_code) && family=="poisson"){
-
-  if(n_waves==1){
-    # model generalized logistic doesn't have seasonal_effect
-
-    model_name="pandemicModels_singleWave_poisson"
-
-    params = c("a","b","c","f", "mu")
-
-    if(covidLPconfig){
-      init <- list(
-        list(a = 100, b1 = log(1), c = .5, f = 1.01)
-      )
-
-    }
-
-
+  #### guido shorter code - begin
+  model_name <- "pandemicModels_"
+  params <- c("a", "b", "c")
+  if (n_waves == 1){
+    model_name <- paste0(model_name, "singleWave_")
+    params <- c(params, "f")
   } else {
-    # multiwaves model without seasonal effect
-
-    model_name="pandemicModels_multiWave_poisson"     #stanmodel name
-
-    params = c("a","b","c","alpha","delta","mu")
-
-    data_stan$nCurves=n_waves
-    data_stan$w1=rep(0,n_waves)
-    data_stan$w2=rep(0,n_waves)
-    data_stan$w3=rep(0,n_waves)
-
-      if(covidLPconfig){
-        #delta=seq(1,ceiling((n_waves-1)*(t/n_waves))+1,by=floor(t/n_waves))
-        #if(length(delta)>n_waves) delta=delta[1:n_waves]                      #problem only when small t (<50) and great n_waves (n_waves> 4)
-
-        init <- list(
-        list(a = rep(1,n_waves), b1 = rep(log(1),n_waves), c = rep(0.5,n_waves),
-             alpha=rep(0.01,n_waves), delta=seq(1,ceiling((n_waves-1)*(t/n_waves))+1,by=floor(t/n_waves))) #delta=seq(0,(n_waves-1)*50,by=50)
-      )
-    }
-
+    model_name <- paste0(model_name, "multiWave_")
+    params <- c(params, "alpha", "delta")
+    data_stan$nCurves <- n_waves
   }
-
-}
-
-#####poisson models with seasonal effect
-
-if (!is.null(s_code) && family=="poisson") { #poisson models with seasonal effect
-
-  if(n_waves==1){        # model generalized logistic with seasonal_effect
-
-   model_name="pandemicModels_SeasonalsingleWave_poisson"
-  params = c("a","b","c","f",paste0("d_",1:length(s_code)),"mu")
-  s_code = c(s_code,0,0)
-
-  data_stan$w1=s_code[1]
-  data_stan$w2=s_code[2]
-  data_stan$w3=s_code[3]
-
-  if(covidLPconfig){
-    init <- list(
-      list(a = 100, b1 = log(1), c = .5, f = 1.01, d_1=1,d_2=1,d_3=1)
-    )
+  if (family == "negbin"){
+    data_stan$fTrunc <- fTrunc # Ignored in multi wave
+    data_stan$phiTrunc <- phiTrunc
+    params <- c(params, "phi")
   }
-
-  } else {   #multiwave with seasonal effect
-
-    model_name="pandemicModels_multiWave_poisson"     #stanmodel name
-
-    params = c("a","b","c","alpha","delta",paste0("d_",1:length(s_code)), "mu")
-    s_code = c(s_code,0,0)
-
-    data_stan$nCurves=n_waves
-    data_stan$w1=rep(s_code[1],n_waves)
-    data_stan$w2=rep(s_code[2],n_waves)
-    data_stan$w3=rep(s_code[3],n_waves)
-
-    if(covidLPconfig){
-      #delta=seq(1,ceiling((n_waves-1)*(t/n_waves))+1,by=floor(t/n_waves))
-      #if(length(delta)>n_waves) delta=delta[1:n_waves]                      #problem only when small t (<50) and great n_waves (n_waves> 4)
-
-     init <- list(
-        list(a = rep(1,n_waves), b1 = rep(log(1),n_waves), c = rep(0.5,n_waves),
-             alpha=rep(0.01,n_waves), delta=seq(1,ceiling((n_waves-1)*(t/n_waves))+1,by=floor(t/n_waves)),
-             d_1=rep(1,n_waves), d_2=rep(1,n_waves), d_3=rep(1,n_waves))
-      )
-
-    }
-
+  if (!is.null(s_code)){
+    params <- c(params, paste0("d_",1:length(s_code)))
+    if (family == "poisson" && n_waves == 1) model_name <- "pandemicModels_SeasonalsingleWave_" # Special case
   }
+  s_code = c(s_code, 0, 0, 0)
+  data_stan$w1 <- rep(s_code[1], n_waves)
+  data_stan$w2 <- rep(s_code[2], n_waves)
+  data_stan$w3 <- rep(s_code[3], n_waves)
+  model_name <- paste0(model_name, family)
+  params <- c(params, "mu")
+  #### guido shorter code - end
 
-}
-
-
-##### negbin models without seasonal effect:
-
-if(is.null(s_code) && family=="negbin"){
-
-  if(n_waves==1){
-    # negbin 1 wave without seasonal_effect
-
-    model_name="pandemicModels_singleWave_negbin"
-
-    params = c("a","b","c","f","phi","mu")
-
-    data_stan$w1=0
-    data_stan$w2=0
-    data_stan$w3=0
-    data_stan$fTrunc=fTrunc
-    data_stan$phiTrunc=phiTrunc
-
-#    if(covidLPconfig){  #negbin não terá covidLPconfig=TRUE
-#      init <- list(
-#        list(a = 100, b1 = log(1), c = .5, f=f)
-#      )
+# #####poisson models without seasonal effect:
+#
+#   if (is.null(s_code) && family == "poisson"){
+#
+#     if(n_waves==1){
+#       # model generalized logistic doesn't have seasonal_effect
+#
+#       model_name="pandemicModels_singleWave_poisson"
+#
+#       params = c("a","b","c","f", "mu")
+#
+#       if(covidLPconfig){
+#         init <- list(
+#           list(a = 100, b1 = log(1), c = .5, f = 1.01)
+#         )
+#
+#       }
+#
+#
+#     } else {
+#       # multiwaves model without seasonal effect
+#
+#       model_name="pandemicModels_multiWave_poisson"     #stanmodel name
+#
+#       params = c("a","b","c","alpha","delta","mu")
+#
+#       data_stan$nCurves=n_waves
+#       data_stan$w1=rep(0,n_waves)
+#       data_stan$w2=rep(0,n_waves)
+#       data_stan$w3=rep(0,n_waves)
+#
+#         if(covidLPconfig){
+#           #delta=seq(1,ceiling((n_waves-1)*(t/n_waves))+1,by=floor(t/n_waves))
+#           #if(length(delta)>n_waves) delta=delta[1:n_waves]                      #problem only when small t (<50) and great n_waves (n_waves> 4)
+#
+#           init <- list(
+#           list(a = rep(1,n_waves), b1 = rep(log(1),n_waves), c = rep(0.5,n_waves),
+#                alpha=rep(0.01,n_waves), delta=seq(1,ceiling((n_waves-1)*(t/n_waves))+1,by=floor(t/n_waves))) #delta=seq(0,(n_waves-1)*50,by=50)
+#         )
+#       }
+#
+#     }
+#
 #   }
-
-
-  } else {
-    #negbin multiwaves model without seasonal effect
-
-    model_name="pandemicModels_multiWave_negbin"     #stanmodel name
-
-    params = c("a","b","c","alpha","delta","phi","mu")
-
-    data_stan$nCurves=n_waves
-    data_stan$w1=rep(0,n_waves)
-    data_stan$w2=rep(0,n_waves)
-    data_stan$w3=rep(0,n_waves)
-    data_stan$phiTrunc=phiTrunc
-
-#    if(covidLPconfig){  #negbin models don't have covidLPconfig
+#
+# #####poisson models with seasonal effect
+#
+# if (!is.null(s_code) && family=="poisson") { #poisson models with seasonal effect
+#
+#   if(n_waves==1){        # model generalized logistic with seasonal_effect
+#
+#    model_name="pandemicModels_SeasonalsingleWave_poisson"
+#   params = c("a","b","c","f",paste0("d_",1:length(s_code)),"mu")
+#   s_code = c(s_code,0,0)
+#
+#   data_stan$w1=s_code[1]
+#   data_stan$w2=s_code[2]
+#   data_stan$w3=s_code[3]
+#
+#   if(covidLPconfig){
+#     init <- list(
+#       list(a = 100, b1 = log(1), c = .5, f = 1.01, d_1=1,d_2=1,d_3=1)
+#     )
+#   }
+#
+#   } else {   #multiwave with seasonal effect
+#
+#     model_name="pandemicModels_multiWave_poisson"     #stanmodel name
+#
+#     params = c("a","b","c","alpha","delta",paste0("d_",1:length(s_code)), "mu")
+#     s_code = c(s_code,0,0)
+#
+#     data_stan$nCurves=n_waves
+#     data_stan$w1=rep(s_code[1],n_waves)
+#     data_stan$w2=rep(s_code[2],n_waves)
+#     data_stan$w3=rep(s_code[3],n_waves)
+#
+#     if(covidLPconfig){
+#       #delta=seq(1,ceiling((n_waves-1)*(t/n_waves))+1,by=floor(t/n_waves))
+#       #if(length(delta)>n_waves) delta=delta[1:n_waves]                      #problem only when small t (<50) and great n_waves (n_waves> 4)
+#
 #      init <- list(
-#        list(a = rep(1,n_waves), b1 = rep(log(1),n_waves), c = rep(0.5,n_waves),
-#             alpha=rep(1,n_waves), delta=seq(0,(n_waves-1)*50,by=50))
-#      )
-#    }
+#         list(a = rep(1,n_waves), b1 = rep(log(1),n_waves), c = rep(0.5,n_waves),
+#              alpha=rep(0.01,n_waves), delta=seq(1,ceiling((n_waves-1)*(t/n_waves))+1,by=floor(t/n_waves)),
+#              d_1=rep(1,n_waves), d_2=rep(1,n_waves), d_3=rep(1,n_waves))
+#       )
+#
+#     }
+#
+#   }
+#
+# }
+#
+#
+# ##### negbin models without seasonal effect:
+#
+# if(is.null(s_code) && family=="negbin"){
+#
+#   if(n_waves==1){
+#     # negbin 1 wave without seasonal_effect
+#
+#     model_name="pandemicModels_singleWave_negbin"
+#
+#     params = c("a","b","c","f","phi","mu")
+#
+#     data_stan$w1=0
+#     data_stan$w2=0
+#     data_stan$w3=0
+#     data_stan$fTrunc=fTrunc
+#     data_stan$phiTrunc=phiTrunc
+#
+# #    if(covidLPconfig){  #negbin não terá covidLPconfig=TRUE
+# #      init <- list(
+# #        list(a = 100, b1 = log(1), c = .5, f=f)
+# #      )
+# #   }
+#
+#
+#   } else {
+#     #negbin multiwaves model without seasonal effect
+#
+#     model_name="pandemicModels_multiWave_negbin"     #stanmodel name
+#
+#     params = c("a","b","c","alpha","delta","phi","mu")
+#
+#     data_stan$nCurves=n_waves
+#     data_stan$w1=rep(0,n_waves)
+#     data_stan$w2=rep(0,n_waves)
+#     data_stan$w3=rep(0,n_waves)
+#     data_stan$phiTrunc=phiTrunc
+#
+# #    if(covidLPconfig){  #negbin models don't have covidLPconfig
+# #      init <- list(
+# #        list(a = rep(1,n_waves), b1 = rep(log(1),n_waves), c = rep(0.5,n_waves),
+# #             alpha=rep(1,n_waves), delta=seq(0,(n_waves-1)*50,by=50))
+# #      )
+# #    }
+#
+#   }
+#
+# }
+#
+#
+# ##### negbin models with seasonal effect
+#
+# if (!is.null(s_code) && family=="negbin") {
+#
+#   if(n_waves==1){        # negbin one wave model  with seasonal_effect
+#
+#     model_name="pandemicModels_singleWave_negbin"
+#     params = c("a","b","c","f","phi",paste0("d_",1:length(s_code)),"mu")
+#     s_code = c(s_code,0,0)
+#
+#     data_stan$w1=s_code[1]
+#     data_stan$w2=s_code[2]
+#     data_stan$w3=s_code[3]
+#     data_stan$fTrunc=fTrunc
+#     data_stan$phiTrunc=phiTrunc
+#
+# #  if(covidLPconfig){
+# #      init <- list(
+# #        list(a = 100, b1 = log(1), c = .5, f = 1.01, d_1=1,d_2=1,d_3=1)
+# #      )
+# #    }
+#
+#   } else {   #multiwave with seasonal effect
+#
+#     model_name="pandemicModels_multiWave_negbin"     #stanmodel name
+#
+#     params = c("a","b","c","alpha","delta", "phi", paste0("d_",1:length(s_code)), "mu")
+#     s_code = c(s_code,0,0)
+#
+#     data_stan$nCurves=n_waves
+#     data_stan$w1=rep(s_code[1],n_waves)
+#     data_stan$w2=rep(s_code[2],n_waves)
+#     data_stan$w3=rep(s_code[3],n_waves)
+#     data_stan$phiTrunc=phiTrunc
+#
+# #    if(covidLPconfig){
+# #      init <- list(
+# #        list(a = rep(1,n_waves), b1 = rep(log(1),n_waves), c = rep(0.5,n_waves),
+# #             alpha=rep(1,n_waves), delta=seq(0,(n_waves-1)*50,by=50),
+# #             d_1=rep(1,n_waves), d_2=rep(1,n_waves), d_3=rep(1,n_waves))
+# #      )
+# #    }
+#
+#   }
+#
+# }
 
+  #### Test: Using the result from another run for initial values ####
+  if (is(init, "pandemicEstimated")){
+    new_init <- list()
+    pars <- names(init$fit)
+    all_iterations <- as.array(init$fit)
+    #last <- dim(all_iterations)[1]
+
+    for (c in 1:chains){
+      # Set up
+      temp_init <- list()
+      last_iter <- colMeans(all_iterations[, (c - 1) %% init$fit@sim$chains + 1, ]) ## Make sure to cycle correctly through old chains
+
+      if (n_waves == 1) # Waves parameters - begin
+        if (init$n_waves == 1){
+          temp_init$a <- last_iter[pars == "a"]
+          temp_init$b <- last_iter[pars == "b"]
+          temp_init$c <- last_iter[pars == "c"]
+          temp_init$f <- last_iter[pars == "f"]
+        } else {
+          temp_init$a <- min(last_iter[pars == "a[1]"],
+                             p * Y$population * last_iter[pars == "b[1]"] ^ 1.01 * 0.999) # Avoiding errors
+          temp_init$b <- last_iter[pars == "b[1]"]
+          temp_init$c <- last_iter[pars == "c[1]"]
+          temp_init$f <- 1.01
+        }
+      else
+        if (init$n_waves == 1){
+          temp_init$a <- array(rep(last_iter[pars == "a"], n_waves))
+          temp_init$b <- rep(last_iter[pars == "b"], n_waves)
+          temp_init$c <- array(rep(last_iter[pars == "c"], n_waves))
+          temp_init$alpha <- rep(0.01,n_waves)
+          temp_init$delta <- seq(1, ceiling((n_waves - 1) * (t / n_waves)) + 1,
+                                 by = floor(t / n_waves))
+        } else {
+          extra <- max(0, n_waves - init$n_waves)
+          temp_init$a <- array(c(last_iter[match(paste0("a[", 1:min(n_waves,
+                                                                    init$n_waves),"]"), pars)],
+                               rep(0.01, extra)))
+          temp_init$b <- c(last_iter[match(paste0("b[", 1:min(n_waves,
+                                                              init$n_waves),"]"), pars)],
+                           rep(1, extra))
+          temp_init$c <- array(c(last_iter[match(paste0("c[", 1:min(n_waves,
+                                                                    init$n_waves),"]"), pars)],
+                                 rep(0.5, extra)))
+          temp_init$alpha <- c(last_iter[match(paste0("alpha[", 1:min(n_waves,
+                                                                      init$n_waves),"]"), pars)],
+                               rep(0.01, extra))
+          temp_init$delta <- c(last_iter[match(paste0("delta[", 1:min(n_waves,
+                                                                      init$n_waves),"]"), pars)],
+                               rep(0, extra))
+        } # Waves parameters - end
+      new_init[[c]] <- temp_init
+    }
+    init <- new_init
   }
 
-}
 
+  out=list(data_stan=data_stan,params=params,init=init,p=p,phiTrunc=phiTrunc,fTrunc=fTrunc,
+           warmup=warmup,thin=thin, model_name=model_name,
+           sample_size=sample_size,chains=chains,number_iterations=number_iterations)
 
-##### negbin models with seasonal effect
-
-if (!is.null(s_code) && family=="negbin") {
-
-  if(n_waves==1){        # negbin one wave model  with seasonal_effect
-
-    model_name="pandemicModels_singleWave_negbin"
-    params = c("a","b","c","f","phi",paste0("d_",1:length(s_code)),"mu")
-    s_code = c(s_code,0,0)
-
-    data_stan$w1=s_code[1]
-    data_stan$w2=s_code[2]
-    data_stan$w3=s_code[3]
-    data_stan$fTrunc=fTrunc
-    data_stan$phiTrunc=phiTrunc
-
-#  if(covidLPconfig){
-#      init <- list(
-#        list(a = 100, b1 = log(1), c = .5, f = 1.01, d_1=1,d_2=1,d_3=1)
-#      )
-#    }
-
-  } else {   #multiwave with seasonal effect
-
-    model_name="pandemicModels_multiWave_negbin"     #stanmodel name
-
-    params = c("a","b","c","alpha","delta", "phi", paste0("d_",1:length(s_code)), "mu")
-    s_code = c(s_code,0,0)
-
-    data_stan$nCurves=n_waves
-    data_stan$w1=rep(s_code[1],n_waves)
-    data_stan$w2=rep(s_code[2],n_waves)
-    data_stan$w3=rep(s_code[3],n_waves)
-    data_stan$phiTrunc=phiTrunc
-
-#    if(covidLPconfig){
-#      init <- list(
-#        list(a = rep(1,n_waves), b1 = rep(log(1),n_waves), c = rep(0.5,n_waves),
-#             alpha=rep(1,n_waves), delta=seq(0,(n_waves-1)*50,by=50),
-#             d_1=rep(1,n_waves), d_2=rep(1,n_waves), d_3=rep(1,n_waves))
-#      )
-#    }
-
-  }
-
-}
-
-
-
-out=list(data_stan=data_stan,params=params,init=init,p=p,phiTrunc=phiTrunc,fTrunc=fTrunc,
-         warmup=warmup,thin=thin, model_name=model_name,
-         sample_size=sample_size,chains=chains,number_iterations=number_iterations)
-
-return(out)
+  return(out)
 }
 
 ######## auxiliar functon including_auxparameters(init): only for models with auxiliar parameters
@@ -261,9 +351,9 @@ including_auxparameters=function(init){    #if init="random" :  this auxiliar fu
 
     for(j in 1:length(init)){     #including b1_1, excluding b1 (multiwaves): user view
 
-      k = which(names(init[[j]])=="b")
+      k = grep("b", init[[j]])
 
-      if(length(k)!=0){
+      if(length(k)){
         init[[j]]$b1= log(init[[j]]$b)
         init[[j]]=init[[j]][-k]
       }
@@ -287,12 +377,11 @@ excluding_auxparameters=function(init){   #if init="random" :  this auxiliar fun
 if(class(init)=="list"){
 
   for(j in 1:length(init)){
-    kk=which(names(init[[j]])=="b1")    #if user input initial value for b1 or covidLPconfig=TRUE
+    kk=grep("b1", init[[j]])    #if user input initial value for b1 or covidLPconfig=TRUE
 
-    if(length(kk)!=0){
+    if(length(kk)){
       init[[j]]$b=exp(init[[j]]$b1)
-      l=which(names(init[[j]])=="b1")
-      init[[j]]=init[[j]][-l]                  #including b1, excluding b1_1 (multiwaves) :  user view
+      init[[j]]=init[[j]][-kk]                  #including b1, excluding b1_1 (multiwaves) :  user view
 
     }
   }
@@ -598,7 +687,9 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 #' Go to  \code{\link{models}} for more info about model parameters.
 #' Any parameters whose values are not specified will receive initial values generated as described in
 #' \code{init = "random"}. Specification of the initial values for \code{\link{pandemic_model}} can only be via list.
-#' See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}.
+#' See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}. Alternatively
+#' it can be an output of the \code{pandemic_model()} function, which uses the last stored iteration
+#' from that object as the initial values. If the models are different, an analogy is made.
 #'
 #' @param ... other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
 #' Additional arguments can be \code{control}, \code{cores}, etc...
@@ -864,7 +955,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
 
   if(!is.null(points[["control"]])) stop("The input 'control' cannot be used when covidLPconfig = TRUE: CovidLPconfig settings control sampler behavior")
 
-  if(chains!=1 | warmup!=2e3 | thin!=3 | sample_size !=1e3 | init != "random" ){
+  if(chains!=1 | warmup!=2e3 | thin!=3 | sample_size !=1e3 | init != "random" | !is(init, "pandemicEstimated") ){
     warning("There is at least one configuration different from the ones provided in CovidLPconfig: CovidLPconfig settings will be used")
   }
 
