@@ -29,7 +29,7 @@ public:
 protected:
   R_xlen_t ch_size;
 
-  virtual void predict(R_xlen_t pos, R_xlen_t t, double N) {}
+  virtual void predict(R_xlen_t pos, R_xlen_t t, double N) = 0;
 };
 
 class seasonal
@@ -249,15 +249,15 @@ private:
   }
 };
 
-class negbin_multiWave : public negbin, public seasonal, public multiWave,
-                         public predictor
+class negbin_multiWave : public virtual negbin, public virtual seasonal,
+                         public virtual multiWave, public virtual predictor
 {
 public:
   negbin_multiWave(DataFrame pars, unsigned int nW,
                    std::vector<unsigned int> s,
                    std::vector<unsigned int> ss,
-                   std::vector<unsigned int> sss) : seasonal(pars, s, ss, sss),
-                    multiWave(pars,nW), negbin(pars) {}
+                   std::vector<unsigned int> sss) : negbin(pars),
+                   seasonal(pars, s, ss, sss), multiWave(pars,nW) {}
 private:
   void predict(R_xlen_t pos, R_xlen_t t, double N)
   {
