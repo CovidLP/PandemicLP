@@ -58,7 +58,6 @@ if (!d) load(temp) else {
   warning("Data failed to download from drive. Please check internet connection and try again.")
   knitr::knit_exit()
 }
-load(system.file("extdata", "PandemicLP_SumRegions.rda", package = "PandemicLP")) # load outputs
 for(i in 1:length(regions)) { 
   if (is.na(match(regions[i],states$state_abb))){
     data[[i]] <- load_covid(country_name=regions[i],last_date=last_date)
