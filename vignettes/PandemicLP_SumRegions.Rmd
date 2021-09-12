@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r set_options, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -29,7 +29,7 @@ Considering that the wish is to run the model for Covid-19 data, the first step 
 
 To exemplify, this vignette will make the prediction for the South Region of Brazil Covid-19 deaths using the data until October 1st.
 
-```{r}
+```{r select_regions_dates_cases}
 regions <- c("PR", "SC","RS")
 last_date <- "2020-10-01"
 case_type <- "deaths"
@@ -45,12 +45,19 @@ Inside the loop, it is possible to see that an "ifelse" statement is done to che
 
 The data, outputs, and predictions for each region are stored in lists. 
 
-```{r}
+```{r load_data_and_estimations_from_internet}
 data <- list()
 outputs <- list()
 preds <- list()
 states <- state_list()
 ## Using pre-generated results for speed
+temp <- tempfile(fileext = ".rda")
+d <- download.file("https://drive.google.com/u/2/uc?id=1ucWISU7MxgLoICuB_zXy_KE59TuX5tjs&export=download",
+  temp, mode = "wb")
+if (!d) load(temp) else {
+  warning("Data failed to download from drive. Please check internet connection and try again.")
+  knitr::knit_exit()
+}
 load(system.file("extdata", "PandemicLP_SumRegions.rda", package = "PandemicLP")) # load outputs
 for(i in 1:length(regions)) { 
   if (is.na(match(regions[i],states$state_abb))){
@@ -68,7 +75,7 @@ for(i in 1:length(regions)) {
 
 After doing all the sums, we want the final object (pred_final) to be `pandemicPredicted` class and to contain the predictions, the data, the name of the regions considered, the type of case used, and the past and future mu's. So, to make sure that the `pred_final` reflects all necessary format, we make it equal to the result of the `posterior_predict` function for the first considered region, and then we will add the information using a loop starting from the second region until all the regions are added.
 
-```{r,}
+```{r create_predictions}
 pred_final <- preds[[1]] # Just to get the class and format
 mu_t <- t(preds[[1]]$pastMu)
 mu_final <- data.frame(data = preds[[1]]$data$date,mu_t)
@@ -89,7 +96,7 @@ In the case of the past mu, the data frames containing the mu values are transpo
 
 To sum the covid data for each region, each dataset is merged by date in a way that all the information is considered for both objects in the merge. When there is data on a given date for one region and not for another, the column for the region that does not have the information is shown as "NA", so it is changed to 0 to be added. Then, each column from one dataset is added to the corresponding column of the second one, respecting the dates. In the end, the duplicated column is deleted so that the loop can start again for another region without any problem. 
 
-```{r}
+```{r merge_predictions}
 for (i in 2:length(preds)){
   pred_final$predictive_Long <- pred_final$predictive_Long + preds[[i]]$predictive_Long
   pred_final$predictive_Short <- pred_final$predictive_Short + preds[[i]]$predictive_Short
@@ -125,7 +132,7 @@ pred_final$pastMu <- mu_final
 
 After finishing all the data manipulation, the object pred_final is the final object that can be used to create plots or any other analysis that the user may want. In this part, it is important to highlight that the argument "summary = FALSE" in the plot function works to take out the notes on the graph with the summary measures. When plotting the results for the sum of regions, this is important once the function used to calculate these statistics does not work properly in this scenario (this will be fixed in future versions).
 
-```{r, fig.asp=2/(sqrt(5)+1), fig.width=8, fig.align='center', warnings = FALSE}
+```{r print_results, fig.asp=2/(sqrt(5)+1), fig.width=8, fig.align='center', warnings = FALSE}
 plots <- plot(pred_final,term = "both",summary = FALSE)
 plots$long
 plots$short
