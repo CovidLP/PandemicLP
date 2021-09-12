@@ -40,7 +40,7 @@ The model is estimated with function `pandemic_model`. It currently uses [rstan]
 ## Using pre-generated results for speed
 temp <- tempfile(fileext = ".rda")
 d <- download.file("https://drive.google.com/u/2/uc?id=165mXm5DbtPENGJlVLVJvzvVfFFWxT_dr&export=download",
-  temp, mode = "wb")
+  temp, mode = "wb", quiet = TRUE)
 
 # Try to use downloaded version. If not available, run the model
 if (!d) load(temp) else {

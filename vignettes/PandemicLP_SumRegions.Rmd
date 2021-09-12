@@ -53,7 +53,7 @@ states <- state_list()
 ## Using pre-generated results for speed
 temp <- tempfile(fileext = ".rda")
 d <- download.file("https://drive.google.com/u/2/uc?id=1ucWISU7MxgLoICuB_zXy_KE59TuX5tjs&export=download",
-  temp, mode = "wb")
+  temp, mode = "wb", quiet = TRUE)
 if (!d) load(temp) else {
   warning("Data failed to download from drive. Please check internet connection and try again.")
   knitr::knit_exit()
