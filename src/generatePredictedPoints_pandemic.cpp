@@ -257,11 +257,7 @@ public:
                    std::vector<unsigned int> s,
                    std::vector<unsigned int> ss,
                    std::vector<unsigned int> sss) : negbin(pars),
-<<<<<<< HEAD
-                   seasonal(pars, s, ss, sss), multiWave(pars,nW) {}
-=======
                    seasonal(pars, s, ss, sss), multiWave(pars, nW) {}
->>>>>>> app_helper
 private:
   void predict(R_xlen_t pos, R_xlen_t t, double N)
   {

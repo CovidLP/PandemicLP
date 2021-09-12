@@ -35,7 +35,6 @@ RcppExport SEXP _rcpp_module_boot_stan_fit4pandemicModels_multiWave_negbin_mod()
 RcppExport SEXP _rcpp_module_boot_stan_fit4pandemicModels_multiWave_poisson_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4pandemicModels_singleWave_negbin_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4pandemicModels_singleWave_poisson_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4poisson_static_generalized_logistic_mod();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_PandemicLP_generatePredictedPoints_pandemicC", (DL_FUNC) &_PandemicLP_generatePredictedPoints_pandemicC, 8},
@@ -44,7 +43,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_stan_fit4pandemicModels_multiWave_poisson_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4pandemicModels_multiWave_poisson_mod, 0},
     {"_rcpp_module_boot_stan_fit4pandemicModels_singleWave_negbin_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4pandemicModels_singleWave_negbin_mod, 0},
     {"_rcpp_module_boot_stan_fit4pandemicModels_singleWave_poisson_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4pandemicModels_singleWave_poisson_mod, 0},
-    {"_rcpp_module_boot_stan_fit4poisson_static_generalized_logistic_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4poisson_static_generalized_logistic_mod, 0},
     {NULL, NULL, 0}
 };
 
