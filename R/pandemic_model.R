@@ -6,7 +6,7 @@ CovidLP <- function(t, n_waves)
       list(a = rep(1, n_waves), b1 = rep(log(1), n_waves), c = rep(0.5, n_waves),
                    alpha = rep(0.01, n_waves), delta = seq(1, ceiling((n_waves - 1) * (t / n_waves)) +
                                                              1, by = floor(t / n_waves)))),
-      seasonal = list(d_1 = rep(1, n_waves), d_2 = rep(1, n_waves),
+      seasonal <- list(d_1 = rep(1, n_waves), d_2 = rep(1, n_waves),
                       d_3 = rep(1, n_waves))
     )
   )
