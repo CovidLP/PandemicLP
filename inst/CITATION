@@ -1,0 +1,22 @@
+citHeader("To cite PandemicLP in publications use:")
+
+citEntry(
+  entry      = "Book",
+  title      = "Building a Platform for Data-Driven Pandemic Prediction: From Data Modelling to Visualisation - The CovidLP Project",
+  author     = c(person("Dani", "Gamerman"),
+                 person("Marcos O.", "Prates"),
+                 person("Thais", "Paiva"),
+                 person("Vinicius D.", "Mayrink")),
+  editor     = c(person("Dani", "Gamerman"),
+                 person("Marcos O.", "Prates"),
+                 person("Thais", "Paiva"),
+                 person("Vinicius D.", "Mayrink")),
+  publisher  = "CRC Press",
+  year       = 2021,
+  address    = "Boca Raton",
+  textVersion = paste("Dani Gamerman, Marcos O. Prates, Thais Paiva and",
+    "Vinicius D. Mayrink (2021). Building a Platform for Data-Driven Pandemic",
+    "Prediction: From Data Modelling to Visualisation - The CovidLP Project.",
+    "CRC Press"
+  )
+)

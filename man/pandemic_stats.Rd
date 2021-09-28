@@ -54,13 +54,13 @@ are based on the new case counts.
  }
  \subsection{Estimated Peak Dates}{
  The peak of the pandemic curve represents the highest number of daily cases reported.
- 
- 
+
+
  The median, 2.5\% and 97.5\% percentiles are calculated on the mean number of new cases for the pandemic curve
  (starting from the first observed data point until 1,000 days after the last date observed in the data).
  The 95\% credible interval for the peak of cases is selected such that the two limiting dates of the 97.5\%
  percentile curve coincides with the highest value of the 2.5\% percentile curve. This guarantees that all
- possible curves belonging to the confidence band will peak within the defined interval. 
+ possible curves belonging to the confidence band will peak within the defined interval.
  }
  \subsection{End of the Pandemic Dates}{
  Represents the 99\% percentile of the total number of cases in the pandemic.

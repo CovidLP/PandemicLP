@@ -3,8 +3,8 @@
 #' @description This function provides short and long-term predictions for the pandemic. 95\% credible intervals are
 #' assigned to the number of cases for every future date predicted, as well as for the total number of cases,
 #' and dates for the peak and end of the pandemic.
-#' 
-#' 
+#'
+#'
 #' Short-term predictions are made on the cumulative counts and long-term predictions
 #' are based on the new case counts.
 #'
@@ -45,13 +45,13 @@
 #'  }
 #'  \subsection{Estimated Peak Dates}{
 #'  The peak of the pandemic curve represents the highest number of daily cases reported.
-#'  
-#'  
+#'
+#'
 #'  The median, 2.5\% and 97.5\% percentiles are calculated on the mean number of new cases for the pandemic curve
 #'  (starting from the first observed data point until 1,000 days after the last date observed in the data).
 #'  The 95\% credible interval for the peak of cases is selected such that the two limiting dates of the 97.5\%
 #'  percentile curve coincides with the highest value of the 2.5\% percentile curve. This guarantees that all
-#'  possible curves belonging to the confidence band will peak within the defined interval. 
+#'  possible curves belonging to the confidence band will peak within the defined interval.
 #'  }
 #'  \subsection{End of the Pandemic Dates}{
 #'  Represents the 99\% percentile of the total number of cases in the pandemic.
@@ -80,7 +80,7 @@
 
 pandemic_stats <- function(object){
 
-  if (class(object) != "pandemicPredicted") stop("Please use the output of the posterior_predict() function.")
+  if (!is(object, "pandemicPredicted")) stop("Please use the output of the posterior_predict() function.")
   if(missing(object)) stop("object is a required argument. See help(pandemic_stats) for more information.")
 
   t = length(object$data[[1]])
