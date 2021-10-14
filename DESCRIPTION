@@ -1,8 +1,8 @@
 Package: PandemicLP
 Type: Package
 Title: Long Term Prediction for Epidemic and Pandemic Data
-Version: 1.1.0
-Date: 2021-09-03
+Version: 1.1.1
+Date: 2021-10-08
 Authors@R: c(person("Débora", "de Freitas Magalhães", email = "deborafmag@gmail.com", role = "aut"),
             person("Marta Cristina", "Colozza Bianchi da Costa", email = "marta_bianchi@ufg.br", role = "aut"),
             person("Guido", "Alberti Moreira", email = "guidoalber@gmail.com", role = c("cre","aut"),comment=c(ORCID="0000-0001-7557-0874")),
@@ -48,4 +48,4 @@ Suggests:
 URL: <http://est.ufmg.br/covidlp/home/pt/>
 VignetteBuilder: knitr
 SystemRequirements: GNU make
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
