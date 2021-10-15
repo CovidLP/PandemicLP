@@ -282,12 +282,13 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
     new_init <- list()
     pars <- names(init$fit)
     all_iterations <- as.array(init$fit)
-    #last <- dim(all_iterations)[1]
+    last <- dim(all_iterations)[1]
 
     for (c in 1:chains){
       # Set up
       temp_init <- list()
-      last_iter <- colMeans(all_iterations[, (c - 1) %% init$fit@sim$chains + 1, ]) ## Make sure to cycle correctly through old chains
+      #last_iter <- colMeans(all_iterations[, (c - 1) %% init$fit@sim$chains + 1, ]) ## Make sure to cycle correctly through old chains
+      last_iter <- all_iterations[last, (c - 1) %% init$fit@sim$chains + 1, ] ## Make sure to cycle correctly through old chains
 
       if (n_waves == 1) # Waves parameters - begin
         if (init$n_waves == 1){
