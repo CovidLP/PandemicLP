@@ -1,6 +1,7 @@
 <!-- badges -->
 [![CRAN\ Status\ Badge](http://r-pkg.org/badges/version/PandemicLP?color=blue)](http://cran.r-project.org/package=PandemicLP)
 [![Downloads](http://cranlogs.r-pkg.org/badges/PandemicLP?color=blue)](http://cran.rstudio.com/package=PandemicLP)
+[![R-CMD-check](https://github.com/CovidLP/PandemicLP/workflows/R-CMD-check/badge.svg)](https://github.com/CovidLP/PandemicLP/actions)
 <!-- end badges -->
 
 # Installing PandemicLP
