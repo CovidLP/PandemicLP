@@ -1,6 +1,12 @@
 # Installing PandemicLP
 
-First, make sure you have the `devtools` package installed by typing 
+There are two ways to install the package. The first more direct way is to install from CRAN, via the code
+
+```R
+install.packages("PandemicLP")
+```
+
+If you want to install the latest version, however, first, make sure you have the `devtools` package installed by typing 
 
 ```R
 install.packages("devtools")
