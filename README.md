@@ -1,3 +1,8 @@
+<!-- badges -->
+[![CRAN\ Status\ Badge](http://r-pkg.org/badges/version/PandemicLP?color=blue)](http://cran.r-project.org/package=PandemicLP)
+[![Downloads](http://cranlogs.r-pkg.org/badges/PandemicLP?color=blue)](http://cran.rstudio.com/package=PandemicLP)
+<!-- end badges -->
+
 # Installing PandemicLP
 
 There are two ways to install the package. The first more direct way is to install from CRAN, via the code
