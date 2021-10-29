@@ -33,7 +33,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_pandemicModels_multiWave_poisson");
-    reader.add_event(86, 84, "end", "model_pandemicModels_multiWave_poisson");
+    reader.add_event(85, 83, "end", "model_pandemicModels_multiWave_poisson");
     return reader;
 }
 template <typename T1__, typename T2__, typename T3__>
@@ -219,28 +219,28 @@ public:
             // validate, set parameter ranges
             num_params_r__ = 0U;
             param_ranges_i__.clear();
-            current_statement_begin__ = 34;
+            current_statement_begin__ = 33;
             validate_non_negative_index("b1", "nCurves", nCurves);
             num_params_r__ += nCurves;
-            current_statement_begin__ = 35;
+            current_statement_begin__ = 34;
             validate_non_negative_index("a", "nCurves", nCurves);
             num_params_r__ += (1 * nCurves);
-            current_statement_begin__ = 37;
+            current_statement_begin__ = 36;
             validate_non_negative_index("c", "nCurves", nCurves);
             num_params_r__ += (1 * nCurves);
-            current_statement_begin__ = 40;
+            current_statement_begin__ = 39;
             validate_non_negative_index("d_1", "nCurves", nCurves);
             num_params_r__ += (1 * nCurves);
-            current_statement_begin__ = 41;
+            current_statement_begin__ = 40;
             validate_non_negative_index("d_2", "nCurves", nCurves);
             num_params_r__ += (1 * nCurves);
-            current_statement_begin__ = 42;
+            current_statement_begin__ = 41;
             validate_non_negative_index("d_3", "nCurves", nCurves);
             num_params_r__ += (1 * nCurves);
-            current_statement_begin__ = 45;
+            current_statement_begin__ = 44;
             validate_non_negative_index("alpha", "nCurves", nCurves);
             num_params_r__ += nCurves;
-            current_statement_begin__ = 46;
+            current_statement_begin__ = 45;
             validate_non_negative_index("delta", "nCurves", nCurves);
             num_params_r__ += nCurves;
         } catch (const std::exception& e) {
@@ -260,7 +260,7 @@ public:
         (void) pos__; // dummy call to supress warning
         std::vector<double> vals_r__;
         std::vector<int> vals_i__;
-        current_statement_begin__ = 34;
+        current_statement_begin__ = 33;
         if (!(context__.contains_r("b1")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable b1 missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("b1");
@@ -277,7 +277,7 @@ public:
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable b1: ") + e.what()), current_statement_begin__, prog_reader__());
         }
-        current_statement_begin__ = 35;
+        current_statement_begin__ = 34;
         if (!(context__.contains_r("a")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable a missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("a");
@@ -297,7 +297,7 @@ public:
                 stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable a: ") + e.what()), current_statement_begin__, prog_reader__());
             }
         }
-        current_statement_begin__ = 37;
+        current_statement_begin__ = 36;
         if (!(context__.contains_r("c")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable c missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("c");
@@ -317,7 +317,7 @@ public:
                 stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable c: ") + e.what()), current_statement_begin__, prog_reader__());
             }
         }
-        current_statement_begin__ = 40;
+        current_statement_begin__ = 39;
         if (!(context__.contains_r("d_1")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable d_1 missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("d_1");
@@ -337,7 +337,7 @@ public:
                 stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable d_1: ") + e.what()), current_statement_begin__, prog_reader__());
             }
         }
-        current_statement_begin__ = 41;
+        current_statement_begin__ = 40;
         if (!(context__.contains_r("d_2")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable d_2 missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("d_2");
@@ -357,7 +357,7 @@ public:
                 stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable d_2: ") + e.what()), current_statement_begin__, prog_reader__());
             }
         }
-        current_statement_begin__ = 42;
+        current_statement_begin__ = 41;
         if (!(context__.contains_r("d_3")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable d_3 missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("d_3");
@@ -377,7 +377,7 @@ public:
                 stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable d_3: ") + e.what()), current_statement_begin__, prog_reader__());
             }
         }
-        current_statement_begin__ = 45;
+        current_statement_begin__ = 44;
         if (!(context__.contains_r("alpha")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable alpha missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("alpha");
@@ -394,7 +394,7 @@ public:
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable alpha: ") + e.what()), current_statement_begin__, prog_reader__());
         }
-        current_statement_begin__ = 46;
+        current_statement_begin__ = 45;
         if (!(context__.contains_r("delta")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable delta missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("delta");
@@ -436,14 +436,14 @@ public:
         try {
             stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
             // model parameters
-            current_statement_begin__ = 34;
+            current_statement_begin__ = 33;
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> b1;
             (void) b1;  // dummy to suppress unused var warning
             if (jacobian__)
                 b1 = in__.vector_constrain(nCurves, lp__);
             else
                 b1 = in__.vector_constrain(nCurves);
-            current_statement_begin__ = 35;
+            current_statement_begin__ = 34;
             std::vector<local_scalar_t__> a;
             size_t a_d_0_max__ = nCurves;
             a.reserve(a_d_0_max__);
@@ -453,7 +453,7 @@ public:
                 else
                     a.push_back(in__.scalar_lub_constrain(0, min(multiply((p * pop), stan::math::exp(b1)))));
             }
-            current_statement_begin__ = 37;
+            current_statement_begin__ = 36;
             std::vector<local_scalar_t__> c;
             size_t c_d_0_max__ = nCurves;
             c.reserve(c_d_0_max__);
@@ -463,7 +463,7 @@ public:
                 else
                     c.push_back(in__.scalar_lb_constrain(0));
             }
-            current_statement_begin__ = 40;
+            current_statement_begin__ = 39;
             std::vector<local_scalar_t__> d_1;
             size_t d_1_d_0_max__ = nCurves;
             d_1.reserve(d_1_d_0_max__);
@@ -473,7 +473,7 @@ public:
                 else
                     d_1.push_back(in__.scalar_lb_constrain(0));
             }
-            current_statement_begin__ = 41;
+            current_statement_begin__ = 40;
             std::vector<local_scalar_t__> d_2;
             size_t d_2_d_0_max__ = nCurves;
             d_2.reserve(d_2_d_0_max__);
@@ -483,7 +483,7 @@ public:
                 else
                     d_2.push_back(in__.scalar_lb_constrain(0));
             }
-            current_statement_begin__ = 42;
+            current_statement_begin__ = 41;
             std::vector<local_scalar_t__> d_3;
             size_t d_3_d_0_max__ = nCurves;
             d_3.reserve(d_3_d_0_max__);
@@ -493,14 +493,14 @@ public:
                 else
                     d_3.push_back(in__.scalar_lb_constrain(0));
             }
-            current_statement_begin__ = 45;
+            current_statement_begin__ = 44;
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> alpha;
             (void) alpha;  // dummy to suppress unused var warning
             if (jacobian__)
                 alpha = in__.vector_lb_constrain(0, nCurves, lp__);
             else
                 alpha = in__.vector_lb_constrain(0, nCurves);
-            current_statement_begin__ = 46;
+            current_statement_begin__ = 45;
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> delta;
             (void) delta;  // dummy to suppress unused var warning
             if (jacobian__)
@@ -508,28 +508,28 @@ public:
             else
                 delta = in__.vector_constrain(nCurves);
             // transformed parameters
-            current_statement_begin__ = 52;
+            current_statement_begin__ = 51;
             validate_non_negative_index("b", "nCurves", nCurves);
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> b(nCurves);
             stan::math::initialize(b, DUMMY_VAR__);
             stan::math::fill(b, DUMMY_VAR__);
             stan::math::assign(b,stan::math::exp(b1));
-            current_statement_begin__ = 53;
+            current_statement_begin__ = 52;
             validate_non_negative_index("mu", "n", n);
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> mu(n);
             stan::math::initialize(mu, DUMMY_VAR__);
             stan::math::fill(mu, DUMMY_VAR__);
             // transformed parameters block statements
-            current_statement_begin__ = 55;
+            current_statement_begin__ = 54;
             for (int t = 1; t <= n; ++t) {
-                current_statement_begin__ = 56;
+                current_statement_begin__ = 55;
                 stan::model::assign(mu, 
                             stan::model::cons_list(stan::model::index_uni(t), stan::model::nil_index_list()), 
                             0, 
                             "assigning variable mu");
-                current_statement_begin__ = 57;
+                current_statement_begin__ = 56;
                 for (int curve = 1; curve <= nCurves; ++curve) {
-                    current_statement_begin__ = 58;
+                    current_statement_begin__ = 57;
                     stan::model::assign(mu, 
                                 stan::model::cons_list(stan::model::index_uni(t), stan::model::nil_index_list()), 
                                 (stan::model::rvalue(mu, stan::model::cons_list(stan::model::index_uni(t), stan::model::nil_index_list()), "mu") + stan::math::exp(((((normal_cdf_log((get_base1(alpha, curve, "alpha", 1) * (t - get_base1(delta, curve, "delta", 1))), 0, 1) + genLog(t, get_base1(a, curve, "a", 1), get_base1(b, curve, "b", 1), get_base1(c, curve, "c", 1), 1, pstream__)) + ((logical_eq(modulus((t - get_base1(w1, curve, "w1", 1)), 7), 0) * logical_gt(get_base1(w1, curve, "w1", 1), 0)) * stan::math::log(get_base1(d_1, curve, "d_1", 1)))) + ((logical_eq(modulus((t - get_base1(w2, curve, "w2", 1)), 7), 0) * logical_gt(get_base1(w2, curve, "w2", 1), 0)) * stan::math::log(get_base1(d_2, curve, "d_2", 1)))) + ((logical_eq(modulus((t - get_base1(w3, curve, "w3", 1)), 7), 0) * logical_gt(get_base1(w3, curve, "w3", 1), 0)) * stan::math::log(get_base1(d_3, curve, "d_3", 1)))))), 
@@ -539,7 +539,7 @@ public:
             // validate transformed parameters
             const char* function__ = "validate transformed params";
             (void) function__;  // dummy to suppress unused var warning
-            current_statement_begin__ = 52;
+            current_statement_begin__ = 51;
             size_t b_j_1_max__ = nCurves;
             for (size_t j_1__ = 0; j_1__ < b_j_1_max__; ++j_1__) {
                 if (stan::math::is_uninitialized(b(j_1__))) {
@@ -549,7 +549,7 @@ public:
                 }
             }
             check_greater_or_equal(function__, "b", b, 0);
-            current_statement_begin__ = 53;
+            current_statement_begin__ = 52;
             size_t mu_j_1_max__ = n;
             for (size_t j_1__ = 0; j_1__ < mu_j_1_max__; ++j_1__) {
                 if (stan::math::is_uninitialized(mu(j_1__))) {
@@ -561,23 +561,23 @@ public:
             check_greater_or_equal(function__, "mu", mu, 0);
             check_less_or_equal(function__, "mu", mu, pop);
             // model body
-            current_statement_begin__ = 73;
+            current_statement_begin__ = 72;
             lp_accum__.add(poisson_log<propto__>(y, mu));
-            current_statement_begin__ = 76;
+            current_statement_begin__ = 75;
             lp_accum__.add(gamma_log<propto__>(a, 0.1, 0.1));
-            current_statement_begin__ = 77;
+            current_statement_begin__ = 76;
             lp_accum__.add(normal_log<propto__>(delta, 0, 100));
-            current_statement_begin__ = 78;
+            current_statement_begin__ = 77;
             lp_accum__.add(gamma_log<propto__>(c, 2, 9));
-            current_statement_begin__ = 79;
+            current_statement_begin__ = 78;
             lp_accum__.add(gamma_log<propto__>(alpha, 0.01, 0.01));
-            current_statement_begin__ = 80;
+            current_statement_begin__ = 79;
             lp_accum__.add(gamma_log<propto__>(d_1, 2, 1));
-            current_statement_begin__ = 81;
+            current_statement_begin__ = 80;
             lp_accum__.add(gamma_log<propto__>(d_2, 2, 1));
-            current_statement_begin__ = 82;
+            current_statement_begin__ = 81;
             lp_accum__.add(gamma_log<propto__>(d_3, 2, 1));
-            current_statement_begin__ = 83;
+            current_statement_begin__ = 82;
             lp_accum__.add(normal_log<propto__>(b1, 0, stan::math::sqrt(20)));
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -731,28 +731,28 @@ public:
         if (!include_tparams__ && !include_gqs__) return;
         try {
             // declare and define transformed parameters
-            current_statement_begin__ = 52;
+            current_statement_begin__ = 51;
             validate_non_negative_index("b", "nCurves", nCurves);
             Eigen::Matrix<double, Eigen::Dynamic, 1> b(nCurves);
             stan::math::initialize(b, DUMMY_VAR__);
             stan::math::fill(b, DUMMY_VAR__);
             stan::math::assign(b,stan::math::exp(b1));
-            current_statement_begin__ = 53;
+            current_statement_begin__ = 52;
             validate_non_negative_index("mu", "n", n);
             Eigen::Matrix<double, Eigen::Dynamic, 1> mu(n);
             stan::math::initialize(mu, DUMMY_VAR__);
             stan::math::fill(mu, DUMMY_VAR__);
             // do transformed parameters statements
-            current_statement_begin__ = 55;
+            current_statement_begin__ = 54;
             for (int t = 1; t <= n; ++t) {
-                current_statement_begin__ = 56;
+                current_statement_begin__ = 55;
                 stan::model::assign(mu, 
                             stan::model::cons_list(stan::model::index_uni(t), stan::model::nil_index_list()), 
                             0, 
                             "assigning variable mu");
-                current_statement_begin__ = 57;
+                current_statement_begin__ = 56;
                 for (int curve = 1; curve <= nCurves; ++curve) {
-                    current_statement_begin__ = 58;
+                    current_statement_begin__ = 57;
                     stan::model::assign(mu, 
                                 stan::model::cons_list(stan::model::index_uni(t), stan::model::nil_index_list()), 
                                 (stan::model::rvalue(mu, stan::model::cons_list(stan::model::index_uni(t), stan::model::nil_index_list()), "mu") + stan::math::exp(((((normal_cdf_log((get_base1(alpha, curve, "alpha", 1) * (t - get_base1(delta, curve, "delta", 1))), 0, 1) + genLog(t, get_base1(a, curve, "a", 1), get_base1(b, curve, "b", 1), get_base1(c, curve, "c", 1), 1, pstream__)) + ((logical_eq(modulus((t - get_base1(w1, curve, "w1", 1)), 7), 0) * logical_gt(get_base1(w1, curve, "w1", 1), 0)) * stan::math::log(get_base1(d_1, curve, "d_1", 1)))) + ((logical_eq(modulus((t - get_base1(w2, curve, "w2", 1)), 7), 0) * logical_gt(get_base1(w2, curve, "w2", 1), 0)) * stan::math::log(get_base1(d_2, curve, "d_2", 1)))) + ((logical_eq(modulus((t - get_base1(w3, curve, "w3", 1)), 7), 0) * logical_gt(get_base1(w3, curve, "w3", 1), 0)) * stan::math::log(get_base1(d_3, curve, "d_3", 1)))))), 
@@ -763,9 +763,9 @@ public:
             // validate transformed parameters
             const char* function__ = "validate transformed params";
             (void) function__;  // dummy to suppress unused var warning
-            current_statement_begin__ = 52;
+            current_statement_begin__ = 51;
             check_greater_or_equal(function__, "b", b, 0);
-            current_statement_begin__ = 53;
+            current_statement_begin__ = 52;
             check_greater_or_equal(function__, "mu", mu, 0);
             check_less_or_equal(function__, "mu", mu, pop);
             // write transformed parameters

@@ -23,8 +23,8 @@ pandemic_model(
 )
 }
 \arguments{
-\item{Y}{an object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}}
-or a list providing the epidemiological data for the model.
+\item{Y}{an object of class \code{\link{pandemicData-objects}} created by function \code{\link{load_covid}},
+or function \code{\link{format_data}}. It is a list providing the epidemiological data for the model.
 The elements of this Y list are:
 
 \describe{
@@ -56,7 +56,7 @@ The elements of this Y list are:
 
 
   For formatting epidemiological data (not provided by the \code{load_covid} function) in the specified Y list format,
-  see the ??? function, the vignette ???? or \strong{Examples} section in
+  see the \code{\link{format_data}} function or the \strong{Examples} section in
    \code{\link{covid19BH}}.}
 
 \item{case_type}{a string providing the type of cases of interest in modelling the epidemic.

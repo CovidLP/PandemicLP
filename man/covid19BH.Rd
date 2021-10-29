@@ -27,39 +27,49 @@ covid19BH
 }
 \description{
 The purpose of this page is to show the user how to format the Y input argument
-in \code{\link{pandemic_model}} function, when epidemiological data was obtained
+in the \code{\link{pandemic_model}} function, when epidemiological data was obtained
 outside of the \code{\link{load_covid}} function.
 
 
 The Covid-19 data for the city of Belo Horizonte, MG - Brazil will be used to illustrate
-how to correctly format the epidemiological data required in the \code{pandemic_model} function.
+how to correctly format the epidemiological data required in the \code{pandemic_model} function,
+using the function \code{\link{format_data}}.
 See the \strong{Examples} section.
 
 
 For complete information on the required data format,
-check the \code{Y} input argument description in
-
-\code{?pandemic_model}.
+check the \code{Y} input argument description in \code{?pandemic_model}.
 }
 \examples{
 ## formating the data frame for pandemic_model function
-covid19BH
-names(covid19BH)
 
-data = covid19BH
-names(data) = c("date", "new_cases", "new_deaths", "cases", "deaths", "population")
+#loading data
+data <- covid19BH
+data
+names(data)
 
+#re-order data in ascending order
 class(data$date)
 data$date = as.Date(data$date)
 class(data$date)
+data <- data[order(data$date), ]
+head(data)
 
-data      #note:  data frame is ordered by date in descending order!
-data = data[order(data$date, decreasing=FALSE), ]
-data      #data frame ordered by dates in ascending order
+# building the Y list required
+start <- data$date[1]
+end <- data$date[nrow(data)]
+cases <- data$last_available_confirmed
+new_cases <- data$new_confirmed
+deaths <- data$last_available_deaths
+new_deaths <- data$new_deaths
+pop <- data$estimated_population_2019[1]
 
-## building the Y list required
-pop = data$population[1]
-Y = list(data = data, name = "Belo Horizonte/MG", population = pop)
+Y <- format_data(s_date = start, e_date = end,
+                 cases = cases, n_cases = new_cases,
+                 deaths = deaths, n_deaths = new_deaths,
+                 name = "Belo Horizonte/MG", pop = pop)
+Y
+plot(Y)
 
 ## fitted model:
 ##pandemic_model function may take a few minutes...
@@ -88,7 +98,7 @@ CovidLP Team, 2020. CovidLP: Short and Long-term Prediction for COVID-19. Depart
 Brazil. URL: \url{http://est.ufmg.br/covidlp/home/en/}
 }
 \seealso{
-\code{\link{load_covid}}, \code{\link{pandemic_model}}, \code{\link{posterior_predict.pandemicEstimated}},
+\code{\link{load_covid}}, \code{\link{format_data}}, \code{\link{pandemic_model}}, \code{\link{posterior_predict.pandemicEstimated}},
 \code{\link{pandemic_stats}} and  \code{\link{plot.pandemicPredicted}}.
 }
 \keyword{datasets}
