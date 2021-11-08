@@ -845,17 +845,16 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
   } else if(!("new_deaths" %in% names(Y$data)) && "new_cases" %in% names(Y$data) && is.numeric(Y$data$new_cases)){
     data_cases <- TRUE
     Y$data <- cbind(Y$data, new_deaths = Y$data$new_cases)
-  } else if(!any(c("new_cases", "new_deaths") %in% names(Y$data))) { if("cases" %in% names(Y$data)){
-    accum_to_new_c <- function(x){
-      n = nrow(x)
+  } else if(!any(c("new_cases", "new_deaths") %in% names(Y$data))) { if("cases" %in% names(Y$data)){{
+      n_lines = nrow(Y$data)
       col_new_cases = c()
       i = 1
-      while (i <= n){
+      while (i <= n_lines){
         if (i == 1){
-          i_new_cases = x[i, 2]
+          i_new_cases = Y$data[i, 2]
           col_new_cases = c(col_new_cases, i_new_cases)
         } else{
-          i_new_cases = x[i, 2] - x[i-1, 2]
+          i_new_cases = Y$data[i, 2] - Y$data[i-1, 2]
           if (i_new_cases >= 0){
             col_new_cases = c(col_new_cases, i_new_cases)
           } else{
@@ -864,20 +863,18 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
         }
         i = i+1
       }
-      x["new_cases"] = c(col_new_cases)
-      return(x)
+      Y$data["new_cases"] = c(col_new_cases)
     }
   } else{
-    accum_to_new_d <- function(x){
-      n <- nrow(x)
+      n_lines <- nrow(Y$data)
       col_new_deaths <- c()
       i = 1
-      while (i <= n){
+      while (i <= n_lines){
         if (i == 1){
-          i_new_deaths = x[i, 2]
+          i_new_deaths = Y$data[i, 2]
           col_new_deaths = c(col_new_deaths, i_new_deaths)
         } else{
-          i_new_deaths = x[i, 2] - x[i-1, 2]
+          i_new_deaths = Y$data[i, 2] - Y$data[i-1, 2]
           if (i_new_deaths >= 0){
             col_new_deaths = c(col_new_deaths, i_new_deaths)
           } else{
@@ -886,8 +883,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
         }
         i = i+1
       }
-      x["new_deaths"] = c(col_new_deaths)
-      return(x)
+      Y$data["new_deaths"] = c(col_new_deaths)
     }
   }}
 
