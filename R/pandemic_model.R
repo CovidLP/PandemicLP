@@ -845,10 +845,11 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
   } else if(!("new_deaths" %in% names(Y$data)) && "new_cases" %in% names(Y$data) && is.numeric(Y$data$new_cases)){
     data_cases <- TRUE
     Y$data <- cbind(Y$data, new_deaths = Y$data$new_cases)
-  } else if(!any(c("new_cases", "new_deaths") %in% names(Y$data))) { if("cases" %in% names(Y$data)){{
+  } else if(!any(c("new_cases", "new_deaths") %in% names(Y$data))) {
+      if("cases" %in% names(Y$data)){
       n_lines = nrow(Y$data)
       col_new_cases = c()
-      i = 1
+      i == 1
       while (i <= n_lines){
         if (i == 1){
           i_new_cases = Y$data[i, 2]
@@ -864,11 +865,10 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
         i = i+1
       }
       Y$data["new_cases"] = c(col_new_cases)
-    }
   } else{
       n_lines <- nrow(Y$data)
       col_new_deaths <- c()
-      i = 1
+      i == 1
       while (i <= n_lines){
         if (i == 1){
           i_new_deaths = Y$data[i, 2]
