@@ -837,16 +837,6 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
   data_cases <-  NULL  #indicator of the Y$data full: both 'new_cases' and 'new_deaths'.
   names(Y$data) <- tolower(names(Y$data))
 
-  # Y$data with 'new_deaths' and without 'new_cases':
-  if(!("new_cases" %in% names(Y$data)) && "new_deaths" %in% names(Y$data) && is.numeric(Y$data$new_deaths)){
-  data_cases <- FALSE
-  Y$data <- cbind(Y$data, new_cases = Y$data$new_deaths)
-  #Y$data with 'new_cases' and without 'new_deaths':
-  } else if(!("new_deaths" %in% names(Y$data)) && "new_cases" %in% names(Y$data) && is.numeric(Y$data$new_cases)){
-    data_cases <- TRUE
-    Y$data <- cbind(Y$data, new_deaths = Y$data$new_cases)
-  }
-
   # Y$data without either 'new_deaths' and 'new_cases':
   if(!any(c("new_cases", "new_deaths") %in% names(Y$data))) {
     if("cases" %in% names(Y$data)){
@@ -867,9 +857,9 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
         }
         i = i+1
       }
-      Y$data["new_cases"] = c(col_new_cases)
+      Y$data <- cbind(Y$data, new_cases = col_new_cases)
     } else{
-      n_lines <- nrow(Y$data)
+      n_lines = nrow(Y$data)
       col_new_deaths <- c()
       i == 1
       while (i <= n_lines){
@@ -886,8 +876,16 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
         }
         i = i+1
       }
-      Y$data["new_deaths"] = c(col_new_deaths)
-    }
+      Y$data = cbind(new_deaths, col_new_deaths)
+    }}
+  # Y$data with 'new_deaths' and without 'new_cases':
+  if(!("new_cases" %in% names(Y$data)) && "new_deaths" %in% names(Y$data) && is.numeric(Y$data$new_deaths)){
+  data_cases <- FALSE
+  Y$data <- cbind(Y$data, new_cases = Y$data$new_deaths)
+  #Y$data with 'new_cases' and without 'new_deaths':
+  } else if(!("new_deaths" %in% names(Y$data)) && "new_cases" %in% names(Y$data) && is.numeric(Y$data$new_cases)){
+    data_cases <- TRUE
+    Y$data <- cbind(Y$data, new_deaths = Y$data$new_cases)
   }
 
   #Y$data without either 'cumulative cases':
