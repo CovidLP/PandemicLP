@@ -885,7 +885,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
       }
       Y$data["new_deaths"] = c(col_new_deaths)
     }
-  }}
+  }
 
   #Y$data without either 'cumulative cases':
   if("new_cases" %in% names(Y$data) && !("cases" %in% names(Y$data)) && is.numeric(Y$data$new_cases)) {
