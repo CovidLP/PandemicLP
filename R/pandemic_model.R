@@ -876,7 +876,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
         }
         i = i+1
       }
-      Y$data = cbind(new_deaths, col_new_deaths)
+      Y$data = cbind(Y$data, new_deaths = col_new_deaths)
     }}
   # Y$data with 'new_deaths' and without 'new_cases':
   if(!("new_cases" %in% names(Y$data)) && "new_deaths" %in% names(Y$data) && is.numeric(Y$data$new_deaths)){
