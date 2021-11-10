@@ -825,7 +825,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
   if(!is.null(points[["algorithm"]])) stop("The input 'algorithm' of the Stan sampler cannot be used: The sampling algorithm is 'NUTS' in pandemic_model function.")
 
 
-  ############### preparing data and warning for user  whend data is not load_covid
+  ############### preparing data and warning for user when data is not load_covid
 
   if(missing(Y)) stop("Y is a required argument. See help(pandemic_model)")
   if(!is.list(Y) && !is(Y, "pandemicData")) stop("Y should be a list or an object of S3 Class 'pandemicData'. See help(pandemic_model) and help(load_covid).")
@@ -842,13 +842,13 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
     if("cases" %in% names(Y$data)){
       n_lines = nrow(Y$data)
       col_new_cases = c()
-      i == 1
+      i <- as.integer(1)
       while (i <= n_lines){
         if (i == 1){
-          i_new_cases = Y$data[i, 2]
+          i_new_cases = Y$data[i, "cases" ]
           col_new_cases = c(col_new_cases, i_new_cases)
         } else{
-          i_new_cases = Y$data[i, 2] - Y$data[i-1, 2]
+          i_new_cases = Y$data[i, "cases" ] - Y$data[i-1, "cases" ]
           if (i_new_cases >= 0){
             col_new_cases = c(col_new_cases, i_new_cases)
           } else{
@@ -861,13 +861,13 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
     } else{
       n_lines = nrow(Y$data)
       col_new_deaths <- c()
-      i == 1
+      i <- as.integer(1)
       while (i <= n_lines){
         if (i == 1){
-          i_new_deaths = Y$data[i, 2]
+          i_new_deaths = Y$data[i, "deaths" ]
           col_new_deaths = c(col_new_deaths, i_new_deaths)
         } else{
-          i_new_deaths = Y$data[i, 2] - Y$data[i-1, 2]
+          i_new_deaths = Y$data[i, "deaths" ] - Y$data[i-1, "deaths" ]
           if (i_new_deaths >= 0){
             col_new_deaths = c(col_new_deaths, i_new_deaths)
           } else{
