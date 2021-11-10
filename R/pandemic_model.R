@@ -845,10 +845,10 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
       i == 1
       while (i <= n_lines){
         if (i == 1){
-          i_new_cases = Y$data[i, 2]
+          i_new_cases = Y$data[i, "cases"]
           col_new_cases = c(col_new_cases, i_new_cases)
         } else{
-          i_new_cases = Y$data[i, 2] - Y$data[i-1, 2]
+          i_new_cases = Y$data[i, "cases"] - Y$data[i-1, "cases"]
           if (i_new_cases >= 0){
             col_new_cases = c(col_new_cases, i_new_cases)
           } else{
@@ -864,10 +864,10 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
       i == 1
       while (i <= n_lines){
         if (i == 1){
-          i_new_deaths = Y$data[i, 2]
+          i_new_deaths = Y$data[i, "deaths"]
           col_new_deaths = c(col_new_deaths, i_new_deaths)
         } else{
-          i_new_deaths = Y$data[i, 2] - Y$data[i-1, 2]
+          i_new_deaths = Y$data[i, "deaths"] - Y$data[i-1, "deaths"]
           if (i_new_deaths >= 0){
             col_new_deaths = c(col_new_deaths, i_new_deaths)
           } else{
@@ -877,7 +877,8 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
         i = i+1
       }
       Y$data = cbind(Y$data, new_deaths = col_new_deaths)
-    }}
+    }
+  }
   # Y$data with 'new_deaths' and without 'new_cases':
   if(!("new_cases" %in% names(Y$data)) && "new_deaths" %in% names(Y$data) && is.numeric(Y$data$new_deaths)){
   data_cases <- FALSE
