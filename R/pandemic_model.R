@@ -845,10 +845,10 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
       i == 1
       while (i <= n_lines){
         if (i == 1){
-          i_new_cases = Y$data[i, c("cases")]
+          i_new_cases = Y$data[i, 2]
           col_new_cases = c(col_new_cases, i_new_cases)
         } else{
-          i_new_cases = Y$data[i, c("cases")] - Y$data[i-1, c("cases")]
+          i_new_cases = Y$data[i, 2] - Y$data[i-1, 2]
           if (i_new_cases >= 0){
             col_new_cases = c(col_new_cases, i_new_cases)
           } else{
@@ -864,10 +864,10 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
       i == 1
       while (i <= n_lines){
         if (i == 1){
-          i_new_deaths = Y$data[i, c("deaths")]
+          i_new_deaths = Y$data[i, 2]
           col_new_deaths = c(col_new_deaths, i_new_deaths)
         } else{
-          i_new_deaths = Y$data[i, c("deaths")] - Y$data[i-1, c("deaths")]
+          i_new_deaths = Y$data[i, 2] - Y$data[i-1, 2]
           if (i_new_deaths >= 0){
             col_new_deaths = c(col_new_deaths, i_new_deaths)
           } else{
