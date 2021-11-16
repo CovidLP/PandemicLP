@@ -607,7 +607,7 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 #'
 #' \describe{
 #'   \item{\code{data}:}{
-#'   a data frame with at least the 2 columns \code{date} and any other possible column:  \code{cases} or \code{new_cases} or \code{deaths} or \code{new_deaths}.
+#'   a data frame with a \code{date} column and at least one of the following:  \code{cases}, \code{new_cases}, \code{deaths}, \code{new_deaths}.
 #'   Bellow are descriptions of each of these columns:
 #'
 #'   \describe{
