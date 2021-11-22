@@ -18,6 +18,7 @@ pandemic_model(
   thin = 3,
   sample_size = 1000,
   init = "random",
+  prior_parameters = NULL,
   ...,
   covidLPconfig = FALSE
 )
