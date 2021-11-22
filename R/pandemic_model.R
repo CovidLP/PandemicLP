@@ -37,8 +37,6 @@ seasonal_code <- function(dates, s_e){
 ### auxiliar function 'config_stan'
 config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,chains,init,covidLPconfig){
 
-  number_iterations <- warmup + thin * sample_size
-
   if (case_type == "confirmed") cases <- "new_cases"
   if (case_type == "deaths") cases <- "new_deaths"    #nature of the occurrence
 
@@ -58,6 +56,7 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
     fun <- CovidLP(t, n_waves)[[family]]
     data_stan <- c(data_stan, fun[["mu_params"]], fun[["seasonal"]])
   }
+  number_iterations <- warmup + thin * sample_size
 
   #### guido shorter code - begin
   model_name <- "pandemicModels_"
@@ -956,7 +955,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
 
   if(!is.null(points[["control"]])) stop("The input 'control' cannot be used when covidLPconfig = TRUE: CovidLPconfig settings control sampler behavior")
 
-  if(chains!=1 | warmup!=2e3 | thin!=3 | sample_size !=1e3 | init != "random" | !is(init, "pandemicEstimated") ){
+  if(chains!=1 | warmup!=2e3 | thin!=3 | sample_size !=1e3 | !(init == "random" | is(init, "pandemicEstimated")) ){
     warning("There is at least one configuration different from the ones provided in CovidLPconfig: CovidLPconfig settings will be used")
   }
 
