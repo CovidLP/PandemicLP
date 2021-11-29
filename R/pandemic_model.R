@@ -805,7 +805,8 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 #' it can be an output of the \code{pandemic_model()} function, which uses the last stored iteration
 #' from that object as the initial values. If the models are different, an analogy is made.
 #'
-#' @param prior_parameters
+#' @param prior_parameters Either \code{NULL} or a \code{list}. If \code{NULL} default prior parameters are used.
+#' If a \code{list} must contain adequate values for the prior parameters. See \code{\link{models}} for details.
 #'
 #' @param ... other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
 #' Additional arguments can be \code{control}, \code{cores}, etc...

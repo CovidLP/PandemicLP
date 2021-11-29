@@ -96,8 +96,7 @@ These warmup samples are not used for inference.  The default is \code{2000}, if
 the value default becomes \code{warmup=5000}.}
 
 \item{thin}{a positive integer specifying the period for saving samples. The default is \code{3},
-which is the default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).
-.}
+which is the default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).}
 
 \item{sample_size}{a positive integer specifying the posterior sample's size per chain that will be used for inference.
 The total number of iterations per chain is:
@@ -113,6 +112,9 @@ Any parameters whose values are not specified will receive initial values genera
 See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}. Alternatively
 it can be an output of the \code{pandemic_model()} function, which uses the last stored iteration
 from that object as the initial values. If the models are different, an analogy is made.}
+
+\item{prior_parameters}{Either \code{NULL} or a \code{list}. If \code{NULL} default prior parameters are used.
+If a \code{list} must contain adequate values for the prior parameters. See \code{\link{models}} for details.}
 
 \item{...}{other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
 Additional arguments can be \code{control}, \code{cores}, etc...}
