@@ -848,7 +848,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
           i_new_cases = Y$data[i, "cases" ]
           col_new_cases = c(col_new_cases, i_new_cases)
         } else{
-          i_new_cases = diff(dado_2$data[c(i-1, i), "cases" ])
+          i_new_cases = diff(Y$data[c(i-1, i), "cases" ])
           if (i_new_cases >= 0){
             col_new_cases = c(col_new_cases, i_new_cases)
           } else{
@@ -867,7 +867,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
           i_new_deaths = Y$data[i, "deaths" ]
           col_new_deaths = c(col_new_deaths, i_new_deaths)
         } else{
-          i_new_deaths = diff(dado_2$data[c(i-1, i), "deaths" ])
+          i_new_deaths = diff(Y$data[c(i-1, i), "deaths" ])
           if (i_new_deaths >= 0){
             col_new_deaths = c(col_new_deaths, i_new_deaths)
           } else{
