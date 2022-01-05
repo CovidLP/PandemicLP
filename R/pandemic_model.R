@@ -11,6 +11,30 @@ CovidLP <- function(t, n_waves)
     )
   )
 
+prior_aux <- function(par){
+  if(par == "a_alpha") return(0.1)
+  if(par == "a_beta") return(0.1)
+  if(par == "mu_delta") return(0)
+  if(par == "sigma2_delta") return(100)
+  if(par == "c_alpha") return(2)
+  if(par == "c_beta") return(9)
+  if(par == "alpha_alpha") return(0.01)
+  if(par == "alpha_beta") return(0.01)
+  if(par == "d_1_alpha") return(2)
+  if(par == "d_1_beta") return(1)
+  if(par == "d_2_alpha") return(2)
+  if(par == "d_2_beta") return(1)
+  if(par == "d_3_alpha") return(2)
+  if(par == "d_3_beta") return(1)
+  if(par == "mu_b_1") return(0)
+  if(par == "sigma2_b_1") return(20)
+  if(par == "phi_alpha") return(0.1)
+  if(par == "phi_beta") return(0.1)
+  if(par == "f_alpha") return( 0.01)
+  if(par == "f_beta") return( 0.01)
+
+
+}
 #pandemic_environment$weekdays=c("sunday", "monday", "tuesday", "wednesday", "thursday",
 #                                "friday", "saturday")
 
@@ -35,7 +59,7 @@ seasonal_code <- function(dates, s_e){
 
 
 ### auxiliar function 'config_stan'
-config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,chains,init,covidLPconfig){
+config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,chains,init,prior_parameters,covidLPconfig){
 
   if (case_type == "confirmed") cases <- "new_cases"
   if (case_type == "deaths") cases <- "new_deaths"    #nature of the occurrence
@@ -85,6 +109,95 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
   model_name <- paste0(model_name, family)
   params <- c(params, "mu")
   #### guido shorter code - end
+
+  ## Prior Parameters
+
+  pars <- c("a_alpha","a_beta","mu_delta","sigma2_delta","c_alpha","c_beta","alpha_alpha","alpha_beta",
+          "d_1_alpha","d_1_beta","d_2_alpha","d_2_beta","d_3_alpha","d_3_beta","mu_b_1","sigma2_b_1",
+          "phi_alpha","phi_beta","f_alpha","f_beta")
+  for (par in pars) {
+    if(is.null(prior_parameters[[par]]))  data_stan[[par]] <- prior_aux(par)
+    else data_stan[[par]] <- prior_parameters[[par]]
+  }
+
+ stopifnot(data_stan$a_alpha > 0, data_stan$a_beta > 0, data$sigma2_delta > 0, data_stan$c_alpha > 0,
+           data_stan$c_beta > 0, data_stan$alpha_alpha > 0, data_stan$alpha_beta  > 0, data_stan$d_1_alpha >0,
+           data_stan$d_1_beta > 0, data_stan$d_2_alpha > 0, data_stan$d_2_beta > 0, data_stan$d_3_alpha >0,
+           data_stan$d_3_beta > 0, data_stan$sigma2_b_1 > 0, data_stan$phi_alpha >0, data_stan$phi_beta >0
+           , data_stan$f_alpha > 0, data_stan$f_beta >0  )
+# if(data_stan$a_alpha < 0){
+#   print("Parameter a_alpha out of limits ")
+# }
+#
+#   if(data_stan$a_beta < 0){
+#     print("Parameter a_beta out of limits ")
+#   }
+#
+#   if(data_stan$sigma2_delta < 0){
+#     print("Parameter sigma2_delta out of limits ")
+#   }
+#
+#   if(data_stan$c_alpha < 0){
+#     print("Parameter c_alpha out of limits ")
+#   }
+#
+#   if(data_stan$c_beta < 0){
+#     print("Parameter c_beta out of limits ")
+#   }
+#
+#   if(data_stan$alpha_alpha < 0){
+#     print("Parameter alpha_alpha out of limits ")
+#   }
+#
+#   if(data_stan$alpha_beta < 0){
+#     print("Parameter alpha_beta out of limits ")
+#   }
+#
+#   if(data_stan$d_1_alpha < 0){
+#     print("Parameter d_1_alpha out of limits ")
+#   }
+#
+#   if(data_stan$d_1_beta < 0){
+#     print("Parameter d_1_beta out of limits ")
+#   }
+#
+#   if(data_stan$d_2_alpha < 0){
+#     print("Parameter d_2_alpha out of limits ")
+#   }
+#
+#   if(data_stan$d_2_beta < 0){
+#     print("Parameter d_2_beta out of limits ")
+#   }
+#
+#   if(data_stan$d_3_alpha < 0){
+#     print("Parameter d_3_alpha out of limits ")
+#   }
+#
+#   if(data_stan$d_3_beta < 0){
+#     print("Parameter d_3_beta out of limits ")
+#   }
+#
+#   if(data_stan$sigma2_b_1 < 0){
+#     print("Parameter sigma2_b_1 out of limits ")
+#   }
+#
+#   if(data_stan$phi_alpha < 0){
+#     print("Parameter phi_alpha out of limits ")
+#   }
+#
+#   if(data_stan$phi_beta < 0){
+#     print("Parameter phi_beta out of limits ")
+#   }
+#
+#   if(data_stan$f_alpha < 0){
+#     print("Parameter f_alpha out of limits ")
+#   }
+#
+#   if(data_stan$f_beta < 0){
+#     print("Parameter f_beta out of limits ")
+#   }
+
+
 
 # #####poisson models without seasonal effect:
 #
@@ -425,14 +538,14 @@ if(class(init)=="list"){
 
 fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n_waves,p,
                   phiTrunc, fTrunc,
-                  chains, warmup, thin, sample_size, init,...,covidLPconfig){
+                  chains, warmup, thin, sample_size, init,prior_parameters,...,covidLPconfig){
 
 ########### stan configuration
 
   s_code <- seasonal_code(Y$data$date, seasonal_effect)    #codifing seasonal_effect
 
   config <- config_stan(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,     #confit stan
-                     chains,init,covidLPconfig)
+                     chains,init,prior_parameters,covidLPconfig)
 
   init=including_auxparameters(config$init)    #replace initial values, by user, by initial values of the auxiliar paremeters ( when necessary) for datastan
 
@@ -478,14 +591,14 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 
       if(n_waves==1) {                    #gen logistic
 
-      priors=list(prior.a= "Gamma(0.1,0.1)" ,prior.b= "LogNormal(0,20)"  ,
-                  prior.c= "Gamma(2,9)" ,prior.f= "Gamma(0.01,0.01)")
+      priors=list(prior.a= paste0("Gamma(",prior_parameters$a_alpha,",",prior_parameters$a_beta,")") ,prior.b= paste0("LogNormal(",prior_parameters$mu_b_1,",",prior_parameters$sigma2_b_1,")")  ,
+                  prior.c= paste0("Gamma(",prior_parameters$c_alpha,",",prior_parameters$c_beta,")") ,paste0("Gamma(",prior_parameters$f_alpha,",",prior_parameters$f_beta,")"))
 
       if(family=="poisson"){
         priors$restrictions=list(paste0("a/b^f<"," ",p,"*population"),"f>1")
         name="poisson: static generalized logistic"
       } else {
-        priors$phi="Gamma(0.1,0.1)"
+        priors$phi= paste0("Gamma(",prior_parameters$phi_alpha,",",prior_parameters$phi_beta,")")
         priors$restrictions=list(paste0("a/b^f<"," ",p,"*population"),paste0("f>",fTrunc),
                                  paste0("phi>",phiTrunc))
         name="negbin: static generalized logistic"
@@ -494,12 +607,12 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 
       } else {   #multiwaves model without seasonal effect:
 
-          priors=list(prior.a_i= "Gamma(0.1,0.1)" ,prior.b_i= "LogNormal(0,20)"  ,
-                      prior.c_i= "Gamma(2,9)" ,prior.alpha_i= "Gamma(0.01,0.01)",
-                      prior.delta_i="Normal(0,100)")
+          priors=list(prior.a_i= paste0("Gamma(",prior_parameters$a_alpha,",",prior_parameters$a_beta,")") ,paste0("LogNormal(",prior_parameters$mu_b_1,",",prior_parameters$sigma2_b_1,")") ,
+                      prior.c_i= paste0("Gamma(",prior_parameters$c_alpha,",",prior_parameters$c_beta,")") ,paste0("Gamma(",prior_parameters$alpha_alpha,",",prior_parameters$alpha_beta,")"),
+                      prior.delta_i=paste0("Normal(",prior_parameters$mu_delta,",",prior_parameters$sigma2_delta,")") )
 
           if(family=="negbin"){
-            priors[["phi"]]="Gamma(0.1,0,1)"
+            priors[["phi"]]= paste0("Gamma(",prior_parameters$phi_alpha,",",prior_parameters$phi_beta,")")
             priors$restrictions=list(paste0("a_i/b_i<"," ",p,"*population"),
                                      paste0("phi>"," ",phiTrunc))
             name=paste0("negbin: multi_waves(",n_waves,")")
@@ -513,14 +626,14 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
     } else {     #with seasonal effect
 
       if(n_waves==1){
-      priors=list(prior.a= "Gamma(0.1,0.1)" ,prior.b= "LogNormal(0,20)"  ,
-                  prior.c= "Gamma(2,9)" ,prior.f= "Gamma(0.01,0.01)",prior.d_i="Gamma(2,1)")
+      priors=list(prior.a= paste0("Gamma(",prior_parameters$a_alpha,",",prior_parameters$a_beta,")") ,prior.b= paste0("LogNormal(",prior_parameters$mu_b_1,",",prior_parameters$sigma2_b_1,")") ,
+                  prior.c= paste0("Gamma(",prior_parameters$c_alpha,",",prior_parameters$c_beta,")") ,prior.f= paste0("Gamma(",prior_parameters$f_alpha,",",prior_parameters$f_beta,")"),prior.d_i=paste0("Gamma(",prior_parameters$d_1_alpha,",",prior_parameters$d_1_beta,")"))
 
       if(family=="poisson"){
         priors$restrictions=list(paste0("a/b^f<"," ",p,"*population"),"f>1")
         name="poisson: static seasonal generalized logistic"
       } else {
-        priors$phi="Gamma(0.1,0.1)"
+        priors$phi= paste0("Gamma(",prior_parameters$phi_alpha,",",prior_parameters$phi_beta,")")
         priors$restrictions=list(paste0("a/b^f<"," ",p,"*population"),paste0("f>",fTrunc),
                                  paste0("phi>",phiTrunc))
         name="negbin: static generalized logistic"
@@ -529,12 +642,12 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 
       } else { #n_waves >=2 with seasonal effect:
 
-        priors=list(prior.a_i= "Gamma(0.1,0.1)" ,prior.b_i= "LogNormal(0,20)"  ,
-                    prior.c_i= "Gamma(2,9)" ,prior.alpha_i= "Gamma(0.01,0.01)",
-                    prior.delta_i="Normal(0,100)", prior.d_i="Gamma(2,1)")
+        priors=list(prior.a_i= paste0("Gamma(",prior_parameters$a_alpha,",",prior_parameters$a_beta,")") ,prior.b_i= paste0("LogNormal(",prior_parameters$mu_b_1,",",prior_parameters$sigma2_b_1,")")  ,
+                    prior.c_i= paste0("Gamma(",prior_parameters$c_alpha,",",prior_parameters$c_beta,")") ,prior.alpha_i= paste0("Gamma(",prior_parameters$alpha_alpha,",",prior_parameters$alpha_beta,")"),
+                    prior.delta_i=paste0("Normal(",prior_parameters$mu_delta,",",prior_parameters$sigma2_delta,")"), prior.d_i= paste0("Gamma(",prior_parameters$d_1_alpha,",",prior_parameters$d_1_beta,")") )
 
         if(family=="negbin"){
-          priors[["phi"]]="Gamma(0.1,0,1)"
+          priors[["phi"]]= paste0("Gamma(",prior_parameters$phi_alpha,",",prior_parameters$phi_beta,")")
           priors$restrictions=list(paste0("a_i/b_i<"," ",p,"*population"),
                                    paste0("phi> ",phiTrunc))
         name=paste0("negbin: multi_waves(",n_waves,")")
@@ -674,7 +787,7 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 #'
 #' @param thin  a positive integer specifying the period for saving samples. The default is \code{3},
 #' which is the default value used by the CovidLP app (\url{http://est.ufmg.br/covidlp/home/en/}).
-#'.
+#'
 #'
 #' @param sample_size  a positive integer specifying the posterior sample's size per chain that will be used for inference.
 #' The total number of iterations per chain is:
@@ -690,6 +803,9 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 #' See the detailed documentation for the init argument via list in \code{\link[rstan]{stan}}. Alternatively
 #' it can be an output of the \code{pandemic_model()} function, which uses the last stored iteration
 #' from that object as the initial values. If the models are different, an analogy is made.
+#'
+#' @param prior_parameters Either \code{NULL} or a \code{list}. If \code{NULL} default prior parameters are used.
+#' If a \code{list} must contain adequate values for the prior parameters. See \code{\link{models}} for details.
 #'
 #' @param ... other arguments passed to the function. These are optional arguments for the \code{\link[rstan]{sampling}}  (\pkg{rstan} package).
 #' Additional arguments can be \code{control}, \code{cores}, etc...
@@ -818,7 +934,7 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 
 pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal_effect = NULL, n_waves = 1, p = 0.08,
                           phiTrunc = 0, fTrunc = 1, chains = 1, warmup = 2e3, thin = 3,
-                          sample_size = 1e3, init = "random", ..., covidLPconfig = FALSE) {
+                          sample_size = 1e3, init = "random", prior_parameters =NULL,..., covidLPconfig = FALSE) {
 
   points <- list(...)
 
@@ -975,10 +1091,12 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
   fit <- fitmodel(Y=Y,data_cases=data_cases,family=family,case_type=case_type,
                seasonal_effect=seasonal_effect, n_waves=n_waves, p = p, phiTrunc = phiTrunc,
                fTrunc=fTrunc, chains=chains, warmup=warmup,
-                thin=thin, sample_size=sample_size, init=init,..., covidLPconfig = covidLPconfig)
+                thin=thin, sample_size=sample_size, init=init,prior_parameters,..., covidLPconfig = covidLPconfig)
 
   class(fit) <- "pandemicEstimated"
 
   return(fit)
 
 }
+
+
