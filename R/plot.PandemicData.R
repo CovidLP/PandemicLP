@@ -46,10 +46,94 @@ plot.pandemicData <- function(x, y, cases = "new", color = TRUE, ...){
   cases <- tolower(cases)
   if(!(cases %in% c("both","new","cumulative"))) stop("Invalid \'cases\' argument. Please read \'help(plot.pandemicData)\' for available options.")
 
-  if(cases == "new" & is.null(x$data$new_cases) & is.null(x$data$new_deaths)) stop("Invalid \'cases\' argument. The data only contain cumulative data (\'cases\' argument should be \'Cumulative\')")
-  if(cases == "both" & is.null(x$data$new_cases) & is.null(x$data$new_deaths)) stop("Invalid \'cases\' argument. The data only contain cumulative data (\'cases\' argument should be \'Cumulative\')")
-  if(cases == "cumulative" & is.null(x$data$cases) & is.null(x$data$deaths)) stop("Invalid \'cases\' argument. The data only contain daily data (\'cases\' argument should be \'New\')")
-  if(cases == "both" & is.null(x$data$cases) & is.null(x$data$deaths)) stop("Invalid \'cases\' argument. The data only contain daily data (\'cases\' argument should be \'New\')")
+  #if(cases == "new" & is.null(x$data$new_cases) & is.null(x$data$new_deaths)) stop("Invalid \'cases\' argument. The data only contain cumulative data (\'cases\' argument should be \'Cumulative\')")
+  #if(cases == "both" & is.null(x$data$new_cases) & is.null(x$data$new_deaths)) stop("Invalid \'cases\' argument. The data only contain cumulative data (\'cases\' argument should be \'Cumulative\')")
+  #if(cases == "cumulative" & is.null(x$data$cases) & is.null(x$data$deaths)) stop("Invalid \'cases\' argument. The data only contain daily data (\'cases\' argument should be \'New\')")
+  #if(cases == "both" & is.null(x$data$cases) & is.null(x$data$deaths)) stop("Invalid \'cases\' argument. The data only contain daily data (\'cases\' argument should be \'New\')")
+
+  # x$data without either 'new_deaths' and 'new_cases':
+  if(!any(c("new_cases", "new_deaths") %in% names(x$data))) {
+    if("cases" %in% names(x$data)){
+      n_lines = nrow(x$data)
+      col_new_cases = c()
+      i <- as.integer(1)
+      while (i <= n_lines){
+        if (i == 1){
+          i_new_cases = x$data[i, "cases" ]
+          col_new_cases = c(col_new_cases, i_new_cases)
+        } else{
+          i_new_cases = diff(dado_2$data[c(i-1, i), "cases" ])
+          if (i_new_cases >= 0){
+            col_new_cases = c(col_new_cases, i_new_cases)
+          } else{
+            col_new_cases = c(col_new_cases, 0)
+          }
+        }
+        i = i+1
+      }
+      x$data <- cbind(x$data, new_cases = col_new_cases)
+    } else{
+      n_lines = nrow(x$data)
+      col_new_deaths <- c()
+      i <- as.integer(1)
+      while (i <= n_lines){
+        if (i == 1){
+          i_new_deaths = x$data[i, "deaths" ]
+          col_new_deaths = c(col_new_deaths, i_new_deaths)
+        } else{
+          i_new_deaths = diff(dado_2$data[c(i-1, i), "deaths" ])
+          if (i_new_deaths >= 0){
+            col_new_deaths = c(col_new_deaths, i_new_deaths)
+          } else{
+            col_new_deaths = c(col_new_deaths, 0)
+          }
+        }
+        i = i+1
+      }
+      x$data = cbind(x$data, new_deaths = col_new_deaths)
+    }
+  }
+
+  # x$data with 'new_deaths' and without 'new_cases':
+  if(!("new_cases" %in% names(x$data)) && "new_deaths" %in% names(x$data) && is.numeric(x$data$new_deaths)){
+    data_cases <- FALSE
+    x$data <- cbind(x$data, new_cases = x$data$new_deaths)
+  #x$data with 'new_cases' and without 'new_deaths':
+  } else if(!("new_deaths" %in% names(x$data)) && "new_cases" %in% names(x$data) && is.numeric(x$data$new_cases)){
+    data_cases <- TRUE
+    x$data <- cbind(x$data, new_deaths = x$data$new_cases)
+  }
+
+  #x$data without either 'cumulative cases':
+  if("new_cases" %in% names(x$data) && !("cases" %in% names(x$data)) && is.numeric(x$data$new_cases)) {
+    x$data <- cbind(x$data, cases = cumsum(x$data$new_cases))
+  }
+  if("new_deaths" %in% names(x$data) && !("deaths" %in% names(x$data)) && is.numeric(x$data$new_deaths)) {
+    x$data <- cbind(x$data, deaths = cumsum(x$data$new_deaths))
+  }
+
+  if(!all(c("date", "cases", "deaths", "new_cases", "new_deaths") %in% names(x$data))) stop("x$data should be a data.frame with column names: 'date' and at least one of the 'new_cases' or 'new_deaths'. See help(pandemic_model)")
+  if(!is(x$data$date, "Date")) stop("x$data$date should be of class 'Date' and format 'YYYY-MM-dd' " )
+  if(!all(is.numeric(x$data$cases), is.numeric(x$data$deaths), is.numeric(x$data$new_cases), is.numeric(x$data$new_deaths))) stop( "x$data: values in 'cases', 'deaths', 'new_cases' and 'new_deaths' columns should be as.integer or as.numeric")
+
+  #data processing: new_cases, new_deaths < 0:
+  while(any(x$data$new_cases < 0)){
+    pos <- which(x$data$new_cases < 0)
+    for(j in pos){
+      x$data$new_cases[j - 1] = x$data$new_cases[j] + x$data$new_cases[j - 1]
+      x$data$new_cases[j] = 0
+      x$data$cases[j - 1] = x$data$cases[j]
+    }
+  }
+
+  while(any(x$data$new_deaths < 0)){
+    pos <- which(x$data$new_deaths < 0)
+    for(j in pos){
+      x$data$new_deaths[j - 1] = x$data$new_deaths[j] + x$data$new_deaths[j - 1]
+      x$data$new_deaths[j] = 0
+      x$data$deaths[j - 1] = x$data$deaths[j]
+    }
+  }
 
   cat(paste0("Plotting Data.\n"))
 
