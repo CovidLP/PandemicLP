@@ -1,7 +1,6 @@
 #Pulling auxiliary functions
 source("R/utils.R")
 
-
 #' @title Bayesian growth curve models for epidemiological data via Stan
 #'
 #' @name pandemic_model

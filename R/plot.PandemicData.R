@@ -1,3 +1,6 @@
+#Pulling auxiliary functions
+source("R/utils.R")
+
 #' Plot pandemic data
 #'
 #' S3 method that plots the predicted data into an interactive graphic.
@@ -49,21 +52,23 @@ plot.pandemicData <- function(x, y, cases = "new", color = TRUE, ...){
   if(cases = "new" && !any(c("new_cases", "new_deaths")) %in% names(x$data)) warning("Check if you entered the \'cases'\ parameter correctly")
   if(cases = "cumulative" && !any(c("cases", "deaths")) %in% names(x$data)) warning("Check if you entered the \'cases'\ parameter correctly")
 
-  # x$data without either 'new_deaths' and 'new_cases':
-  if(!any(c("new_cases", "new_deaths") %in% names(x$data))) {
-    if("cases" %in% names(x$data)){
-      n_lines = nrow(x$data)
-      col_new_cases = c()
-      i <- as.integer(1)
-      while (i <= n_lines){
-        if (i == 1){
-          i_new_cases = x$data[i, "cases" ]
-          col_new_cases = c(col_new_cases, i_new_cases)
-        } else{
-          i_new_cases = diff(dado_2$data[c(i-1, i), "cases" ])
-          if (i_new_cases >= 0){
-            col_new_cases = c(col_new_cases, i_new_cases)
-          } else{
+  x$data <- accum_to_new(x)
+
+  ## x$data without either 'new_deaths' and 'new_cases':
+  #if(!any(c("new_cases", "new_deaths") %in% names(x$data))) {
+  #  if("cases" %in% names(x$data)){
+  #    n_lines = nrow(x$data)
+  #    col_new_cases = c()
+  #    i <- as.integer(1)
+  #    while (i <= n_lines){
+  #      if (i == 1){
+  #        i_new_cases = x$data[i, "cases" ]
+  #        col_new_cases = c(col_new_cases, i_new_cases)
+  #      } else{
+  #        i_new_cases = diff(dado_2$data[c(i-1, i), "cases" ])
+  #        if (i_new_cases >= 0){
+  #          col_new_cases = c(col_new_cases, i_new_cases)
+  #        } else{
             col_new_cases = c(col_new_cases, 0)
           }
         }

@@ -71,7 +71,7 @@ accum_to_new <- function(Y){
     Y$data <- cbind(Y$data, deaths = cumsum(Y$data$new_deaths))
   }
 
-  if(!all(c("date", "cases", "deaths", "new_cases", "new_deaths") %in% names(Y$data))) stop("Y$data should be a data.frame with column names: 'date' and at least one of the 'new_cases' or 'new_deaths'. See help(pandemic_model)")
+  if(!all(c("date", "cases", "deaths", "new_cases", "new_deaths") %in% names(Y$data))) stop("Y$data should be a data.frame with column names: 'date' and at least one of the 'new_cases', 'new_deaths', 'deaths' or 'cases'. See help(pandemic_model)")
   if(!is(Y$data$date, "Date")) stop("Y$data$date should be of class 'Date' and format 'YYYY-MM-dd' " )
   if(!all(is.numeric(Y$data$cases), is.numeric(Y$data$deaths), is.numeric(Y$data$new_cases), is.numeric(Y$data$new_deaths))) stop( "Y$data: values in 'cases', 'deaths', 'new_cases' and 'new_deaths' columns should be as.integer or as.numeric")
 
@@ -93,6 +93,13 @@ accum_to_new <- function(Y){
       x$data$deaths[j - 1] = x$data$deaths[j]
     }
   }
+
+  if(is.null(Y$name[[1]])) stop("name of Country/State/Location should be informed in Y$name as character")
+  if(!(is.character(Y$name[[1]]))) stop("name of Country/State/Location should be informed in Y$name as character")
+
+
+  if(is.null(Y$population)) stop("Country/State/Location population should be informed in Y$population")
+  if(!(is.numeric(Y$population))) stop("Country/State/Location population should be informed in Y$population as.numeric or as.integer")
 }
 
 # App configuration
