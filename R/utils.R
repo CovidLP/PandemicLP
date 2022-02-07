@@ -52,6 +52,7 @@ accum_to_new <- function(Y){
       Y$data = cbind(Y$data, new_deaths = col_new_deaths)
     }
   }
+
   # Y$data with 'new_deaths' and without 'new_cases':
   if(!("new_cases" %in% names(Y$data)) && "new_deaths" %in% names(Y$data) && is.numeric(Y$data$new_deaths)){
     data_cases <- FALSE
@@ -73,6 +74,25 @@ accum_to_new <- function(Y){
   if(!all(c("date", "cases", "deaths", "new_cases", "new_deaths") %in% names(Y$data))) stop("Y$data should be a data.frame with column names: 'date' and at least one of the 'new_cases' or 'new_deaths'. See help(pandemic_model)")
   if(!is(Y$data$date, "Date")) stop("Y$data$date should be of class 'Date' and format 'YYYY-MM-dd' " )
   if(!all(is.numeric(Y$data$cases), is.numeric(Y$data$deaths), is.numeric(Y$data$new_cases), is.numeric(Y$data$new_deaths))) stop( "Y$data: values in 'cases', 'deaths', 'new_cases' and 'new_deaths' columns should be as.integer or as.numeric")
+
+  #data processing: new_cases, new_deaths < 0:
+  while(any(x$data$new_cases < 0)){
+    pos <- which(x$data$new_cases < 0)
+    for(j in pos){
+      x$data$new_cases[j - 1] = x$data$new_cases[j] + x$data$new_cases[j - 1]
+      x$data$new_cases[j] = 0
+      x$data$cases[j - 1] = x$data$cases[j]
+    }
+  }
+
+  while(any(x$data$new_deaths < 0)){
+    pos <- which(x$data$new_deaths < 0)
+    for(j in pos){
+      x$data$new_deaths[j - 1] = x$data$new_deaths[j] + x$data$new_deaths[j - 1]
+      x$data$new_deaths[j] = 0
+      x$data$deaths[j - 1] = x$data$deaths[j]
+    }
+  }
 }
 
 # App configuration
