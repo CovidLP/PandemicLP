@@ -93,13 +93,7 @@ accum_to_new <- function(Y){
       x$data$deaths[j - 1] = x$data$deaths[j]
     }
   }
-
-  if(is.null(Y$name[[1]])) stop("name of Country/State/Location should be informed in Y$name as character")
-  if(!(is.character(Y$name[[1]]))) stop("name of Country/State/Location should be informed in Y$name as character")
-
-
-  if(is.null(Y$population)) stop("Country/State/Location population should be informed in Y$population")
-  if(!(is.numeric(Y$population))) stop("Country/State/Location population should be informed in Y$population as.numeric or as.integer")
+  return(Y$data)
 }
 
 # App configuration

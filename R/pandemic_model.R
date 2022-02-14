@@ -1,6 +1,3 @@
-#Pulling auxiliary functions
-source("R/utils.R")
-
 #' @title Bayesian growth curve models for epidemiological data via Stan
 #'
 #' @name pandemic_model
@@ -243,99 +240,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
 
   ############### preparing data and warning for user when data is not load_covid
 
-  if(missing(Y)) stop("Y is a required argument. See help(pandemic_model)")
-  if(!is.list(Y) && !is(Y, "pandemicData")) stop("Y should be a list or an object of S3 Class 'pandemicData'. See help(pandemic_model) and help(load_covid).")
-
-  names(Y) <- tolower(names(Y))
-  if(!(all(c("data", "name", "population") %in% names(Y)))) stop("object list Y should have elementes 'data', 'name', 'population'. See help(pandemic_model).")
-  if(!is.data.frame(Y$data)) stop("Y$data should be a data.frame. See help(pandemic_model).")
-
-  data_cases <-  NULL  #indicator of the Y$data full: both 'new_cases' and 'new_deaths'.
-  names(Y$data) <- tolower(names(Y$data))
-
-  # Y$data without either 'new_deaths' and 'new_cases':
-  if(!any(c("new_cases", "new_deaths") %in% names(Y$data))) {
-    if("cases" %in% names(Y$data)){
-      n_lines = nrow(Y$data)
-      col_new_cases = c()
-      i <- as.integer(1)
-      while (i <= n_lines){
-        if (i == 1){
-          i_new_cases = Y$data[i, "cases" ]
-          col_new_cases = c(col_new_cases, i_new_cases)
-        } else{
-          i_new_cases = diff(dado_2$data[c(i-1, i), "cases" ])
-          if (i_new_cases >= 0){
-            col_new_cases = c(col_new_cases, i_new_cases)
-          } else{
-            col_new_cases = c(col_new_cases, 0)
-          }
-        }
-        i = i+1
-      }
-      Y$data <- cbind(Y$data, new_cases = col_new_cases)
-    } else{
-      n_lines = nrow(Y$data)
-      col_new_deaths <- c()
-      i <- as.integer(1)
-      while (i <= n_lines){
-        if (i == 1){
-          i_new_deaths = Y$data[i, "deaths" ]
-          col_new_deaths = c(col_new_deaths, i_new_deaths)
-        } else{
-          i_new_deaths = diff(dado_2$data[c(i-1, i), "deaths" ])
-          if (i_new_deaths >= 0){
-            col_new_deaths = c(col_new_deaths, i_new_deaths)
-          } else{
-            col_new_deaths = c(col_new_deaths, 0)
-          }
-        }
-        i = i+1
-      }
-      Y$data = cbind(Y$data, new_deaths = col_new_deaths)
-    }
-  }
-  # Y$data with 'new_deaths' and without 'new_cases':
-  if(!("new_cases" %in% names(Y$data)) && "new_deaths" %in% names(Y$data) && is.numeric(Y$data$new_deaths)){
-  data_cases <- FALSE
-  Y$data <- cbind(Y$data, new_cases = Y$data$new_deaths)
-  #Y$data with 'new_cases' and without 'new_deaths':
-  } else if(!("new_deaths" %in% names(Y$data)) && "new_cases" %in% names(Y$data) && is.numeric(Y$data$new_cases)){
-    data_cases <- TRUE
-    Y$data <- cbind(Y$data, new_deaths = Y$data$new_cases)
-  }
-
-  #Y$data without either 'cumulative cases':
-  if("new_cases" %in% names(Y$data) && !("cases" %in% names(Y$data)) && is.numeric(Y$data$new_cases)) {
-    Y$data <- cbind(Y$data, cases = cumsum(Y$data$new_cases))
-  }
-  if("new_deaths" %in% names(Y$data) && !("deaths" %in% names(Y$data)) && is.numeric(Y$data$new_deaths)) {
-    Y$data <- cbind(Y$data, deaths = cumsum(Y$data$new_deaths))
-  }
-
-  if(!all(c("date", "cases", "deaths", "new_cases", "new_deaths") %in% names(Y$data))) stop("Y$data should be a data.frame with column names: 'date' and at least one of the 'new_cases' or 'new_deaths'. See help(pandemic_model)")
-  if(!is(Y$data$date, "Date")) stop("Y$data$date should be of class 'Date' and format 'YYYY-MM-dd' " )
-  if(!all(is.numeric(Y$data$cases), is.numeric(Y$data$deaths), is.numeric(Y$data$new_cases), is.numeric(Y$data$new_deaths))) stop( "Y$data: values in 'cases', 'deaths', 'new_cases' and 'new_deaths' columns should be as.integer or as.numeric")
-
-  #data processing: new_cases, new_deaths < 0:
-  while(any(Y$data$new_cases < 0)){
-    pos <- which(Y$data$new_cases < 0)
-    for(j in pos){
-      Y$data$new_cases[j - 1] = Y$data$new_cases[j] + Y$data$new_cases[j - 1]
-      Y$data$new_cases[j] = 0
-      Y$data$cases[j - 1] = Y$data$cases[j]
-    }
-  }
-
-  while(any(Y$data$new_deaths < 0)){
-    pos <- which(Y$data$new_deaths < 0)
-    for(j in pos){
-      Y$data$new_deaths[j - 1] = Y$data$new_deaths[j] + Y$data$new_deaths[j - 1]
-      Y$data$new_deaths[j] = 0
-      Y$data$deaths[j - 1] = Y$data$deaths[j]
-    }
-  }
-
+  Y$data <- accum_to_new(Y)
 
   if(is.null(Y$name[[1]])) stop("name of Country/State/Location should be informed in Y$name as character")
   if(!(is.character(Y$name[[1]]))) stop("name of Country/State/Location should be informed in Y$name as character")
