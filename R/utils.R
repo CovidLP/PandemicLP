@@ -1,4 +1,4 @@
-#### auxiliar function: transforming cumulative data in daily data and vice-versa, and adding to the dataset
+#### auxiliar function: transforming cumulative data in daily data and vice-versa, and adding to the dataset ####
 accum_to_new <- function(Y){
   if(missing(Y)) stop("Y is a required argument. See help(pandemic_model)")
   if(!is.list(Y) && !is(Y, "pandemicData")) stop("Y should be a list or an object of S3 Class 'pandemicData'. See help(pandemic_model) and help(load_covid).")
@@ -96,7 +96,7 @@ accum_to_new <- function(Y){
   return(Y$data)
 }
 
-# App configuration
+#### App configuration ####
 CovidLP <- function(t, n_waves)
   list(
     poisson = list(mu_params = ifelse(n_waves == 1,
@@ -113,7 +113,7 @@ CovidLP <- function(t, n_waves)
 #                                "friday", "saturday")
 
 
-#### auxiliar function "seasonal_code( dates,s_e): coding the days of the week with seasonal effect
+#### auxiliar function "seasonal_code( dates,s_e): coding the days of the week with seasonal effect ####
 # dates = observed dates vector; s_e = seasonal_effects =  string vector with full weekdays' name
 
 seasonal_code <- function(dates, s_e){
@@ -132,7 +132,7 @@ seasonal_code <- function(dates, s_e){
 }
 
 
-#### auxiliar function 'config_stan'
+#### auxiliar function 'config_stan' ####
 config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,chains,init,covidLPconfig){
 
   number_iterations <- warmup + thin * sample_size
@@ -375,7 +375,7 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
   #
   # }
 
-  #### Test: Using the result from another run for initial values ####
+  #### Test: Using the result from another run for initial values
   if (is(init, "pandemicEstimated")){
     new_init <- list()
     pars <- names(init$fit)
@@ -439,7 +439,7 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
   return(out)
 }
 
-#### auxiliar functon including_auxparameters(init): only for models with auxiliar parameters
+#### auxiliar functon including_auxparameters(init): only for models with auxiliar parameters ####
 # provides the replacement of the initial value of the parameter, given by the user, with the respective initial
 #value of the auxiliary parameter.
 
@@ -466,7 +466,7 @@ including_auxparameters=function(init){    #if init="random" :  this auxiliar fu
 }
 
 
-#### auxiliar functon excluding_auxparameters(init): only for models with auxiliar parameters
+#### auxiliar functon excluding_auxparameters(init): only for models with auxiliar parameters ####
 # provides the replacement of the initial value of the auxiliar parameter, used by sampler STAN, with the respective
 #initial value of the parameter of interest.
 
@@ -494,7 +494,7 @@ excluding_auxparameters=function(init){   #if init="random" :  this auxiliar fun
 }
 
 
-#### auxiliar function: Excludes parameters from a stanfit object.
+#### auxiliar function: Excludes parameters from a stanfit object
 #Used for the seasonal model to remove unused d_i parameters
 
 ## Obsolete ##
@@ -512,7 +512,7 @@ excluding_auxparameters=function(init){   #if init="random" :  this auxiliar fun
 # }
 
 
-#### auxiliar funtion: fitmodel(...)
+#### auxiliar funtion: fitmodel(...) ####
 # provides adjustment of the model according to the configurations of the STAN sampler
 #requested by the user
 #' @importFrom rstan sampling
@@ -675,7 +675,5 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
 
   } else {
     print("ERROR sampling STAN")
-
   }
-
 }
