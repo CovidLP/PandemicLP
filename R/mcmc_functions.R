@@ -1,22 +1,3 @@
-# Auxiliary function to build the correct parameters string vector
-build_params <- function(object, waves){
-  if (grepl("multi", object$model_name)){
-    out <- c(paste0("a[",waves,"]"), paste0("b[",waves,"]"), paste0("c[",waves,"]"),
-             paste0("alpha[",waves,"]"), paste0("delta[",waves,"]"))
-    if (!is.null(object$seasonal_effect))
-      out <- c(out, paste0(paste0("d_", 1:length(object$seasonal_effect)), "[", waves, "]"))
-  }
-  else{
-    out <- c("a", "b", "c", "f")
-    if (!is.null(object$seasonal_effect))
-      out <- c(out, paste0("d_", 1:length(object$seasonal_effect)))
-  }
-  if (grepl("negbin", object$model_name))
-    out <- c(out, "phi")
-
-  out
-}
-
 #' @importFrom methods setOldClass
 methods::setOldClass("pandemicEstimated")
 
