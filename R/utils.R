@@ -115,7 +115,6 @@ CovidLP <- function(t, n_waves)
 
 #### auxiliar function "seasonal_code( dates,s_e): coding the days of the week with seasonal effect ####
 # dates = observed dates vector; s_e = seasonal_effects =  string vector with full weekdays' name
-
 seasonal_code <- function(dates, s_e){
 
   if(is.null(s_e)) code <- NULL else {       #model doesn't have seasonal effect
@@ -442,7 +441,6 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
 #### auxiliar functon including_auxparameters(init): only for models with auxiliar parameters ####
 # provides the replacement of the initial value of the parameter, given by the user, with the respective initial
 #value of the auxiliary parameter.
-
 including_auxparameters=function(init){    #if init="random" :  this auxiliar function is not necessary
 
   if(is.list(init)) {
@@ -469,7 +467,6 @@ including_auxparameters=function(init){    #if init="random" :  this auxiliar fu
 #### auxiliar functon excluding_auxparameters(init): only for models with auxiliar parameters ####
 # provides the replacement of the initial value of the auxiliar parameter, used by sampler STAN, with the respective
 #initial value of the parameter of interest.
-
 excluding_auxparameters=function(init){   #if init="random" :  this auxiliar function is not necessary
 
   if(class(init)=="list"){
@@ -492,7 +489,6 @@ excluding_auxparameters=function(init){   #if init="random" :  this auxiliar fun
   return(init)
 
 }
-
 
 #### auxiliar function: Excludes parameters from a stanfit object
 #Used for the seasonal model to remove unused d_i parameters
@@ -518,7 +514,6 @@ excluding_auxparameters=function(init){   #if init="random" :  this auxiliar fun
 #' @importFrom rstan sampling
 #'
 #' @importClassesFrom rstan stanfit
-
 
 fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n_waves,p,
                      phiTrunc, fTrunc,
@@ -676,4 +671,77 @@ fitmodel <- function(Y,data_cases=data_cases,family, case_type,seasonal_effect,n
   } else {
     print("ERROR sampling STAN")
   }
+}
+
+#### Capitalize country names: This function capitalizes country_name inputs in order to match the capitalization in the database. ####
+#' Capitalize country names
+#'
+#' This function capitalizes country_name inputs in order to match the capitalization in the database.
+#'
+#' @param x A character string
+#' @return Capitalized character string x to match the spelling and capitalization in the database.
+#' @noRd
+
+capitalize <- function(x) {
+  s <- gsub("\\b(\\w)", "\\U\\1", x, perl = TRUE)
+  s<- gsub("\\bAnd\\b", "and", s)
+  s<- gsub("\\bOf\\b", "of", s)
+  if(length(s)== 1 && s =="Cote D'Ivoire") {s <-"Cote d'Ivoire"}
+  if(length(s)== 1 && s =="Eswatini") {s <-"eSwatini"}
+  s
+}
+
+#### Auxiliary function to build the correct parameters string vector ####
+build_params <- function(object, waves){
+  if (grepl("multi", object$model_name)){
+    out <- c(paste0("a[",waves,"]"), paste0("b[",waves,"]"), paste0("c[",waves,"]"),
+             paste0("alpha[",waves,"]"), paste0("delta[",waves,"]"))
+    if (!is.null(object$seasonal_effect))
+      out <- c(out, paste0(paste0("d_", 1:length(object$seasonal_effect)), "[", waves, "]"))
+  }
+  else{
+    out <- c("a", "b", "c", "f")
+    if (!is.null(object$seasonal_effect))
+      out <- c(out, paste0("d_", 1:length(object$seasonal_effect)))
+  }
+  if (grepl("negbin", object$model_name))
+    out <- c(out, "phi")
+
+  out
+}
+
+#### Auxiliary function for posterior_predict.pandemicEstimated. Provides the actual predictions ####
+# c for chains, h for horizon, n for NA value, m for model, ft for final time and s for seasonal effects days
+#' @importFrom stats rpois rgamma pnorm
+generatePredictedPoints_pandemic = function(M,c,h,n,m,ft,s){
+
+  .Deprecated("generatePredictedPoints_pandemicC")
+  y = mu = matrix(-Inf,ncol = h,nrow = M)
+  if (m == "poisson: static generalized logistic")
+    for (i in 1:h){
+      mu[,i] = exp(log(c$f)+log(c$a)+log(c$c)-(c$c*(ft+i))-(c$f+1)*log(c$b+exp(-c$c*(ft+i)) ))
+      y[,i] = stats::rpois(M,mu[,i])
+    } else if (m == "negbin: static generalized logistic")
+      for (i in 1:h){
+        mu[,i] = exp(log(c$f)+log(c$a)+log(c$c)-(c$c*(ft+i))-(c$f+1)*log(c$b+exp(-c$c*(ft+i)) ))
+        y[,i] = stats::rpois(M,stats::rgamma(M,mu[,i]*c$phi,c$phi))
+      } else if (m == "poisson: static seasonal generalized logistic"){
+        d_1 = c$d_1; d_2 = ifelse(is.null(c$d_2),1,c$d_2); d_3 = ifelse(is.null(c$d_3),1,c$d_3)
+        for (i in 1:h){
+          mu[,i] = exp(log(c$f)+log(c$a)+log(c$c)-(c$c*(ft+i))-(c$f+1)*log(c$b+exp(-c$c*(ft+i)) ))*
+            d_1^((s[1]>0) * !((ft+i - s[1]) %% 7)) * d_2^((s[2]>0) * !((ft+i - s[2]) %% 7)) * d_3^((s[3]>0) * !((ft+i - s[3]) %% 7))
+          y[,i] = stats::rpois(M,mu[,i])
+        }} else if (m == "poisson: multi_waves(2)")
+          for (i in 1:h){
+            mu[,i] = exp(log(c$a1)+log(c$c1)-(c$c1*(ft+i))-2*log(c$b1+exp(-c$c1*(ft+i)) ) + stats::pnorm(c$alpha1*(ft+i-c$delta1),log.p = TRUE))+
+              exp(log(c$a2)+log(c$c2)-(c$c2*(ft+i))-2*log(c$b2+exp(-c$c2*(ft+i)) ) + stats::pnorm(c$alpha2*(ft+i-c$delta2),log.p = TRUE))
+            y[,i] = stats::rpois(M,mu[,i])
+          } else stop(paste("Unknown model",m))
+
+  if (any(is.na(y))){
+    message(paste("Prediction had",sum(is.na(y)),"NA values. Replaced with large value for identification."))
+    y.fut[is.na(y.fut)] = n
+  }
+
+  list(yL=y, yS = t(apply(y,1,cumsum)), mu = mu)
 }

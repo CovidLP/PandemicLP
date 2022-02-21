@@ -167,27 +167,3 @@ load_covid <- function(country_name, state_name = NULL, last_date){
   return(list_out)
 
 }
-
-#' Capitalize country names
-#'
-#' This function capitalizes country_name inputs in order to match the capitalization in the database.
-#'
-#' @param x A character string
-#'
-#' @return Capitalized character string x to match the spelling and capitalization in the database.
-#'
-#' @noRd
-#'
-
-capitalize <- function(x) {
-    s <- gsub("\\b(\\w)", "\\U\\1", x, perl = TRUE)
-    s<- gsub("\\bAnd\\b", "and", s)
-    s<- gsub("\\bOf\\b", "of", s)
-    if(length(s)== 1 && s =="Cote D'Ivoire") {s <-"Cote d'Ivoire"}
-    if(length(s)== 1 && s =="Eswatini") {s <-"eSwatini"}
-    s
-}
-
-
-
-
