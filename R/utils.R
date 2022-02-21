@@ -21,7 +21,7 @@ accum_to_new <- function(Y){
           i_new_cases = Y$data[i, "cases" ]
           col_new_cases = c(col_new_cases, i_new_cases)
         } else{
-          i_new_cases = diff(dado_2$data[c(i-1, i), "cases" ])
+          i_new_cases = diff(Y$data[c(i-1, i), "cases" ])
           if (i_new_cases >= 0){
             col_new_cases = c(col_new_cases, i_new_cases)
           } else{
@@ -40,7 +40,7 @@ accum_to_new <- function(Y){
           i_new_deaths = Y$data[i, "deaths" ]
           col_new_deaths = c(col_new_deaths, i_new_deaths)
         } else{
-          i_new_deaths = diff(dado_2$data[c(i-1, i), "deaths" ])
+          i_new_deaths = diff(Y$data[c(i-1, i), "deaths" ])
           if (i_new_deaths >= 0){
             col_new_deaths = c(col_new_deaths, i_new_deaths)
           } else{
@@ -76,21 +76,21 @@ accum_to_new <- function(Y){
   if(!all(is.numeric(Y$data$cases), is.numeric(Y$data$deaths), is.numeric(Y$data$new_cases), is.numeric(Y$data$new_deaths))) stop( "Y$data: values in 'cases', 'deaths', 'new_cases' and 'new_deaths' columns should be as.integer or as.numeric")
 
   #data processing: new_cases, new_deaths < 0:
-  while(any(x$data$new_cases < 0)){
-    pos <- which(x$data$new_cases < 0)
+  while(any(Y$data$new_cases < 0)){
+    pos <- which(Y$data$new_cases < 0)
     for(j in pos){
-      x$data$new_cases[j - 1] = x$data$new_cases[j] + x$data$new_cases[j - 1]
-      x$data$new_cases[j] = 0
-      x$data$cases[j - 1] = x$data$cases[j]
+      Y$data$new_cases[j - 1] = Y$data$new_cases[j] + Y$data$new_cases[j - 1]
+      Y$data$new_cases[j] = 0
+      Y$data$cases[j - 1] = Y$data$cases[j]
     }
   }
 
-  while(any(x$data$new_deaths < 0)){
-    pos <- which(x$data$new_deaths < 0)
+  while(any(Y$data$new_deaths < 0)){
+    pos <- which(Y$data$new_deaths < 0)
     for(j in pos){
-      x$data$new_deaths[j - 1] = x$data$new_deaths[j] + x$data$new_deaths[j - 1]
-      x$data$new_deaths[j] = 0
-      x$data$deaths[j - 1] = x$data$deaths[j]
+      Y$data$new_deaths[j - 1] = Y$data$new_deaths[j] + Y$data$new_deaths[j - 1]
+      Y$data$new_deaths[j] = 0
+      Y$data$deaths[j - 1] = Y$data$deaths[j]
     }
   }
   return(Y$data)

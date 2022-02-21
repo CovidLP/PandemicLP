@@ -237,6 +237,7 @@ pandemic_model <- function(Y, case_type = "confirmed",family="poisson", seasonal
 
   if(!is.null(points[["algorithm"]])) stop("The input 'algorithm' of the Stan sampler cannot be used: The sampling algorithm is 'NUTS' in pandemic_model function.")
 
+  data_cases <-  NULL  #indicator of the Y$data full: both 'new_cases' and 'new_deaths'.
 
   ############### preparing data and warning for user when data is not load_covid
 
