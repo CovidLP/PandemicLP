@@ -46,8 +46,8 @@ plot.pandemicData <- function(x, y, cases = "new", color = TRUE, ...){
   cases <- tolower(cases)
   if(!(cases %in% c("both","new","cumulative"))) stop("Invalid \'cases\' argument. Please read \'help(plot.pandemicData)\' for available options.")
 
-  if(cases = "new" && !any(c("new_cases", "new_deaths")) %in% names(x$data)) warning("Check if you entered the \'cases'\ parameter correctly")
-  if(cases = "cumulative" && !any(c("cases", "deaths")) %in% names(x$data)) warning("Check if you entered the \'cases'\ parameter correctly")
+  if(cases == "new" && !any(c("new_cases", "new_deaths")) %in% names(x$data)) warning("Check if you entered the \'cases'\ parameter correctly")
+  if(cases == "cumulative" && !any(c("cases", "deaths")) %in% names(x$data)) warning("Check if you entered the \'cases'\ parameter correctly")
 
   x$data <- accum_to_new(x)
 
