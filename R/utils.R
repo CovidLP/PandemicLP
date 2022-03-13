@@ -158,7 +158,7 @@ seasonal_code <- function(dates, s_e){
 
 
 #### Auxiliary function 'config_stan' ####
-config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,chains,init,covidLPconfig){
+config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warmup,thin,sample_size,chains,init,prior_parameters,covidLPconfig){
 
   number_iterations <- warmup + thin * sample_size
 
@@ -209,6 +209,93 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
   model_name <- paste0(model_name, family)
   params <- c(params, "mu")
   #### guido shorter code - end
+
+  ## Prior Parameters
+
+  pars <- c("a_alpha","a_beta","mu_delta","sigma2_delta","c_alpha","c_beta","alpha_alpha","alpha_beta",
+            "d_1_alpha","d_1_beta","d_2_alpha","d_2_beta","d_3_alpha","d_3_beta","mu_b_1","sigma2_b_1",
+            "phi_alpha","phi_beta","f_alpha","f_beta")
+  for (par in pars) {
+    if(is.null(prior_parameters[[par]]))  data_stan[[par]] <- prior_aux(par)
+    else data_stan[[par]] <- prior_parameters[[par]]
+  }
+
+  stopifnot(data_stan$a_alpha > 0, data_stan$a_beta > 0, data$sigma2_delta > 0, data_stan$c_alpha > 0,
+            data_stan$c_beta > 0, data_stan$alpha_alpha > 0, data_stan$alpha_beta  > 0, data_stan$d_1_alpha >0,
+            data_stan$d_1_beta > 0, data_stan$d_2_alpha > 0, data_stan$d_2_beta > 0, data_stan$d_3_alpha >0,
+            data_stan$d_3_beta > 0, data_stan$sigma2_b_1 > 0, data_stan$phi_alpha >0, data_stan$phi_beta >0
+            , data_stan$f_alpha > 0, data_stan$f_beta >0  )
+  # if(data_stan$a_alpha < 0){
+  #   print("Parameter a_alpha out of limits ")
+  # }
+  #
+  #   if(data_stan$a_beta < 0){
+  #     print("Parameter a_beta out of limits ")
+  #   }
+  #
+  #   if(data_stan$sigma2_delta < 0){
+  #     print("Parameter sigma2_delta out of limits ")
+  #   }
+  #
+  #   if(data_stan$c_alpha < 0){
+  #     print("Parameter c_alpha out of limits ")
+  #   }
+  #
+  #   if(data_stan$c_beta < 0){
+  #     print("Parameter c_beta out of limits ")
+  #   }
+  #
+  #   if(data_stan$alpha_alpha < 0){
+  #     print("Parameter alpha_alpha out of limits ")
+  #   }
+  #
+  #   if(data_stan$alpha_beta < 0){
+  #     print("Parameter alpha_beta out of limits ")
+  #   }
+  #
+  #   if(data_stan$d_1_alpha < 0){
+  #     print("Parameter d_1_alpha out of limits ")
+  #   }
+  #
+  #   if(data_stan$d_1_beta < 0){
+  #     print("Parameter d_1_beta out of limits ")
+  #   }
+  #
+  #   if(data_stan$d_2_alpha < 0){
+  #     print("Parameter d_2_alpha out of limits ")
+  #   }
+  #
+  #   if(data_stan$d_2_beta < 0){
+  #     print("Parameter d_2_beta out of limits ")
+  #   }
+  #
+  #   if(data_stan$d_3_alpha < 0){
+  #     print("Parameter d_3_alpha out of limits ")
+  #   }
+  #
+  #   if(data_stan$d_3_beta < 0){
+  #     print("Parameter d_3_beta out of limits ")
+  #   }
+  #
+  #   if(data_stan$sigma2_b_1 < 0){
+  #     print("Parameter sigma2_b_1 out of limits ")
+  #   }
+  #
+  #   if(data_stan$phi_alpha < 0){
+  #     print("Parameter phi_alpha out of limits ")
+  #   }
+  #
+  #   if(data_stan$phi_beta < 0){
+  #     print("Parameter phi_beta out of limits ")
+  #   }
+  #
+  #   if(data_stan$f_alpha < 0){
+  #     print("Parameter f_alpha out of limits ")
+  #   }
+  #
+  #   if(data_stan$f_beta < 0){
+  #     print("Parameter f_beta out of limits ")
+  #   }
 
   # #####poisson models without seasonal effect:
   #
