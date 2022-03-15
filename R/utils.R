@@ -221,7 +221,7 @@ config_stan <- function(Y,s_code,family,n_waves,p,case_type,phiTrunc,fTrunc,warm
     else data_stan[[par]] <- prior_parameters[[par]]
   }
 
-  stopifnot(data_stan$a_alpha > 0, data_stan$a_beta > 0, data$sigma2_delta > 0, data_stan$c_alpha > 0,
+  stopifnot(data_stan$a_alpha > 0, data_stan$a_beta > 0, data_stan$sigma2_delta > 0, data_stan$c_alpha > 0,
             data_stan$c_beta > 0, data_stan$alpha_alpha > 0, data_stan$alpha_beta  > 0, data_stan$d_1_alpha >0,
             data_stan$d_1_beta > 0, data_stan$d_2_alpha > 0, data_stan$d_2_beta > 0, data_stan$d_3_alpha >0,
             data_stan$d_3_beta > 0, data_stan$sigma2_b_1 > 0, data_stan$phi_alpha >0, data_stan$phi_beta >0,
