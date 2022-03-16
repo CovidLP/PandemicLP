@@ -1,6 +1,6 @@
 #' PandemicLP: Modeling Pandemic Data
 #'
-#' \if{html}{\figure{logo.jpeg}{options: width="120px"}}
+#' \if{html}{\figure{logo.jpeg}{options: width="120"}}
 #'
 #' The \pkg{PandemicLP} package provides five main functions that enable the user to make short and long-term
 #' predictions of epidemic and pandemic count data.

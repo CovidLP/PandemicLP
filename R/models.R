@@ -75,10 +75,10 @@
 #' distributions is such that the values are passed directly to the \code{stan}
 #' code.
 #' \deqn{a_j\sim Gamma(a_alpha, a_beta), j = 1, ..., K: 0.1, 0.1}
-#' \deqn{b_j\sim LogNormal(mu_b_1, sigma2_b_1), j = 1, ..., K: 0, 20}
+#' \deqn{b_j\sim LogNormal(mu_{b_1}, sigma2_{b_1}), j = 1, ..., K: 0, 20}
 #' \deqn{c_j\sim Gamma(c_alpha, c_beta), j = 1, ..., K: 2, 9}
 #' \deqn{f\sim Gamma(f_alpha, f_beta): 0.01, 0.01}
-#' \deqn{d_j\sim Gamma(d_j_alpha, d_j_beta), j = 1, 2, 3: 2, 1}
+#' \deqn{d_j\sim Gamma(d_{j_alpha}, d_{j_beta}), j = 1, 2, 3: 2, 1}
 #' \deqn{\delta_j\sim Normal(mu_delta, sigma2_delta), j = 1, ..., K: 0, 100}
 #' \deqn{\alpha_j\sim Gamma(alpha_alpha, alpha_beta), j = 1, ..., K: 0.01, 0.01}
 #' \deqn{\phi\sim Gamma(phi_alpha, phi_beta): 0.1, 0.1}

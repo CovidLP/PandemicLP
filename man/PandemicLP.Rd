@@ -5,7 +5,7 @@
 \alias{PandemicLP}
 \title{PandemicLP: Modeling Pandemic Data}
 \description{
-\if{html}{\figure{logo.jpeg}{options: width="120px"}}
+\if{html}{\figure{logo.jpeg}{options: width="120"}}
 }
 \details{
 The \pkg{PandemicLP} package provides five main functions that enable the user to make short and long-term

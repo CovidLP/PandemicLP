@@ -30,8 +30,8 @@ The elements of this Y list are:
 
 \describe{
   \item{\code{data}:}{
-  a data frame with at least the 2 columns \code{date} and \code{new_cases} (or \code{new_deaths}).
-  It can also contain all following columns:
+  a data frame with a \code{date} column and at least one of the following:  \code{cases}, \code{new_cases}, \code{deaths}, \code{new_deaths}.
+  Bellow are descriptions of each of these columns:
 
   \describe{
   \item{\code{date}:}{a date vector. It should be of class 'Date' and format 'YYYY-MM-DD'.}
