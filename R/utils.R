@@ -583,7 +583,7 @@ including_auxparameters=function(init){    #if init="random" :  this auxiliar fu
 #initial value of the parameter of interest.
 excluding_auxparameters=function(init){   #if init="random" :  this auxiliar function is not necessary
 
-  if(class(init)=="list"){
+  if(is.list(init)){
 
     for(j in 1:length(init)){
       kk=grep("b1", init[[j]])    #if user input initial value for b1 or covidLPconfig=TRUE

@@ -39,12 +39,11 @@ The model is estimated with function `pandemic_model`. It currently uses [rstan]
 #MGestimated <- pandemic_model(MGdata, case_type = "deaths", covidLPconfig = TRUE)
 ## Using pre-generated results for speed
 temp <- tempfile(fileext = ".rda")
-d <- download.file("https://drive.google.com/u/2/uc?id=165mXm5DbtPENGJlVLVJvzvVfFFWxT_dr&export=download",
-  temp, mode = "wb", quiet = TRUE)
+d <- tryCatch(download.file("https://drive.google.com/u/2/uc?id=165mXm5DbtPENGJlVLVJvzvVfFFWxT_dr&export=download", temp, mode = "wb", quiet = TRUE), error = function(e) print(paste("Data failed to download from drive. Please check internet connection and try again. If the problem persists, the repository might be unavailable, but it should be back shortly.")))
 
 # Try to use downloaded version. If not available, run the model
 if (!d) load(temp) else {
-  warning("Data failed to download from drive. Please check internet connection and try again.")
+  warning("Data failed to download from drive. Please check internet connection and try again. If the problem persists, the repository might be unavailable, but it should be back shortly.")
   knitr::knit_exit()
 }
 ```

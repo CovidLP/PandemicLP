@@ -52,10 +52,9 @@ preds <- list()
 states <- state_list()
 ## Using pre-generated results for speed
 temp <- tempfile(fileext = ".rda")
-d <- download.file("https://drive.google.com/u/2/uc?id=1ucWISU7MxgLoICuB_zXy_KE59TuX5tjs&export=download",
-  temp, mode = "wb", quiet = TRUE)
+d <- tryCatch(download.file("https://drive.google.com/u/2/uc?id=1ucWISU7MxgLoICuB_zXy_KE59TuX5tjs&export=download", temp, mode = "wb", quiet = TRUE), error = function(e) print(paste("Data failed to download from drive. Please check internet connection and try again. If the problem persists, the repository might be unavailable, but it should be back shortly.")))
 if (!d) load(temp) else {
-  warning("Data failed to download from drive. Please check internet connection and try again.")
+  warning("Data failed to download from drive. Please check internet connection and try again. If the problem persists, the repository might be unavailable, but it should be back shortly.")
   knitr::knit_exit()
 }
 for(i in 1:length(regions)) { 
