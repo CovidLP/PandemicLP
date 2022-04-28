@@ -1,7 +1,7 @@
 Package: PandemicLP
 Type: Package
 Title: Long Term Prediction for Epidemic and Pandemic Data
-Version: 1.3.1
+Version: 1.3.2
 Date: 2022-03-18
 Authors@R: c(person("Débora", "de Freitas Magalhães", email = "deborafmag@gmail.com", role = "aut"),
             person("Marta Cristina", "Colozza Bianchi da Costa", email = "marta_bianchi@ufg.br", role = "aut"),
