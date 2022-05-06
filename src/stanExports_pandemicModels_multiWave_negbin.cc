@@ -7,7 +7,7 @@ using namespace Rcpp ;
 RCPP_MODULE(stan_fit4pandemicModels_multiWave_negbin_mod) {
 
 
-    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("model_pandemicModels_multiWave_negbin")
+    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_pandemicModels_multiWave_negbin")
 
     .constructor<SEXP,SEXP,SEXP>()
 

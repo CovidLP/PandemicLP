@@ -6,6 +6,8 @@
 
 # Installing PandemicLP
 
+**Warning: R version 4.2 on Windows does not compile the package due to incompatibility with the new Rtools. If you use windows, we recommend not updating R to version 4.2 yet. Please check this site regularly to check whether this problem is fixed.**
+
 There are two ways to install the package. The first more direct way is to install from CRAN, via the code
 
 ```R
